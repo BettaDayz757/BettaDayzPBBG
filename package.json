@@ -16,6 +16,8 @@
     "dev": "node pre-start.cjs  && remix vite:dev",
     "test": "vitest --run",
     "test:watch": "vitest",
+    "ci": "npm run lint && npm test",
+    "deploy:gh-pages": "npm run build",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint app",
     "lint:fix": "npm run lint -- --fix && prettier app --write",
     "start:windows": "wrangler pages dev ./build/client",
