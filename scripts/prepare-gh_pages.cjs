@@ -15,10 +15,16 @@ for (const c of candidates) {
     break
   }
 }
-
 if (!src) {
-  console.error('Source docs folder not found. Tried:', candidates.join(', '))
-  process.exit(1)
+  console.warn('Source docs folder not found. Tried:', candidates.join(', '))
+  console.warn('Creating a minimal placeholder ./docs/index.html so Pages can publish a site.')
+  // ensure dest exists
+  fs.rmSync(dest, { recursive: true, force: true })
+  fs.mkdirSync(dest, { recursive: true })
+  const html = `<!doctype html>\n<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BettaDayz Docs (placeholder)</title></head><body><h1>BettaDayz</h1><p>This is a placeholder docs site. Add real docs in your nested docs folder and re-run the prepare script.</p></body></html>`
+  fs.writeFileSync(path.join(dest, 'index.html'), html, 'utf8')
+  console.log('Wrote placeholder at', path.join(dest, 'index.html'))
+  process.exit(0)
 }
 
 console.log('Removing existing docs folder at', dest)
