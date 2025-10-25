@@ -1,0 +1,30 @@
+{
+  "name": "BettaDayzPBBG",
+  "version": "1.0.0",
+  "description": "A browser-based game platform for BettaDayzPBBG.",
+  "main": "src/js/main.js",
+  "scripts": {
+    "build": "sass src/scss/styles.scss docs/assets/css/styles.css",
+    "start": "live-server docs",
+    "deploy": "gh-pages -d docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/BettaDayzPBBG.git"
+  },
+  "keywords": [
+    "PBBG",
+    "game",
+    "browser",
+    "BettaDayz"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "gh-pages": "^3.2.3",
+    "live-server": "^1.2.1",
+    "sass": "^1.32.0"
+  },
+  "devDependencies": {},
+  "homepage": "https://yourusername.github.io/BettaDayzPBBG"
+}
