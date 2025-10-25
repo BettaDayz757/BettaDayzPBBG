@@ -1,0 +1,71 @@
+{
+  "paymentMethods": {
+    "cashapp": {
+      "enabled": true,
+      "name": "Cash App",
+      "icon": "cashapp-icon",
+      "verificationMethod": "manual",
+      "instructions": "Send payment to $${CASHAPP_CASHTAG} and include your user ID in the note"
+    },
+    "bitcoin": {
+      "enabled": true,
+      "name": "Bitcoin",
+      "icon": "bitcoin-icon",
+      "verificationMethod": "automatic",
+      "confirmations": 2,
+      "instructions": "Send BTC to the address provided. Payment will be confirmed after 2 blockchain confirmations"
+    }
+  },
+  "inAppPurchases": {
+    "currency": {
+      "small": {
+        "amount": 5,
+        "coins": 500
+      },
+      "medium": {
+        "amount": 10,
+        "coins": 1200
+      },
+      "large": {
+        "amount": 20,
+        "coins": 2600
+      },
+      "mega": {
+        "amount": 50,
+        "coins": 7000
+      }
+    },
+    "vipMembership": {
+      "monthly": {
+        "amount": 9.99,
+        "features": [
+          "Premium Avatars",
+          "Special Items",
+          "VIP Badge",
+          "Extended Game Features"
+        ]
+      },
+      "yearly": {
+        "amount": 99.99,
+        "features": [
+          "All Monthly Features",
+          "Exclusive Items",
+          "Priority Support",
+          "Early Access to New Features"
+        ]
+      }
+    }
+  },
+  "verificationProcess": {
+    "cashapp": {
+      "requireScreenshot": true,
+      "manualReviewTime": "24h",
+      "autoRefundTime": "48h"
+    },
+    "bitcoin": {
+      "minConfirmations": 2,
+      "autoVerify": true,
+      "exchangeRateProvider": "coingecko"
+    }
+  }
+}
