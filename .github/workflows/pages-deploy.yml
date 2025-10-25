@@ -3,6 +3,11 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+  workflow_dispatch: {}
+
+  # Also deploy when the GH Pages prep branch pushes
+  push:
+    branches: [ fix/gh-pages-prepare ]
 
 jobs:
   deploy:
@@ -10,33 +15,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug: show workspace files
+        run: |
+          echo "Node:" && node --version || true
+          echo "NPM:" && npm --version || true
+          echo "Working dir: $(pwd)"
+          ls -la
+          echo "Top-level docs present:" && [ -d ./docs ] && echo yes || echo no
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: '9.14.4'
+      - name: Prepare docs folder
+        # Use the same prepare script as locally to copy nested docs into ./docs
+        run: node scripts/prepare-gh_pages.cjs
 
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build
-        run: pnpm run build
-
-      - name: Create deployment files
-        run: |
-          # Copy index.html to 404.html for SPA routing
-          if (Test-Path "./build/client/index.html") {
-            Copy-Item "./build/client/index.html" "./build/client/404.html" -Force
-          }
-        shell: pwsh
-
-      - name: Deploy to gh-pages
+      - name: Deploy docs to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/client
+          publish_dir: ./docs
           publish_branch: gh-pages
