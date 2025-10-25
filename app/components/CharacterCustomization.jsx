@@ -31,7 +31,7 @@ const CLOTHING_STYLES = [
   { id: 'tech', name: 'Tech Entrepreneur', items: ['premium_tee', 'designer_jeans', 'limited_sneakers'] }
 ];
 
-export const CharacterCustomization = ({ onSave }) => {
+export const CharacterCustomization = ({ onCharacterCreated }) => {
   const [character, setCharacter] = useState({
     skinTone: SKIN_TONES[0].id,
     facialFeatures: {
@@ -201,7 +201,7 @@ export const CharacterCustomization = ({ onSave }) => {
 
       <div className="mt-8 flex justify-end">
         <button
-          onClick={() => onSave(character)}
+          onClick={() => onCharacterCreated(character)}
           className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
         >
           Save & Continue

@@ -32,7 +32,7 @@ const COMMUNITY_ORGANIZATIONS = [
   }
 ];
 
-export const CommunityHub = ({ player, onInteraction }) => {
+export const CommunityHub = ({ player, onCommunityInteraction }) => {
   const [activeOrgs, setActiveOrgs] = useState([]);
   const [currentEvents, setCurrentEvents] = useState([]);
   const [relationships, setRelationships] = useState(new Map());
@@ -99,7 +99,7 @@ export const CommunityHub = ({ player, onInteraction }) => {
     }
 
     // Apply rewards
-    onInteraction({
+    onCommunityInteraction({
       type: 'event_completed',
       data: {
         eventId,
@@ -140,7 +140,7 @@ export const CommunityHub = ({ player, onInteraction }) => {
                     )}
                   </div>
                   <button
-                    onClick={() => onInteraction({
+                    onClick={() => onCommunityInteraction({
                       type: 'connect_organization',
                       data: { orgId: org.id }
                     })}

@@ -35,8 +35,8 @@ const challenges = [
   }
 ];
 
-export const GameMain = ({ userId }) => {
-  const [playerState, setPlayerState] = useState({
+export const GameMain = ({ player, onBusinessAction }) => {
+  const [playerState, setPlayerState] = useState(player || {
     level: 1,
     money: 1000,
     businesses: [],
@@ -54,11 +54,12 @@ export const GameMain = ({ userId }) => {
   const [availableOpportunities, setAvailableOpportunities] = useState([]);
 
   useEffect(() => {
-    // Load player state
-    loadPlayerState(userId);
+    if (player) {
+      setPlayerState(player);
+    }
     // Generate opportunities based on player level
     generateOpportunities();
-  }, [userId]);
+  }, [player]);
 
   const loadPlayerState = async (userId) => {
     try {
@@ -93,24 +94,29 @@ export const GameMain = ({ userId }) => {
   };
 
   const handleBusinessAction = async (action, data) => {
-    switch (action) {
-      case 'START_BUSINESS':
-        if (playerState.money >= data.cost) {
-          setPlayerState(prev => ({
-            ...prev,
-            money: prev.money - data.cost,
-            businesses: [...prev.businesses, data]
-          }));
-        }
-        break;
-      
-      case 'INVEST':
-        // Handle investment logic
-        break;
+    if (onBusinessAction) {
+      await onBusinessAction(action, data);
+    } else {
+      // Fallback for local state management
+      switch (action) {
+        case 'START_BUSINESS':
+          if (playerState.money >= data.cost) {
+            setPlayerState(prev => ({
+              ...prev,
+              money: prev.money - data.cost,
+              businesses: [...prev.businesses, data]
+            }));
+          }
+          break;
+        
+        case 'INVEST':
+          // Handle investment logic
+          break;
 
-      case 'NETWORK':
-        // Increase networking skills and reputation
-        break;
+        case 'NETWORK':
+          // Increase networking skills and reputation
+          break;
+      }
     }
   };
 
