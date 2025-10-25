@@ -7,29 +7,29 @@ const COMMUNITY_ORGANIZATIONS = [
     name: 'Norfolk State University Business School',
     type: 'education',
     influence: 8,
-    connections: ['students', 'professors', 'alumni']
+    connections: ['students', 'professors', 'alumni'],
   },
   {
     id: 'civic_league',
     name: 'Norfolk Civic League',
     type: 'community',
     influence: 7,
-    connections: ['community_leaders', 'residents', 'activists']
+    connections: ['community_leaders', 'residents', 'activists'],
   },
   {
     id: 'black_chamber',
     name: 'Black Chamber of Commerce',
     type: 'business',
     influence: 9,
-    connections: ['business_owners', 'investors', 'mentors']
+    connections: ['business_owners', 'investors', 'mentors'],
   },
   {
     id: 'youth_center',
     name: 'Norfolk Youth Development Center',
     type: 'youth',
     influence: 6,
-    connections: ['youth', 'parents', 'educators']
-  }
+    connections: ['youth', 'parents', 'educators'],
+  },
 ];
 
 export const CommunityHub = ({ player, onCommunityInteraction }) => {
@@ -44,13 +44,14 @@ export const CommunityHub = ({ player, onCommunityInteraction }) => {
 
   const loadCommunityData = () => {
     setActiveOrgs(COMMUNITY_ORGANIZATIONS);
+
     // Initialize relationships
     const initialRelationships = new Map();
-    COMMUNITY_ORGANIZATIONS.forEach(org => {
+    COMMUNITY_ORGANIZATIONS.forEach((org) => {
       initialRelationships.set(org.id, {
         level: 1,
         trust: 0,
-        lastInteraction: null
+        lastInteraction: null,
       });
     });
     setRelationships(initialRelationships);
@@ -66,8 +67,8 @@ export const CommunityHub = ({ player, onCommunityInteraction }) => {
         reward: {
           reputation: 15,
           connections: ['youth_leaders', 'educators'],
-          skills: { leadership: 2, communication: 1 }
-        }
+          skills: { leadership: 2, communication: 1 },
+        },
       },
       {
         id: 'workshop',
@@ -77,24 +78,28 @@ export const CommunityHub = ({ player, onCommunityInteraction }) => {
         reward: {
           reputation: 10,
           connections: ['business_mentors'],
-          skills: { business: 2, networking: 2 }
-        }
-      }
+          skills: { business: 2, networking: 2 },
+        },
+      },
     ];
     setCurrentEvents(events);
   };
 
   const handleEventParticipation = (eventId) => {
-    const event = currentEvents.find(e => e.id === eventId);
-    if (!event) return;
+    const event = currentEvents.find((e) => e.id === eventId);
+
+    if (!event) {
+      return;
+    }
 
     // Update relationship with organization
     const orgRelationship = relationships.get(event.organization);
+
     if (orgRelationship) {
       relationships.set(event.organization, {
         ...orgRelationship,
         trust: orgRelationship.trust + 10,
-        lastInteraction: new Date()
+        lastInteraction: new Date(),
       });
     }
 
@@ -103,8 +108,8 @@ export const CommunityHub = ({ player, onCommunityInteraction }) => {
       type: 'event_completed',
       data: {
         eventId,
-        rewards: event.reward
-      }
+        rewards: event.reward,
+      },
     });
   };
 
@@ -115,14 +120,10 @@ export const CommunityHub = ({ player, onCommunityInteraction }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <section className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-xl font-bold mb-4">Community Organizations</h3>
-          {activeOrgs.map(org => {
+          {activeOrgs.map((org) => {
             const relationship = relationships.get(org.id);
             return (
-              <motion.div
-                key={org.id}
-                whileHover={{ scale: 1.02 }}
-                className="border-b last:border-0 p-4"
-              >
+              <motion.div key={org.id} whileHover={{ scale: 1.02 }} className="border-b last:border-0 p-4">
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="font-bold">{org.name}</h4>
@@ -140,10 +141,12 @@ export const CommunityHub = ({ player, onCommunityInteraction }) => {
                     )}
                   </div>
                   <button
-                    onClick={() => onCommunityInteraction({
-                      type: 'connect_organization',
-                      data: { orgId: org.id }
-                    })}
+                    onClick={() =>
+                      onCommunityInteraction({
+                        type: 'connect_organization',
+                        data: { orgId: org.id },
+                      })
+                    }
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                   >
                     Connect
@@ -156,25 +159,22 @@ export const CommunityHub = ({ player, onCommunityInteraction }) => {
 
         <section className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-xl font-bold mb-4">Community Events</h3>
-          {currentEvents.map(event => (
-            <motion.div
-              key={event.id}
-              whileHover={{ scale: 1.02 }}
-              className="border-b last:border-0 p-4"
-            >
+          {currentEvents.map((event) => (
+            <motion.div key={event.id} whileHover={{ scale: 1.02 }} className="border-b last:border-0 p-4">
               <h4 className="font-bold">{event.title}</h4>
               <p className="text-sm text-gray-600 mt-1">
-                Hosted by: {activeOrgs.find(org => org.id === event.organization)?.name}
+                Hosted by: {activeOrgs.find((org) => org.id === event.organization)?.name}
               </p>
               <div className="mt-2">
                 <h5 className="font-semibold text-sm">Rewards:</h5>
                 <ul className="text-sm text-gray-600">
-                  {event.reward.reputation && (
-                    <li>• Reputation: +{event.reward.reputation}</li>
-                  )}
-                  {event.reward.skills && Object.entries(event.reward.skills).map(([skill, level]) => (
-                    <li key={skill}>• {skill.charAt(0).toUpperCase() + skill.slice(1)}: +{level}</li>
-                  ))}
+                  {event.reward.reputation && <li>• Reputation: +{event.reward.reputation}</li>}
+                  {event.reward.skills &&
+                    Object.entries(event.reward.skills).map(([skill, level]) => (
+                      <li key={skill}>
+                        • {skill.charAt(0).toUpperCase() + skill.slice(1)}: +{level}
+                      </li>
+                    ))}
                 </ul>
               </div>
               <button
@@ -200,16 +200,12 @@ export const CommunityHub = ({ player, onCommunityInteraction }) => {
           </div>
           <div className="bg-gray-50 p-4 rounded">
             <h4 className="font-bold">Community Events</h4>
-            <p className="text-2xl font-bold text-blue-600">
-              {player.eventHistory ? player.eventHistory.length : 0}
-            </p>
+            <p className="text-2xl font-bold text-blue-600">{player.eventHistory ? player.eventHistory.length : 0}</p>
             <p className="text-sm text-gray-600">Events Participated</p>
           </div>
           <div className="bg-gray-50 p-4 rounded">
             <h4 className="font-bold">Youth Programs</h4>
-            <p className="text-2xl font-bold text-purple-600">
-              {player.youthPrograms ? player.youthPrograms : 0}
-            </p>
+            <p className="text-2xl font-bold text-purple-600">{player.youthPrograms ? player.youthPrograms : 0}</p>
             <p className="text-sm text-gray-600">Programs Supported</p>
           </div>
         </div>

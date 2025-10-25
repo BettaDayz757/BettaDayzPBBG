@@ -15,10 +15,12 @@ class BitcoinPaymentMonitor extends EventEmitter {
 
     this.websocket.on('open', () => {
       // Subscribe to address
-      this.websocket.send(JSON.stringify({
-        "op": "addr_sub",
-        "addr": this.address
-      }));
+      this.websocket.send(
+        JSON.stringify({
+          op: 'addr_sub',
+          addr: this.address,
+        }),
+      );
     });
 
     this.websocket.on('message', (data) => {
@@ -35,19 +37,21 @@ class BitcoinPaymentMonitor extends EventEmitter {
       // New unconfirmed transaction
       this.pendingTransactions.set(tx.x.hash, {
         hash: tx.x.hash,
-        amount: tx.x.out.reduce((acc, output) => {
-          if (output.addr === this.address) {
-            return acc + output.value;
-          }
-          return acc;
-        }, 0) / 100000000, // Convert satoshis to BTC
+        amount:
+          tx.x.out.reduce((acc, output) => {
+            if (output.addr === this.address) {
+              return acc + output.value;
+            }
+
+            return acc;
+          }, 0) / 100000000, // Convert satoshis to BTC
         confirmations: 0,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
 
       this.emit('newTransaction', {
         txHash: tx.x.hash,
-        amount: this.pendingTransactions.get(tx.x.hash).amount
+        amount: this.pendingTransactions.get(tx.x.hash).amount,
       });
     }
   }
@@ -57,19 +61,19 @@ class BitcoinPaymentMonitor extends EventEmitter {
       try {
         const response = await fetch(`https://blockchain.info/rawtx/${hash}`);
         const txData = await response.json();
-        
+
         if (txData.block_height) {
           const confirmations = txData.block_height ? txData.confirmations : 0;
           this.pendingTransactions.set(hash, {
             ...tx,
-            confirmations
+            confirmations,
           });
 
           if (confirmations >= 2) {
             this.emit('confirmed', {
               txHash: hash,
               amount: tx.amount,
-              confirmations
+              confirmations,
             });
             this.pendingTransactions.delete(hash);
           }
@@ -95,11 +99,13 @@ bitcoinMonitor.start();
 // Handle new transactions
 bitcoinMonitor.on('newTransaction', async ({ txHash, amount }) => {
   console.log(`New transaction received: ${txHash} for ${amount} BTC`);
+
   // Update transaction in database
 });
 
 // Handle confirmed transactions
 bitcoinMonitor.on('confirmed', async ({ txHash, amount }) => {
   console.log(`Transaction ${txHash} confirmed with ${amount} BTC`);
+
   // Update user's balance and unlock purchased items
 });

@@ -3,6 +3,7 @@ import { PaymentInterface } from './PaymentInterface';
 import { CharacterCustomization } from './CharacterCustomization';
 import { GameMain } from './GameMain';
 import { CommunityHub } from './CommunityHub';
+// eslint-disable-next-line no-restricted-imports
 import BusinessSimulation from '../game/business-simulation';
 
 export const GameContainer = () => {
@@ -16,6 +17,7 @@ export const GameContainer = () => {
     if (player) {
       try {
         setLoading(true);
+
         const sim = new BusinessSimulation(player);
         setBusinessSim(sim);
         setError(null);
@@ -37,7 +39,7 @@ export const GameContainer = () => {
       level: 1,
       inventory: [],
       achievements: [],
-      eventHistory: []
+      eventHistory: [],
     });
     setGameState('main');
   };
@@ -53,27 +55,31 @@ export const GameContainer = () => {
       setError(null);
 
       switch (action) {
-        case 'START_BUSINESS':
+        case 'START_BUSINESS': {
           if (data.initialInvestment > player.money) {
             throw new Error('Insufficient funds');
           }
+
           const newBusiness = await businessSim.startBusiness(data);
-          setPlayer(prev => ({
+          setPlayer((prev) => ({
             ...prev,
             businesses: [...prev.businesses, newBusiness],
-            money: prev.money - data.initialInvestment
+            money: prev.money - data.initialInvestment,
           }));
           break;
+        }
 
-        case 'UPGRADE_BUSINESS':
+        case 'UPGRADE_BUSINESS': {
           const upgradedBusiness = await businessSim.upgradeProperty(data.businessId, data.upgradeType);
           updatePlayerBusinesses(upgradedBusiness);
           break;
+        }
 
-        case 'HIRE_EMPLOYEE':
+        case 'HIRE_EMPLOYEE': {
           const updatedBusiness = await businessSim.hireEmployee(data.businessId, data.employee);
           updatePlayerBusinesses(updatedBusiness);
           break;
+        }
 
         default:
           throw new Error('Invalid business action');
@@ -87,11 +93,9 @@ export const GameContainer = () => {
   };
 
   const updatePlayerBusinesses = (updatedBusiness) => {
-    setPlayer(prev => ({
+    setPlayer((prev) => ({
       ...prev,
-      businesses: prev.businesses.map(b => 
-        b.id === updatedBusiness.id ? updatedBusiness : b
-      )
+      businesses: prev.businesses.map((b) => (b.id === updatedBusiness.id ? updatedBusiness : b)),
     }));
   };
 
@@ -101,36 +105,44 @@ export const GameContainer = () => {
       setError(null);
 
       switch (interaction.type) {
-        case 'event_completed':
+        case 'event_completed': {
           // Validate rewards exist
           if (!interaction.data?.rewards) {
             throw new Error('Invalid event rewards');
           }
 
           const { reputation = 0, skills = {} } = interaction.data.rewards;
-          
-          setPlayer(prev => ({
+
+          setPlayer((prev) => ({
             ...prev,
             reputation: prev.reputation + reputation,
             skills: applySkillsUpdate(prev.skills, skills),
-            eventHistory: [...prev.eventHistory, {
-              ...interaction.data,
-              timestamp: new Date()
-            }]
+            eventHistory: [
+              ...prev.eventHistory,
+              {
+                ...interaction.data,
+                timestamp: new Date(),
+              },
+            ],
           }));
           break;
+        }
 
-        case 'connect_organization':
+        case 'connect_organization': {
           // Handle new organization connections
-          setPlayer(prev => ({
+          setPlayer((prev) => ({
             ...prev,
-            connections: [...(prev.connections || []), {
-              organizationId: interaction.data.organizationId,
-              connectionType: interaction.data.type,
-              timestamp: new Date()
-            }]
+            connections: [
+              ...(prev.connections || []),
+              {
+                organizationId: interaction.data.organizationId,
+                connectionType: interaction.data.type,
+                timestamp: new Date(),
+              },
+            ],
           }));
           break;
+        }
 
         default:
           throw new Error('Invalid community interaction type');
@@ -148,6 +160,7 @@ export const GameContainer = () => {
     Object.entries(newSkills).forEach(([skill, increase]) => {
       updated[skill] = (updated[skill] || 0) + increase;
     });
+
     return updated;
   };
 
@@ -158,10 +171,7 @@ export const GameContainer = () => {
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
           <strong className="font-bold">Error!</strong>
           <span className="block sm:inline"> {error}</span>
-          <button 
-            className="absolute top-0 right-0 px-4 py-3"
-            onClick={() => setError(null)}
-          >
+          <button className="absolute top-0 right-0 px-4 py-3" onClick={() => setError(null)}>
             <span className="sr-only">Close</span>
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -177,9 +187,7 @@ export const GameContainer = () => {
         </div>
       )}
 
-      {gameState === 'character' && (
-        <CharacterCustomization onSave={handleCharacterCreation} />
-      )}
+      {gameState === 'character' && <CharacterCustomization onSave={handleCharacterCreation} />}
 
       {gameState === 'main' && player && (
         <div>
@@ -190,9 +198,7 @@ export const GameContainer = () => {
                 <button
                   onClick={() => setGameState('main')}
                   className={`px-4 py-2 rounded transition duration-200 ease-in-out ${
-                    gameState === 'main' 
-                      ? 'bg-blue-500 text-white hover:bg-blue-600' 
-                      : 'bg-gray-200 hover:bg-gray-300'
+                    gameState === 'main' ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-200 hover:bg-gray-300'
                   }`}
                   disabled={loading}
                 >
@@ -201,8 +207,8 @@ export const GameContainer = () => {
                 <button
                   onClick={() => setGameState('community')}
                   className={`px-4 py-2 rounded transition duration-200 ease-in-out ${
-                    gameState === 'community' 
-                      ? 'bg-blue-500 text-white hover:bg-blue-600' 
+                    gameState === 'community'
+                      ? 'bg-blue-500 text-white hover:bg-blue-600'
                       : 'bg-gray-200 hover:bg-gray-300'
                   }`}
                   disabled={loading}
@@ -213,26 +219,16 @@ export const GameContainer = () => {
             </div>
           </nav>
 
-          {gameState === 'main' && (
-            <GameMain
-              player={player}
-              onBusinessAction={handleBusinessAction}
-            />
-          )}
+          {gameState === 'main' && <GameMain player={player} onBusinessAction={handleBusinessAction} />}
 
-          {gameState === 'community' && (
-            <CommunityHub
-              player={player}
-              onInteraction={handleCommunityInteraction}
-            />
-          )}
+          {gameState === 'community' && <CommunityHub player={player} onInteraction={handleCommunityInteraction} />}
 
           <PaymentInterface
             userId={player.id}
             onSuccess={(transaction) => {
-              setPlayer(prev => ({
+              setPlayer((prev) => ({
                 ...prev,
-                money: prev.money + transaction.amount
+                money: prev.money + transaction.amount,
               }));
             }}
           />

@@ -10,18 +10,21 @@ export async function fetchBitcoinPrice() {
   try {
     // Using CoinGecko API as it's free and reliable
     const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
+
     return data.bitcoin.usd;
   } catch (error) {
     console.error('Error fetching Bitcoin price:', error);
-    
-    // Fallback to a reasonable default price if API fails
-    // This should be updated periodically or use a backup API
+
+    /*
+     * Fallback to a reasonable default price if API fails
+     * This should be updated periodically or use a backup API
+     */
     return 45000; // Fallback price in USD
   }
 }
@@ -41,9 +44,7 @@ export function validateBitcoinAddress(address) {
   const segwitPattern = /^3[a-km-zA-HJ-NP-Z1-9]{25,34}$/;
   const bech32Pattern = /^bc1[a-z0-9]{39,59}$/;
 
-  return legacyPattern.test(address) || 
-         segwitPattern.test(address) || 
-         bech32Pattern.test(address);
+  return legacyPattern.test(address) || segwitPattern.test(address) || bech32Pattern.test(address);
 }
 
 /**
@@ -56,7 +57,7 @@ export function convertUSDToBTC(usdAmount, btcPrice) {
   if (!usdAmount || !btcPrice || btcPrice <= 0) {
     throw new Error('Invalid USD amount or Bitcoin price');
   }
-  
+
   return parseFloat((usdAmount / btcPrice).toFixed(8)); // Bitcoin has 8 decimal places
 }
 
@@ -69,7 +70,7 @@ export function formatBitcoinAmount(btcAmount) {
   if (typeof btcAmount !== 'number' || isNaN(btcAmount)) {
     return '0.00000000 BTC';
   }
-  
+
   return `${btcAmount.toFixed(8)} BTC`;
 }
 
@@ -78,7 +79,9 @@ export function formatBitcoinAmount(btcAmount) {
  * @returns {number} Estimated transaction fee in BTC
  */
 export function getEstimatedTransactionFee() {
-  // This is a simplified estimate
-  // In a real application, you'd fetch current network fees
+  /*
+   * This is a simplified estimate
+   * In a real application, you'd fetch current network fees
+   */
   return 0.0001; // ~$4-5 at $45k BTC
 }

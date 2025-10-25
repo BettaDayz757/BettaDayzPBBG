@@ -40,7 +40,7 @@ export const VerificationDashboard = ({ isAdmin }) => {
   return (
     <div className="max-w-6xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Payment Verifications</h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h3 className="text-xl font-bold mb-4">Pending Verifications</h3>
@@ -61,11 +61,7 @@ export const VerificationDashboard = ({ isAdmin }) => {
         {selectedVerification && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-xl font-bold mb-4">Verification Details</h3>
-            <img
-              src={selectedVerification.screenshotUrl}
-              alt="Payment Screenshot"
-              className="w-full mb-4 rounded"
-            />
+            <img src={selectedVerification.screenshotUrl} alt="Payment Screenshot" className="w-full mb-4 rounded" />
             <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={() => handleVerification(selectedVerification.id, true)}

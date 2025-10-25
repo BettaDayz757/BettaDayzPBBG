@@ -8,7 +8,7 @@ export const PaymentStatus = {
   PENDING: 'pending',
   COMPLETED: 'completed',
   FAILED: 'failed',
-  VERIFICATION_REQUIRED: 'verification_required'
+  VERIFICATION_REQUIRED: 'verification_required',
 };
 
 export class PaymentProcessor {
@@ -19,11 +19,13 @@ export class PaymentProcessor {
     if (method === 'cashapp') {
       return {
         cashtag: process.env.CASHAPP_CASHTAG,
-        amount: amount,
+        amount,
         note: `BettaDayz User: ${userId}`,
-        instructions: 'Please include your user ID in the payment note'
+        instructions: 'Please include your user ID in the payment note',
       };
-    } else if (method === 'bitcoin') {
+    }
+
+    if (method === 'bitcoin') {
       return {
         address: process.env.BITCOIN_ADDRESS,
         amountUSD: amount,
@@ -31,9 +33,11 @@ export class PaymentProcessor {
           const btcPrice = await fetchBitcoinPrice();
           return amount / btcPrice;
         },
-        instructions: 'Send the exact BTC amount to complete your purchase'
+        instructions: 'Send the exact BTC amount to complete your purchase',
       };
     }
+
+    return null;
   }
 
   /**
@@ -42,18 +46,18 @@ export class PaymentProcessor {
   static async verifyCashAppPayment(screenshot, amount, userId) {
     // Store screenshot for manual verification
     await storeVerificationDocument(screenshot, userId);
-    
+
     // Create pending transaction record
     await createTransactionRecord({
       type: 'cashapp',
       userId,
       amount,
-      status: PaymentStatus.VERIFICATION_REQUIRED
+      status: PaymentStatus.VERIFICATION_REQUIRED,
     });
 
     return {
       status: PaymentStatus.VERIFICATION_REQUIRED,
-      estimatedVerificationTime: '24h'
+      estimatedVerificationTime: '24h',
     };
   }
 
@@ -63,26 +67,26 @@ export class PaymentProcessor {
   static async verifyBitcoinPayment(txHash, amount, userId) {
     // Check blockchain confirmations
     const confirmations = await checkBitcoinConfirmations(txHash);
-    
+
     if (confirmations >= 2) {
       await createTransactionRecord({
         type: 'bitcoin',
         userId,
         amount,
         status: PaymentStatus.COMPLETED,
-        txHash
+        txHash,
       });
 
       return {
         status: PaymentStatus.COMPLETED,
-        confirmations
+        confirmations,
       };
     }
 
     return {
       status: PaymentStatus.PENDING,
       confirmations,
-      requiredConfirmations: 2
+      requiredConfirmations: 2,
     };
   }
 }

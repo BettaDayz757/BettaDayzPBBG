@@ -4,7 +4,22 @@
 
 @layer base {
   html {
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      'Helvetica Neue',
+      Arial,
+      'Noto Sans',
+      sans-serif,
+      'Apple Color Emoji',
+      'Segoe UI Emoji',
+      'Segoe UI Symbol',
+      'Noto Color Emoji';
   }
 }
 
@@ -12,31 +27,31 @@
   .btn-primary {
     @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
   }
-  
+
   .btn-secondary {
     @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
   }
-  
+
   .card {
     @apply bg-white rounded-lg shadow-md p-6;
   }
-  
+
   .card-header {
     @apply border-b border-gray-200 pb-4 mb-4;
   }
-  
+
   .game-stat {
     @apply bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-100;
   }
-  
+
   .business-card {
     @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200;
   }
-  
+
   .norfolk-gradient {
     @apply bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800;
   }
-  
+
   .loading-spinner {
     @apply animate-spin rounded-full border-4 border-gray-200 border-t-blue-600;
   }
@@ -46,7 +61,7 @@
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
   .glass-effect {
     backdrop-filter: blur(10px);
     background-color: rgba(255, 255, 255, 0.8);

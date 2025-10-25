@@ -26,5 +26,5 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react", "react-dom", "framer-motion"],
   },
-  base: process.env.NODE_ENV === 'production' ? '/BettaDayzPBBG-main/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/BettaDayzPBBG/' : '/',
 });

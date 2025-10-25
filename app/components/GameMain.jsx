@@ -6,7 +6,7 @@ const businessTypes = {
   RETAIL: 'Retail',
   FOOD: 'Restaurant',
   REAL_ESTATE: 'Real Estate',
-  ENTERTAINMENT: 'Entertainment'
+  ENTERTAINMENT: 'Entertainment',
 };
 
 const locations = {
@@ -14,41 +14,44 @@ const locations = {
   DOWNTOWN: { name: 'Downtown Norfolk', cost: 15000, traffic: 'High' },
   GHENT: { name: 'Ghent District', cost: 12000, traffic: 'High' },
   OCEANVIEW: { name: 'Ocean View', cost: 8000, traffic: 'Medium' },
-  BERKLEY: { name: 'Berkley', cost: 4000, traffic: 'Growing' }
+  BERKLEY: { name: 'Berkley', cost: 4000, traffic: 'Growing' },
 };
 
 const challenges = [
   {
     id: 'startup_capital',
     title: 'Securing Startup Capital',
-    description: 'Navigate the challenges of raising initial funding through community support and strategic partnerships.'
+    description:
+      'Navigate the challenges of raising initial funding through community support and strategic partnerships.',
   },
   {
     id: 'market_research',
     title: 'Market Research',
-    description: 'Study the Norfolk market to identify underserved needs and opportunities.'
+    description: 'Study the Norfolk market to identify underserved needs and opportunities.',
   },
   {
     id: 'community_support',
     title: 'Building Community Support',
-    description: 'Engage with local community leaders and establish a strong network.'
-  }
+    description: 'Engage with local community leaders and establish a strong network.',
+  },
 ];
 
 export const GameMain = ({ player, onBusinessAction }) => {
-  const [playerState, setPlayerState] = useState(player || {
-    level: 1,
-    money: 1000,
-    businesses: [],
-    reputation: 0,
-    skills: {
-      leadership: 1,
-      marketing: 1,
-      finance: 1,
-      networking: 1
+  const [playerState, setPlayerState] = useState(
+    player || {
+      level: 1,
+      money: 1000,
+      businesses: [],
+      reputation: 0,
+      skills: {
+        leadership: 1,
+        marketing: 1,
+        finance: 1,
+        networking: 1,
+      },
+      completedChallenges: [],
     },
-    completedChallenges: []
-  });
+  );
 
   const [currentChallenge, setCurrentChallenge] = useState(null);
   const [availableOpportunities, setAvailableOpportunities] = useState([]);
@@ -57,6 +60,7 @@ export const GameMain = ({ player, onBusinessAction }) => {
     if (player) {
       setPlayerState(player);
     }
+
     // Generate opportunities based on player level
     generateOpportunities();
   }, [player]);
@@ -79,15 +83,16 @@ export const GameMain = ({ player, onBusinessAction }) => {
         title: 'Tech Startup Partnership',
         description: 'Partner with local tech innovators',
         cost: 5000,
-        potentialReturn: 15000
+        potentialReturn: 15000,
       },
       {
         type: 'property',
         title: 'Military Circle Retail Space',
         description: 'Prime location becoming available',
         cost: 8000,
-        monthlyRevenue: 1200
-      }
+        monthlyRevenue: 1200,
+      },
+
       // Add more dynamic opportunities
     ];
     setAvailableOpportunities(opportunities);
@@ -101,14 +106,15 @@ export const GameMain = ({ player, onBusinessAction }) => {
       switch (action) {
         case 'START_BUSINESS':
           if (playerState.money >= data.cost) {
-            setPlayerState(prev => ({
+            setPlayerState((prev) => ({
               ...prev,
               money: prev.money - data.cost,
-              businesses: [...prev.businesses, data]
+              businesses: [...prev.businesses, data],
             }));
           }
+
           break;
-        
+
         case 'INVEST':
           // Handle investment logic
           break;
@@ -148,11 +154,7 @@ export const GameMain = ({ player, onBusinessAction }) => {
         <section className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-2xl font-bold mb-4">Available Opportunities</h2>
           {availableOpportunities.map((opportunity, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ scale: 1.02 }}
-              className="border-b p-4 last:border-0"
-            >
+            <motion.div key={index} whileHover={{ scale: 1.02 }} className="border-b p-4 last:border-0">
               <h3 className="font-bold">{opportunity.title}</h3>
               <p className="text-gray-600">{opportunity.description}</p>
               <div className="mt-2 flex justify-between items-center">
@@ -187,10 +189,7 @@ export const GameMain = ({ player, onBusinessAction }) => {
             <div key={skill} className="text-center">
               <h3 className="font-bold capitalize">{skill}</h3>
               <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                <div
-                  className="bg-blue-600 h-2 rounded-full"
-                  style={{ width: `${(level / 10) * 100}%` }}
-                ></div>
+                <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${(level / 10) * 100}%` }}></div>
               </div>
             </div>
           ))}

@@ -7,20 +7,18 @@ class BusinessSimulation {
     this.marketConditions = {
       economy: 1.0,
       competition: 1.0,
-      opportunity: 1.0
+      opportunity: 1.0,
     };
   }
 
   startBusiness(config) {
-    const {
-      type,
-      location,
-      initialInvestment,
-      name
-    } = config;
+    const { type, location, initialInvestment, name } = config;
 
     const locationData = NEIGHBORHOODS[location];
-    if (!locationData) throw new Error('Invalid location');
+
+    if (!locationData) {
+      throw new Error('Invalid location');
+    }
 
     const business = {
       id: Date.now(),
@@ -34,7 +32,7 @@ class BusinessSimulation {
       reputation: 0,
       inventory: [],
       upgrades: [],
-      lastUpdate: Date.now()
+      lastUpdate: Date.now(),
     };
 
     // Calculate initial metrics
@@ -42,6 +40,7 @@ class BusinessSimulation {
     business.revenue = this.calculatePotentialRevenue(business);
 
     this.businesses.set(business.id, business);
+
     return business;
   }
 
@@ -50,7 +49,7 @@ class BusinessSimulation {
       rent: NEIGHBORHOODS[business.location].propertyValues[business.type] * 0.01,
       utilities: 500,
       payroll: business.employees.length * 2500,
-      maintenance: 300
+      maintenance: 300,
     };
 
     return Object.values(baseExpenses).reduce((a, b) => a + b, 0);
@@ -60,9 +59,9 @@ class BusinessSimulation {
     const baseRevenue = NEIGHBORHOODS[business.location].propertyValues[business.type] * 0.05;
     const multipliers = {
       location: this.getLocationMultiplier(business.location),
-      reputation: 1 + (business.reputation * 0.01),
+      reputation: 1 + business.reputation * 0.01,
       economy: this.marketConditions.economy,
-      competition: this.marketConditions.competition
+      competition: this.marketConditions.competition,
     };
 
     return baseRevenue * Object.values(multipliers).reduce((a, b) => a * b, 1);
@@ -70,67 +69,77 @@ class BusinessSimulation {
 
   getLocationMultiplier(location) {
     const multipliers = {
-      'DOWNTOWN': 1.5,
-      'GHENT': 1.3,
-      'MILITARY_CIRCLE': 1.2,
-      'PARK_PLACE': 1.1
+      DOWNTOWN: 1.5,
+      GHENT: 1.3,
+      MILITARY_CIRCLE: 1.2,
+      PARK_PLACE: 1.1,
     };
     return multipliers[location] || 1.0;
   }
 
   hireEmployee(businessId, employee) {
     const business = this.businesses.get(businessId);
-    if (!business) throw new Error('Business not found');
+
+    if (!business) {
+      throw new Error('Business not found');
+    }
 
     business.employees.push({
       id: Date.now(),
       ...employee,
       hireDate: new Date(),
-      salary: this.calculateSalary(employee.role)
+      salary: this.calculateSalary(employee.role),
     });
 
     business.expenses = this.calculateExpenses(business);
+
     return business;
   }
 
   calculateSalary(role) {
     const baseSalaries = {
-      'manager': 4000,
-      'staff': 2500,
-      'specialist': 3500
+      manager: 4000,
+      staff: 2500,
+      specialist: 3500,
     };
     return baseSalaries[role] || 2500;
   }
 
   upgradeProperty(businessId, upgradeType) {
     const business = this.businesses.get(businessId);
-    if (!business) throw new Error('Business not found');
+
+    if (!business) {
+      throw new Error('Business not found');
+    }
 
     const upgrades = {
-      'renovation': {
+      renovation: {
         cost: 10000,
         reputationBoost: 10,
-        revenueMultiplier: 1.2
+        revenueMultiplier: 1.2,
       },
-      'expansion': {
+      expansion: {
         cost: 25000,
         capacityIncrease: 50,
-        revenueMultiplier: 1.5
+        revenueMultiplier: 1.5,
       },
-      'technology': {
+      technology: {
         cost: 15000,
         efficiencyBoost: 20,
-        revenueMultiplier: 1.3
-      }
+        revenueMultiplier: 1.3,
+      },
     };
 
     const upgrade = upgrades[upgradeType];
-    if (!upgrade) throw new Error('Invalid upgrade type');
+
+    if (!upgrade) {
+      throw new Error('Invalid upgrade type');
+    }
 
     business.upgrades.push({
       type: upgradeType,
       installDate: new Date(),
-      ...upgrade
+      ...upgrade,
     });
 
     return business;
@@ -138,7 +147,10 @@ class BusinessSimulation {
 
   runDailyOperations(businessId) {
     const business = this.businesses.get(businessId);
-    if (!business) throw new Error('Business not found');
+
+    if (!business) {
+      throw new Error('Business not found');
+    }
 
     const dailyRevenue = this.calculateDailyRevenue(business);
     const dailyExpenses = this.calculateDailyExpenses(business);
@@ -146,6 +158,7 @@ class BusinessSimulation {
 
     // Random events
     const event = this.generateRandomEvent(business);
+
     if (event) {
       this.handleBusinessEvent(business, event);
     }
@@ -159,7 +172,7 @@ class BusinessSimulation {
       revenue: dailyRevenue,
       expenses: dailyExpenses,
       profit,
-      event
+      event,
     };
   }
 
@@ -168,24 +181,25 @@ class BusinessSimulation {
       {
         type: 'opportunity',
         name: 'Local Partnership',
-        effect: { reputationBoost: 5, revenueBoost: 1000 }
+        effect: { reputationBoost: 5, revenueBoost: 1000 },
       },
       {
         type: 'challenge',
         name: 'Equipment Breakdown',
-        effect: { expense: 2000, reputationLoss: 2 }
+        effect: { expense: 2000, reputationLoss: 2 },
       },
       {
         type: 'community',
         name: 'Community Event',
-        effect: { reputationBoost: 3, expense: 500 }
-      }
+        effect: { reputationBoost: 3, expense: 500 },
+      },
     ];
 
     // 10% chance of event
     if (Math.random() < 0.1) {
       return events[Math.floor(Math.random() * events.length)];
     }
+
     return null;
   }
 
@@ -208,7 +222,10 @@ class BusinessSimulation {
 
   getBusinessMetrics(businessId) {
     const business = this.businesses.get(businessId);
-    if (!business) throw new Error('Business not found');
+
+    if (!business) {
+      throw new Error('Business not found');
+    }
 
     return {
       dailyRevenue: this.calculateDailyRevenue(business),
@@ -217,7 +234,7 @@ class BusinessSimulation {
       profit: business.revenue - business.expenses,
       reputation: business.reputation,
       employees: business.employees.length,
-      upgrades: business.upgrades.length
+      upgrades: business.upgrades.length,
     };
   }
 }

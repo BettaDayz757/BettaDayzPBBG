@@ -10,8 +10,8 @@ export const NorfolkEvents = {
       rewards: {
         reputation: 15,
         skills: { leadership: 2, networking: 2 },
-        connections: ['NSU Business Department', 'Student Entrepreneurs']
-      }
+        connections: ['NSU Business Department', 'Student Entrepreneurs'],
+      },
     },
     {
       id: 'oceanview_festival',
@@ -21,8 +21,8 @@ export const NorfolkEvents = {
       rewards: {
         money: 5000,
         reputation: 10,
-        skills: { marketing: 2 }
-      }
+        skills: { marketing: 2 },
+      },
     },
     {
       id: 'berkley_initiative',
@@ -32,9 +32,9 @@ export const NorfolkEvents = {
       rewards: {
         reputation: 25,
         skills: { leadership: 3, networking: 2 },
-        propertyDiscount: 0.15
-      }
-    }
+        propertyDiscount: 0.15,
+      },
+    },
   ],
 
   BUSINESS: [
@@ -46,20 +46,20 @@ export const NorfolkEvents = {
       rewards: {
         money: 25000,
         reputation: 20,
-        contractDuration: '1 year'
-      }
+        contractDuration: '1 year',
+      },
     },
     {
       id: 'waterfront_development',
       title: 'Waterfront Development Project',
-      description: 'Participate in Norfolk\'s waterfront renovation',
+      description: "Participate in Norfolk's waterfront renovation",
       requirements: { level: 6, money: 50000 },
       rewards: {
         propertyAccess: 'Premium Waterfront',
         reputation: 30,
-        skills: { business: 3, networking: 2 }
-      }
-    }
+        skills: { business: 3, networking: 2 },
+      },
+    },
   ],
 
   SEASONAL: [
@@ -71,8 +71,8 @@ export const NorfolkEvents = {
       rewards: {
         money: 8000,
         reputation: 15,
-        skills: { marketing: 2, networking: 1 }
-      }
+        skills: { marketing: 2, networking: 1 },
+      },
     },
     {
       id: 'holiday_market',
@@ -82,22 +82,22 @@ export const NorfolkEvents = {
       rewards: {
         money: 15000,
         reputation: 12,
-        seasonalBonus: 'Holiday Sales Boost'
-      }
-    }
+        seasonalBonus: 'Holiday Sales Boost',
+      },
+    },
   ],
 
   CHALLENGES: [
     {
       id: 'flood_adaptation',
       title: 'Flood Adaptation Initiative',
-      description: 'Develop solutions for Norfolk\'s flooding challenges',
+      description: "Develop solutions for Norfolk's flooding challenges",
       requirements: { level: 4, reputation: 25 },
       rewards: {
         money: 20000,
         reputation: 35,
-        skills: { innovation: 3, community: 2 }
-      }
+        skills: { innovation: 3, community: 2 },
+      },
     },
     {
       id: 'youth_employment',
@@ -107,38 +107,39 @@ export const NorfolkEvents = {
       rewards: {
         reputation: 20,
         skills: { leadership: 2, management: 2 },
-        taxIncentive: 0.1
-      }
-    }
-  ]
+        taxIncentive: 0.1,
+      },
+    },
+  ],
 };
 
 export const NEIGHBORHOODS = {
   GHENT: {
     events: ['art_walk', 'food_festival', 'boutique_showcase'],
     businessTypes: ['art_gallery', 'restaurant', 'boutique'],
-    propertyValues: { retail: 12000, office: 15000 }
+    propertyValues: { retail: 12000, office: 15000 },
   },
   DOWNTOWN: {
     events: ['first_fridays', 'restaurant_week', 'business_expo'],
     businessTypes: ['office', 'restaurant', 'entertainment'],
-    propertyValues: { retail: 18000, office: 25000 }
+    propertyValues: { retail: 18000, office: 25000 },
   },
   MILITARY_CIRCLE: {
     events: ['trade_show', 'tech_meetup', 'business_network'],
     businessTypes: ['retail', 'service', 'technology'],
-    propertyValues: { retail: 8000, office: 10000 }
+    propertyValues: { retail: 8000, office: 10000 },
   },
   PARK_PLACE: {
     events: ['community_market', 'street_fair', 'local_showcase'],
     businessTypes: ['retail', 'service', 'food'],
-    propertyValues: { retail: 6000, office: 7500 }
-  }
+    propertyValues: { retail: 6000, office: 7500 },
+  },
 };
 
 export const generateEvent = (playerLevel, location) => {
-  const availableEvents = [...NorfolkEvents.COMMUNITY, ...NorfolkEvents.BUSINESS]
-    .filter(event => event.requirements.level <= playerLevel);
-  
+  const availableEvents = [...NorfolkEvents.COMMUNITY, ...NorfolkEvents.BUSINESS].filter(
+    (event) => event.requirements.level <= playerLevel,
+  );
+
   return availableEvents[Math.floor(Math.random() * availableEvents.length)];
 };
