@@ -1,0 +1,40 @@
+name: Deploy Remix App (Cloudflare Pages)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        # You can change to npm ci when lockfile is stable in the repo
+        run: npm install --legacy-peer-deps
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages (requires secrets)
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_PAGES_PROJECT: ${{ secrets.CF_PAGES_PROJECT }}
+        run: |
+          # This step requires that you set CF_API_TOKEN, CF_ACCOUNT_ID and CF_PAGES_PROJECT in repo secrets.
+          # Adjust the wrangler command to your needs. Example using wrangler CLI:
+          npx wrangler pages deploy ./build/client --project-name "$CF_PAGES_PROJECT" --branch main
+
+# NOTE: This workflow is a template. Add required Cloudflare secrets and verify the wrangler CLI args match your Cloudflare Pages setup.
