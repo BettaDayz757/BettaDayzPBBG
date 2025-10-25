@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// Note: Using relative import because vite-tsconfig-paths doesn't resolve
+// the ~/alias properly for .js files in production builds
 // eslint-disable-next-line no-restricted-imports
 import { PaymentProcessor, PaymentStatus } from '../utils/payment-processor';
 import { motion } from 'framer-motion';

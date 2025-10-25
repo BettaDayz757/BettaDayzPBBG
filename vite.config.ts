@@ -26,5 +26,8 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react", "react-dom", "framer-motion"],
   },
-  base: process.env.NODE_ENV === 'production' ? '/BettaDayzPBBG/' : '/',
+  // Use environment variable for base path or default to repository name
+  base: process.env.NODE_ENV === 'production' 
+    ? (process.env.BASE_PATH || '/BettaDayzPBBG/') 
+    : '/',
 });

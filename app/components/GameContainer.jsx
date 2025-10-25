@@ -3,6 +3,8 @@ import { PaymentInterface } from './PaymentInterface';
 import { CharacterCustomization } from './CharacterCustomization';
 import { GameMain } from './GameMain';
 import { CommunityHub } from './CommunityHub';
+// Note: Using relative import here because vite-tsconfig-paths doesn't resolve
+// the ~/alias properly for .js files in production builds
 // eslint-disable-next-line no-restricted-imports
 import BusinessSimulation from '../game/business-simulation';
 
