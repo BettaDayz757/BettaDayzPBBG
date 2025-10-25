@@ -1,0 +1,26 @@
+[
+  {
+    "id": "weapon_pass",
+    "title": "Weapon Pass (30 days)",
+    "price_usd": 9.99,
+    "price_btc": 0.00025,
+    "type": "pass",
+    "description": "Access to PvE weapon sets, weekly challenges, and exclusive PvE missions."
+  },
+  {
+    "id": "skin_exotic",
+    "title": "Exotic Skin Pack",
+    "price_usd": 4.99,
+    "price_btc": 0.00012,
+    "type": "cosmetic",
+    "description": "A pack of exotic skins for vehicles and characters."
+  },
+  {
+    "id": "jewelry_set",
+    "title": "Gold Jewelry Set",
+    "price_usd": 14.99,
+    "price_btc": 0.0004,
+    "type": "cosmetic",
+    "description": "High-end jewelry cosmetic set for your character."
+  }
+]

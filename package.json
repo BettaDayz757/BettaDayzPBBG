@@ -1,6 +1,6 @@
 {
-  "name": "bettadayz-monorepo",
-  "description": "BettaDayz PBBG Monorepo - Life Simulation and Social Game with MERN components",
+  "name": "bettadayz",
+  "description": "BettaDayz - A Life Simulation and Social Game",
   "private": true,
   "license": "MIT",
   "version": "1.0.0",
@@ -8,22 +8,36 @@
     "name": "BettaDayz Team",
     "email": "maintainers@bettadayz.com"
   },
-  "workspaces": [
-    "bettadayz-draft",
-    "mern-template"
-  ],
   "scripts": {
-    "install:all": "npm install",
-    "build": "npm run build --workspaces --if-present",
-    "dev": "concurrently \"npm run dev --workspace=bettadayz-draft\" \"npm run dev --workspace=mern-template\"",
-    "test": "npm test --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
-    "clean": "npm run clean --workspaces --if-present && rm -rf node_modules"
+    "deploy": "npm run build && wrangler pages deploy",
+    "build": "remix vite:build",
+    "dev": "node pre-start.cjs  && remix vite:dev",
+    "test": "vitest --run",
+    "ci": "npm run lint && npm test",
+    "deploy:gh-pages": "npm run build",
+    "prepare-gh-pages": "node scripts/prepare-gh_pages.cjs",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint app",
+    "lint:fix": "npm run lint -- --fix && prettier --write app",
+    "start:unix": "bindings=$(./bindings.sh) && wrangler pages dev ./build/client $bindings",
+    "start:windows": "wrangler pages dev ./build/client",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=18.18.0"
   },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remix-island": "^0.2.0",
+    "@remix-run/react": "^2.15.2",
+    "@remix-run/node": "^2.15.2"
+  },
   "devDependencies": {
+    "@remix-run/dev": "^2.15.2",
+    "vite": "^5.4.11",
+    "wrangler": "^4.44.0",
+    "husky": "9.1.7",
     "concurrently": "^8.2.2"
-  }
+  },
+  "packageManager": "npm@9.14.4"
 }
