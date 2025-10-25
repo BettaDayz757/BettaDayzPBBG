@@ -15,6 +15,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug: show workspace files
+        run: |
+          echo "Node:" && node --version || true
+          echo "NPM:" && npm --version || true
+          echo "Working dir: $(pwd)"
+          ls -la
+          echo "Top-level docs present:" && [ -d ./docs ] && echo yes || echo no
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
