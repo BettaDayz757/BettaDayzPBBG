@@ -9,6 +9,27 @@ export default function InAppStore() {
     setLoading(true)
     setStatus(null)
     try {
+      if (method === 'card') {
+        // Use Stripe Checkout session (server-side) for card payments
+        const res = await fetch('/api/stripe-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ itemId })
+        })
+        const data = await res.json()
+        if (res.ok && data.url) {
+          // Redirect user to Stripe Checkout
+          window.location.href = data.url
+          return
+        }
+        // fallback to simulated purchase API
+        if (!res.ok) {
+          setStatus({ ok: false, msg: data.error || 'Stripe session creation failed', data })
+          return
+        }
+      }
+
+      // Non-card or fallback simulated purchase
       const res = await fetch('/api/purchase', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

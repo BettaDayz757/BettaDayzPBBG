@@ -2,7 +2,8 @@ name: Deploy docs to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, fix/gh-pages-prepare ]
+  workflow_dispatch: {}
 
 jobs:
   build-and-deploy:
@@ -21,11 +22,10 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: Prepare docs folder
-        run: npm run prepare-gh-pages
+        # The prepare script is a small Node script that copies nested docs into ./docs.
+        # We avoid running a full `npm ci` here to keep the workflow fast and resilient.
+        run: node scripts/prepare-gh_pages.cjs
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v1
