@@ -1,28 +1,53 @@
 {
-  "name": "my-workflow-app",
-  "version": "0.1.0",
+  "name": "bettadayz",
+  "description": "BettaDayz - A Life Simulation and Social Game",
   "private": true,
+  "license": "MIT",
+  "version": "1.0.0",
+  "author": {
+    "name": "BettaDayz Team",
+    "email": "maintainers@bettadayz.com"
+  },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "ci": "npm run lint && npm run build",
-    "deploy:gh-pages": "npm run build"
+    "deploy": "npm run build && wrangler pages deploy",
+    "build": "remix vite:build",
+    "dev": "node pre-start.cjs && remix vite:dev",
+    "test": "vitest --run",
+    "ci": "npm run lint && npm test",
+    "deploy:gh-pages": "npm run build",
+    "prepare-gh-pages": "node scripts/prepare-gh_pages.cjs",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint app",
+    "lint:fix": "npm run lint -- --fix && prettier --write app",
+    "start:unix": "bindings=$(./bindings.sh) && wrangler pages dev ./build/client $bindings",
+    "start:windows": "wrangler pages dev ./build/client",
+    "prepare": "husky"
+  },
+  "engines": {
+    "node": ">=18.18.0"
   },
   "dependencies": {
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "next": "16.0.0"
+    "@react-three/cannon": "^6.6.0",
+    "@react-three/drei": "^9.56.4",
+    "@react-three/fiber": "^8.18.0",
+    "@remix-run/node": "^2.15.2",
+    "@remix-run/react": "^2.15.2",
+    "cannon-es": "^0.20.0",
+    "framer-motion": "^12.23.24",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remix-island": "^0.2.0",
+    "stripe": "^19.1.0",
+    "three": "^0.180.0"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.0"
+    "@remix-run/dev": "^2.15.2",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^8.2.2",
+    "husky": "9.1.7",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.16",
+    "vite": "^5.4.11",
+    "vite-tsconfig-paths": "^5.1.4",
+    "wrangler": "^4.44.0"
   }
 }
