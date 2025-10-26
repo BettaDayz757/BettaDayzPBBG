@@ -10,8 +10,6 @@ node_modules
 dist
 dist-ssr
 *.local
-build
-*.tsbuildinfo
 
 .vscode/*
 .vscode/launch.json
@@ -35,13 +33,6 @@ functions/build/
 .wrangler
 _worker.bundle
 
-# TypeScript
-*.tsbuildinfo
-.tsbuildinfo
-
-# Backups
-*.bak
-
 Modelfile
 modelfiles
 
@@ -53,4 +44,5 @@ app/commit.json
 changelogUI.md
 docs/instructions/Roadmap.md
 .cursorrules
+*.md
 .qodo
