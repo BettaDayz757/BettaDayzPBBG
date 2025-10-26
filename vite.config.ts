@@ -13,26 +13,26 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+
   server: {
     port: 5173,
     host: true,
   },
+
   build: {
     target: "esnext",
     rollupOptions: {
       external: ["fsevents"],
     },
-    optimizeDeps: {
-      include: ["react", "react-dom", "framer-motion"],
-    },
-    // Base path for asset URLs. In production, uses VITE_BASE_PATH env var if set, otherwise defaults to '/' for root domain deployment.
-    // For development, always uses '/' for local dev server.
-    base: process.env.NODE_ENV === 'production' ? (process.env.VITE_BASE_PATH || '/') : '/',
-  });
-};
   },
+
   optimizeDeps: {
     include: ["react", "react-dom", "framer-motion"],
   },
-  base: '/',
+
+  // Base path for asset URLs. In production, use the Vite env var VITE_BASE_PATH if set,
+  // otherwise default to '/' for root domain deployments. For local development we
+  // always use '/'. This uses Vite's env handling (`import.meta.env.MODE` and
+  // `import.meta.env.VITE_BASE_PATH`) instead of reading `process.env` directly.
+  base: (import.meta.env.MODE === 'production') ? (import.meta.env.VITE_BASE_PATH || '/') : '/',
 });

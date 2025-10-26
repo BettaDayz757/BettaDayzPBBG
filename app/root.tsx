@@ -1,11 +1,4 @@
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import * as RemixReact from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
 export const links: LinksFunction = () => [
@@ -30,14 +23,14 @@ export default function App() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="description" content="BettaDayz - Norfolk Business Empire PBBG" />
         <meta name="theme-color" content="#1f2937" />
-        <Meta />
-        <Links />
+  <RemixReact.Meta />
+  <RemixReact.Links />
       </head>
       <body className="h-full bg-gray-50">
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+  <RemixReact.Outlet />
+  <RemixReact.ScrollRestoration />
+  <RemixReact.Scripts />
+  <RemixReact.LiveReload />
       </body>
     </html>
   );
@@ -49,8 +42,8 @@ export function ErrorBoundary({ error }: { error: Error }) {
     <html lang="en" className="h-full">
       <head>
         <title>Oh no!</title>
-        <Meta />
-        <Links />
+  <RemixReact.Meta />
+  <RemixReact.Links />
       </head>
       <body className="h-full bg-gray-50">
         <div className="min-h-full flex items-center justify-center">
@@ -76,7 +69,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
             </div>
           </div>
         </div>
-        <Scripts />
+  <RemixReact.Scripts />
       </body>
     </html>
   );

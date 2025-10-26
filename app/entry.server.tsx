@@ -1,5 +1,6 @@
 import type { EntryContext } from "@remix-run/node";
-import { RemixServer } from "@remix-run/react";
+import * as RemixReact from "@remix-run/react";
+import React from 'react';
 import { renderToString } from "react-dom/server";
 
 export default function handleRequest(
@@ -8,8 +9,9 @@ export default function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
+  const RemixServer: any = (RemixReact as any).RemixServer || (RemixReact as any).default;
   const markup = renderToString(
-    <RemixServer context={remixContext} url={request.url} />
+    React.createElement(RemixServer, { context: remixContext, url: request.url })
   );
 
   responseHeaders.set("Content-Type", "text/html");

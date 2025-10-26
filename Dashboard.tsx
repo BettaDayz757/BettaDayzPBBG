@@ -21,7 +21,7 @@ interface Character {
   };
   relationships: Array<{
     name: string;
-    type: string;
+    type: 'friend' | 'partner' | 'sibling' | 'family';
     happiness: number;
   }>;
 }

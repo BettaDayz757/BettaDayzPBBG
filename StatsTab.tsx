@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface StatsTabProps {
+  // legacy flat player shape
   player?: {
     level?: number;
     experience?: number;
@@ -9,17 +10,32 @@ interface StatsTabProps {
     health?: number;
     energy?: number;
   };
+  // dashboard character shape (nested stats)
+  character?: {
+    stats?: {
+      smarts?: number;
+      money?: number;
+      health?: number;
+      happiness?: number;
+      energy?: number;
+    };
+  };
 }
 
-const StatsTab: React.FC<StatsTabProps> = ({ player = {} }) => {
+const StatsTab: React.FC<StatsTabProps> = ({ player = {}, character }) => {
+  // Prefer the legacy `player` shape if provided, otherwise derive values
+  // from `character.stats` (used by `Dashboard`). Map fields where names
+  // differ and provide safe defaults.
+  const fromCharacter = character?.stats || {};
+
   const {
-    level = 1,
+    level = fromCharacter.smarts ?? 1,
     experience = 0,
-    money = 1000,
-    reputation = 0,
-    health = 100,
-    energy = 100
-  } = player;
+    money = fromCharacter.money ?? 1000,
+    reputation = fromCharacter.happiness ?? 0,
+    health = fromCharacter.health ?? 100,
+    energy = fromCharacter.energy ?? 100,
+  } = { ...fromCharacter, ...player };
 
   return (
     <div className="p-6 bg-gray-900 text-white rounded-lg">

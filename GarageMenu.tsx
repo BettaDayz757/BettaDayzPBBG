@@ -15,13 +15,8 @@ interface Vehicle {
   durability: number;
   icon: string;
   color: string;
-  customizations?: {
-    paint?: string;
-    wheels?: string;
-    spoiler?: boolean;
-    tint?: string;
-    engine?: string;
-  };
+  // Allow dynamic customization keys (paint, wheels, engine, etc.)
+  customizations?: Record<string, string | boolean | undefined>;
 }
 
 interface GarageMenuProps {
@@ -224,11 +219,13 @@ export default function GarageMenu({ isOpen, onClose, playerMoney, onPurchase }:
           // Apply visual customization
           if (!updatedVehicle.customizations) updatedVehicle.customizations = {};
           updatedVehicle.customizations[customType] = customization.name;
-          
-          // Apply stat boosts
+
+          // Apply stat boosts (stat keys are dynamic, cast to any to update)
           if (customization.boost) {
+            const u: any = updatedVehicle;
             Object.keys(customization.boost).forEach(stat => {
-              updatedVehicle[stat] = Math.min(100, updatedVehicle[stat] + customization.boost[stat]);
+              const prev = typeof u[stat] === 'number' ? u[stat] : 0;
+              u[stat] = Math.min(100, prev + customization.boost[stat]);
             });
           }
           

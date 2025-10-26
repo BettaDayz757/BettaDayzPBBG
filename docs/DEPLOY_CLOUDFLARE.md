@@ -1,3 +1,85 @@
+# Deploying to Cloudflare Pages (Vite SPA)
+
+This document shows recommended steps to connect this repository to Cloudflare Pages and provides a small SPA fallback so single-page app routes don't 404 when the Pages SPA option is not used.
+
+Key changes in this branch:
+- `vite.config.ts` — switched base logic to use Vite env vars: `import.meta.env.VITE_BASE_PATH` and `import.meta.env.MODE`, with a safe `'/’` fallback in production.
+- `public/404.html` — a minimal client-side fallback that fetches `index.html` so unknown routes are handled by the SPA router.
+
+---
+
+## 1) Connect repo to Cloudflare Pages
+
+1. Go to Pages in the Cloudflare dashboard and create a new project.
+2. Connect your GitHub repo `BettaDayz757/BettaDayzPBBG` and choose the `main` branch (or the branch you want to deploy from).
+
+## 2) Build settings
+
+Use the following (recommended for Vite):
+
+- Framework preset: None (use `Vite` if available)
+- Build command: `npm run build` (or `pnpm build` / `yarn build` depending on your environment)
+- Build output directory: `dist`
+
+Notes:
+- If your project uses Next.js or another adapter, adjust the build command and output directory accordingly. These instructions assume a Vite build that outputs `dist`.
+
+## 3) Environment variables
+
+Set the following environment variables in Pages (Project > Settings > Environment variables):
+
+- `VITE_BASE_PATH` — Optional. Set this when you serve the site from a subpath (for example, `/subpath/`).
+  - If left empty (or unset) and `import.meta.env.MODE === 'production'`, the `vite.config.ts` will default to `'/'` which is correct for root domain deployments.
+  - Example: if you host under `https://example.com/app/`, set `VITE_BASE_PATH=/app/`.
+
+The `vite.config.ts` in this repo uses this logic:
+
+```text
+if (import.meta.env.MODE === 'production') use import.meta.env.VITE_BASE_PATH || '/' else use '/'
+```
+
+This ensures safe defaults for root domain deployments while allowing subpath hosting when needed.
+
+## 4) SPA fallback option in Cloudflare Pages
+
+Cloudflare Pages offers an optional SPA fallback that will serve `index.html` for unknown routes. You can enable this in the Pages UI under the project settings.
+
+If you prefer not to enable the Pages SPA option (or you want an additional fallback), this repository includes `public/404.html`. When Pages returns a 404, Cloudflare will serve this file and its small script will fetch and render `index.html` so the SPA router can handle the route.
+
+## 5) Adding a custom domain
+
+1. In Pages, go to the Domains section and add `bettadayz.store` and `www.bettadayz.store`.
+2. Follow the Cloudflare instructions to verify domain ownership.
+3. Update your DNS records where your domain is registered. If you use Cloudflare DNS for the domain, Pages will give you the necessary DNS records.
+
+DNS nameserver reminder:
+- If your domain is not yet using Cloudflare nameservers, you'll need to update the registrar's nameserver settings to use Cloudflare's nameservers before some Pages features (like automatic certificate issuance) will work.
+
+## 6) Troubleshooting
+
+- Broken asset paths (404s for JS/CSS):
+  - Symptom: browser 404s for static assets after deployment while local dev works.
+  - Fix: confirm `VITE_BASE_PATH` matches the deployed base path. If serving from root, ensure `VITE_BASE_PATH` is empty or unset so the config falls back to `/`.
+
+- Import errors for aliased paths in production:
+  - Symptom: runtime errors like `Cannot find module './foo'` or failed imports when Vite aliases are used.
+  - Notes: This repo uses `vite-tsconfig-paths`. That helps TypeScript/TS path resolution during dev/build, but sometimes production/runtime resolution for `.js`/`.jsx` files can fail if file extensions are omitted.
+  - Fixes:
+    - Add explicit file extensions on imports in JS/JSX files (for example `import X from './x.jsx'`) if you see import errors on deployed builds.
+    - Ensure `vite-tsconfig-paths` is configured and included in `vite.config.ts` (it is in this repo).
+
+- If the SPA still 404s:
+  - Confirm Cloudflare Pages build output is the `dist` directory and that `index.html` exists there.
+  - Turn on the Pages SPA option as an alternative to using `public/404.html`.
+
+## 7) Notes and tips
+
+- Leave relative import comments and deliberate extension omissions alone if they are part of a deliberate build step in this repo. The `PaymentInterface.jsx` and `GameContainer.jsx` files include relative import comments in some PRs — do not change them here unless you see a concrete runtime error.
+- If you need to serve the app from a subpath, set `VITE_BASE_PATH` in the Pages environment variables, for example `/app/`. Remember to include the trailing slash when appropriate.
+
+---
+
+If you run into problems creating the PR or with Pages settings, open an issue in the repo or share the deployment logs and I can help troubleshoot the specific errors.
 # Deploying BettaDayz to Cloudflare Pages
 
 This guide provides step-by-step instructions for deploying the BettaDayz application to Cloudflare Pages.

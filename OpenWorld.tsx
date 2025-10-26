@@ -115,7 +115,7 @@ function Vehicle({
     }
   });
 
-  const getVehicleSize = () => {
+  const getVehicleSize = (): [number, number, number] => {
     switch (type) {
       case 'car': return [2, 0.8, 4];
       case 'truck': return [2.5, 1.5, 6];
