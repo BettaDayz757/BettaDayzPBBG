@@ -32,6 +32,8 @@ export default async () => {
     optimizeDeps: {
       include: ["react", "react-dom", "framer-motion"],
     },
-    base: process.env.NODE_ENV === 'production' ? '/BettaDayzPBBG-main/' : '/',
+    // Base path for asset URLs. In production, uses VITE_BASE_PATH env var if set, otherwise defaults to '/' for root domain deployment.
+    // For development, always uses '/' for local dev server.
+    base: process.env.NODE_ENV === 'production' ? (process.env.VITE_BASE_PATH || '/') : '/',
   });
 };
