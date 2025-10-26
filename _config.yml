@@ -1,0 +1,89 @@
+# Jekyll configuration for BettaDayz GitHub Pages deployment
+title: BettaDayz - 3D Life Simulation Game
+description: Experience immersive 3D life simulation like never before with BettaDayz PBBG
+baseurl: ""
+url: "https://bettadayz.store"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Exclude files from Jekyll processing
+exclude:
+  - node_modules/
+  - package.json
+  - pnpm-lock.yaml
+  - README.md
+  - .gitignore
+  - build/
+  - app/
+  - public/
+  - vite.config.ts
+  - tsconfig.json
+  - tailwind.config.ts
+  - eslint.config.mjs
+  - pre-start.cjs
+  - load-context.ts
+  - vercel.json
+  - docker-compose.yaml
+  - Dockerfile
+  - electron-builder.yml
+  - electron-update.yml
+  - bindings.sh
+  - notarize.cjs
+  - .env.example
+  - .env.production
+  - .husky/
+  - .github/
+  - config/
+  - my-workflow-app/
+
+# Include the built files
+include:
+  - _site
+  - .nojekyll
+
+# Plugins for GitHub Pages
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# SEO settings
+author:
+  name: BettaDayz Team
+  email: maintainers@bettadayz.store
+
+# Social media
+twitter:
+  username: bettadayz
+  card: summary_large_image
+
+# GitHub Pages specific settings
+repository: bettadayz/BettaDayzPBBG
+
+# Collections (if needed for game content)
+collections:
+  game_content:
+    output: false
+    
+# Default front matter
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+      
+# Sass configuration
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Pagination
+paginate: 10
+paginate_path: "/page:num/"
+
+# Timezone
+timezone: America/New_York

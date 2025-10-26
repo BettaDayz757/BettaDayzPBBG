@@ -1,0 +1,40 @@
+name = "bettadayz"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "npm run build"
+cwd = "."
+watch_dir = "app"
+
+[build.upload]
+format = "modules"
+dir = "./build/client"
+main = "./build/server/index.js"
+rules = [
+  { type = "ESModule", globs = ["**/*.js"] }
+]
+
+[[build.upload.rules]]
+type = "CompiledWasm"
+globs = ["**/*.wasm"]
+fallthrough = true
+
+[env.production]
+name = "bettadayz-production"
+
+[env.staging]
+name = "bettadayz-staging"
+
+# Custom domain configuration
+[[route]]
+pattern = "bettadayz.store/*"
+custom_domain = true
+
+[[route]]
+pattern = "www.bettadayz.store/*"
+custom_domain = true
+
+# Environment variables (add your actual values in Cloudflare dashboard)
+[vars]
+NODE_ENV = "production"

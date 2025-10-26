@@ -1,90 +1,99 @@
-# BettaDayz PBBG - Monorepo
+# My Workflow App
 
-This repository combines BettaDayz PBBG with two integrated projects in a monorepo structure:
+A Next.js application with GitHub Actions CI/CD and GitHub Pages deployment.
 
-- **BettaDayz PBBG** (root) - A Life Simulation and Social Game built with Remix
-- **bettadayz-draft** - Draft version of BettaDayz with experimental features
-- **mern-template** - MERN stack template with client/server architecture
-
-## Monorepo Structure
-
-```
-BettaDayzPBBG/
-├── app/                    # Main BettaDayz application (Remix)
-├── bettadayz-draft/        # Draft/experimental version (subtree)
-├── mern-template/          # MERN template (subtree)
-├── config/                 # Configuration files
-├── my-workflow-app/        # Workflow application
-└── package.json            # Root workspace configuration
-```
-
-## Getting Started
+## Development
 
 ### Prerequisites
 
-- Node.js 18 or higher
-- npm 7+ (for workspace support)
+- Node.js 20.x
+- npm 10.x
 
-### Installation
+### Local Development
 
-Install all dependencies for the monorepo and all workspaces:
+1. Clone the repository:
 
-```bash
-npm install
-```
+   ```bash
+   git clone <your-repo-url>
+   cd my-workflow-app
+   ```
 
-Or use the convenience script:
+2. Install dependencies:
 
-```bash
-npm run install:all
-```
+   ```bash
+   npm install
+   ```
 
-### Development
+3. Start the development server:
 
-Run all workspaces in development mode:
+   ```bash
+   npm run dev
+   ```
 
-```bash
-npm run dev
-```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-Build all workspaces:
+## GitHub Actions
 
-```bash
-npm run build
-```
+This project uses GitHub Actions for CI/CD:
 
-### Workspace Management
+### Continuous Integration
 
-This project uses npm workspaces to manage multiple packages. Each workspace can be run independently:
+The CI workflow runs on every push and pull request to the `main` branch:
 
-```bash
-# Run commands in a specific workspace
-npm run dev --workspace=bettadayz-draft
-npm run build --workspace=mern-template
-```
+- Lints the code
+- Builds the application
+- Runs tests (when added)
 
-### Testing
+### GitHub Pages Deployment
 
-Run tests across all workspaces:
+The deployment workflow runs on pushes to the `main` branch:
 
-```bash
-npm test
-```
+- Builds the application
+- Deploys to GitHub Pages
 
-## Project History
+## Available Scripts
 
-This monorepo was created by merging:
-- [BettaDayz757/BettaDayzPBBGDraft](https://github.com/BettaDayz757/BettaDayzPBBGDraft) as subtree
-- [krgamestudios/MERN-template](https://github.com/krgamestudios/MERN-template) as subtree
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Run production server
+- `npm run lint` - Run ESLint
+- `npm run ci` - Run CI checks locally
+- `npm run deploy:gh-pages` - Build for GitHub Pages
 
-All git history from both repositories has been preserved.
+## GitHub Pages Setup
+
+1. In your repository settings, go to Pages
+2. Under "Build and deployment":
+   - Source: "GitHub Actions"
+   - Find the latest deployment in the "Deployments" section
 
 ## Contributing
 
-Please see individual workspace READMEs for specific contribution guidelines:
-- [bettadayz-draft/README.md](bettadayz-draft/README.md)
-- [mern-template/README.md](mern-template/README.md)
+1. Create a new branch from `main`
+2. Make your changes
+3. Create a pull request
+4. Wait for CI checks to pass
+5. Request review
 
 ## License
 
-MIT License - See LICENSE file for details
+MIT
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
