@@ -57,7 +57,7 @@ function wrapExportedHandler(worker: ExportedHandler): ExportedHandler {
 	return {
 		...worker,
 		fetch(request, env, ctx) {
-			const dispatcher: Dispatcher = function (type, init) {
+			const dispatcher: Dispatcher = function (type: any, init: any) {
 				if (type === "scheduled" && worker.scheduled !== undefined) {
 					const controller = new __Facade_ScheduledController__(
 						Date.now(),
@@ -102,7 +102,7 @@ function wrapWorkerEntrypoint(
 			return super.fetch(request);
 		};
 
-		#dispatcher: Dispatcher = (type, init) => {
+		#dispatcher: Dispatcher = (type: any, init: any) => {
 			if (type === "scheduled" && super.scheduled !== undefined) {
 				const controller = new __Facade_ScheduledController__(
 					Date.now(),
@@ -113,7 +113,7 @@ function wrapWorkerEntrypoint(
 			}
 		};
 
-		fetch(request: Request<unknown, IncomingRequestCfProperties>) {
+		fetch(request: Request) {
 			return __facade_invoke__(
 				request,
 				this.env,

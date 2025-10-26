@@ -12,7 +12,7 @@ export async function action({ request }: ActionArgs) {
     const { itemId } = body || {};
     if (!itemId) return json({ error: "Missing itemId" }, { status: 400 });
 
-    const item = items.find((i) => i.id === itemId);
+    const item = items.find((i: any) => i.id === itemId);
     if (!item) return json({ error: "Item not found" }, { status: 404 });
 
     if (!stripeSecret) {

@@ -2,7 +2,7 @@ import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig({
+export default defineConfig(({ mode }: { mode: string }) => ({
   plugins: [
     remix({
       future: {
@@ -30,9 +30,8 @@ export default defineConfig({
     include: ["react", "react-dom", "framer-motion"],
   },
 
-  // Base path for asset URLs. In production, use the Vite env var VITE_BASE_PATH if set,
+  // Base path for asset URLs. In production, use the VITE_BASE_PATH env var if set,
   // otherwise default to '/' for root domain deployments. For local development we
-  // always use '/'. This uses Vite's env handling (`import.meta.env.MODE` and
-  // `import.meta.env.VITE_BASE_PATH`) instead of reading `process.env` directly.
-  base: (import.meta.env.MODE === 'production') ? (import.meta.env.VITE_BASE_PATH || '/') : '/',
-});
+  // always use '/'. This uses Vite's mode parameter and process.env.
+  base: mode === 'production' ? (process.env.VITE_BASE_PATH || '/') : '/',
+}));

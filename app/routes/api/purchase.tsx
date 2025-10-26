@@ -8,7 +8,7 @@ export async function action({ request }: ActionArgs) {
     const { itemId, method } = body || {}
     if (!itemId || !method) return json({ message: 'Missing itemId or method' }, { status: 400 })
 
-    const item = items.find(i => i.id === itemId)
+    const item = items.find((i: any) => i.id === itemId)
     if (!item) return json({ message: 'Item not found' }, { status: 404 })
 
     // NOTE: This is a simulated purchase flow for demo purposes only.

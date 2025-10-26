@@ -28,3 +28,39 @@ declare module '@remix-run/react' {
 		export const ScrollRestoration: any;
 		export const LiveReload: any;
 }
+
+// Cloudflare module - basic module declaration
+// load-context.ts extends this with interface augmentation
+declare module '@remix-run/cloudflare' {
+	export interface AppLoadContext {}
+}
+
+// Vite and build tool type declarations
+declare module '@remix-run/dev' {
+	export const vitePlugin: any;
+}
+
+declare module 'vite' {
+	export function defineConfig(config: any): any;
+}
+
+declare module 'vite-tsconfig-paths' {
+	const tsconfigPaths: any;
+	export default tsconfigPaths;
+}
+
+declare module 'stripe' {
+	class Stripe {
+		constructor(key: string, options?: any);
+		checkout: {
+			sessions: {
+				create(params: any): Promise<any>;
+			};
+		};
+	}
+	export default Stripe;
+}
+
+declare module 'wrangler' {
+	export type PlatformProxy<T = any> = any;
+}
