@@ -55,6 +55,8 @@
       sessionStorage.setItem('spa_redirect', pathName + search + hash);
       
       // Redirect to the root, which will load index.html
+      // Note: '/' is relative to the deployment base, so it works correctly
+      // whether deployed to root domain or a subdirectory
       window.location.replace('/' + search + hash);
     })();
   </script>
