@@ -8,6 +8,7 @@ lerna-debug.log*
 
 node_modules
 .next
+out
 dist
 dist-ssr
 *.local
@@ -47,3 +48,6 @@ docs/instructions/Roadmap.md
 .cursorrules
 *.md
 .qodo
+
+# TypeScript build info
+tsconfig.tsbuildinfo
