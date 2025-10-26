@@ -30,10 +30,16 @@ jobs:
       - name: Deploy to Cloudflare Pages (requires secrets)
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_PAGES_PROJECT: ${{ secrets.CF_PAGES_PROJECT }}
         run: |
-          # This step requires that you set CF_API_TOKEN, CF_ACCOUNT_ID and CF_PAGES_PROJECT in repo secrets.
+          # This step requires that you set CF_API_TOKEN (or CLOUDFLARE_API_TOKEN), CF_ACCOUNT_ID and CF_PAGES_PROJECT in repo secrets.
+          # Wrangler expects CLOUDFLARE_API_TOKEN in a non-interactive environment. If only CF_API_TOKEN is set, copy it over.
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CF_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN not set, copying from CF_API_TOKEN"
+            export CLOUDFLARE_API_TOKEN="$CF_API_TOKEN"
+          fi
           # Adjust the wrangler command to your needs. Example using wrangler CLI:
           npx wrangler pages deploy ./build/client --project-name "$CF_PAGES_PROJECT" --branch main
 
