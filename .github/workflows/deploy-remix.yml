@@ -40,7 +40,16 @@ jobs:
             echo "CLOUDFLARE_API_TOKEN not set, copying from CF_API_TOKEN"
             export CLOUDFLARE_API_TOKEN="$CF_API_TOKEN"
           fi
-          # Adjust the wrangler command to your needs. Example using wrangler CLI:
-          npx wrangler pages deploy ./build/client --project-name "$CF_PAGES_PROJECT" --branch main
+          # Adjust the wrangler command to your needs. Example using wrangler CLI.
+          # Prefer passing the token explicitly via --api-token to avoid wrangler's interactive check.
+          TOKEN="$CLOUDFLARE_API_TOKEN"
+          if [ -z "$TOKEN" ] && [ -n "$CF_API_TOKEN" ]; then
+            TOKEN="$CF_API_TOKEN"
+          fi
+          if [ -z "$TOKEN" ]; then
+            echo "ERROR: No Cloudflare API token found. Set CF_API_TOKEN or CLOUDFLARE_API_TOKEN in repo secrets."
+            exit 1
+          fi
+          npx wrangler pages deploy ./build/client --project-name "$CF_PAGES_PROJECT" --branch main --api-token "$TOKEN"
 
 # NOTE: This workflow is a template. Add required Cloudflare secrets and verify the wrangler CLI args match your Cloudflare Pages setup.
