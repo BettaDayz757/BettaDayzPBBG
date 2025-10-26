@@ -44,8 +44,8 @@
     <p>Loading BettaDayz...</p>
   </div>
   <script>
-    // SPA fallback: redirect to index.html while preserving the path
-    // This allows client-side routing to work on Cloudflare Pages
+    // SPA fallback: fetch and serve index.html for unknown routes
+    // This allows client-side routing to work on Cloudflare Pages when SPA option is not enabled
     (function() {
       var pathName = window.location.pathname;
       var search = window.location.search;
@@ -54,10 +54,30 @@
       // Store the intended path for the SPA to restore
       sessionStorage.setItem('spa_redirect', pathName + search + hash);
       
-      // Redirect to the root, which will load index.html
-      // Note: '/' is relative to the deployment base, so it works correctly
-      // whether deployed to root domain or a subdirectory
-      window.location.replace('/' + search + hash);
+      // Fetch index.html and replace the current document
+      fetch('/index.html')
+        .then(function(response) {
+          if (!response.ok) {
+            throw new Error('Failed to fetch index.html');
+          }
+          return response.text();
+        })
+        .then(function(html) {
+          // Replace the document with the fetched index.html
+          document.open();
+          document.write(html);
+          document.close();
+          
+          // Update the URL to preserve the original path without a full page reload
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, '', pathName + search + hash);
+          }
+        })
+        .catch(function(error) {
+          console.error('SPA fallback error:', error);
+          // Fallback to redirect if fetch fails
+          window.location.replace('/' + search + hash);
+        });
     })();
   </script>
 </body>
