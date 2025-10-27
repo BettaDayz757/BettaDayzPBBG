@@ -1,0 +1,20 @@
+// Example Server Component that reads from 'todos' on server-side safely
+import { createServerSupabase } from "@/utils/supabase/server";
+
+export default async function Page() {
+  const supabase = createServerSupabase();
+  const { data: todos, error } = await supabase.from("todos").select("id, title");
+
+  if (error) {
+    // handle error (log, show message)
+    return <div>Failed to load todos</div>;
+  }
+
+  return (
+    <ul>
+      {todos?.map((todo) => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  );
+}
