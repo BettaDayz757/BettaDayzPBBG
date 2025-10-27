@@ -10,7 +10,7 @@ export const meta: MetaFunction = () => {
     { property: "og:title", content: "BettaDayz - Norfolk Business Empire" },
     { property: "og:description", content: "Experience the journey of an African American entrepreneur building their legacy in Norfolk's diverse business landscape." },
     { property: "og:type", content: "website" },
-    { property: "og:url", content: "https://bettadayz.store" },
+    { property: "og:url", content: "https://bettadayz.shop" },
   ];
 };
 

@@ -5299,7 +5299,7 @@ const meta = () => {
     { property: "og:title", content: "BettaDayz - 3D Life Simulation Game" },
     { property: "og:description", content: "Experience immersive 3D life simulation like never before with BettaDayz PBBG" },
     { property: "og:image", content: "/og-image.jpg" },
-    { property: "og:url", content: "https://bettadayz.store" },
+    { property: "og:url", content: "https://bettadayz.shop" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: "BettaDayz - 3D Life Simulation Game" },
