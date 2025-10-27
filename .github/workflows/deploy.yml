@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          DOMAIN: bettadayz.store
+          DOMAIN: bettadayz.shop
           NODE_ENV: production
 
       - name: Deploy to Vercel

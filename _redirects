@@ -1,5 +1,5 @@
 # Redirect www to non-www
-https://www.bettadayz.store/* https://bettadayz.store/:splat 301!
+https://www.bettadayz.shop/* https://bettadayz.shop/:splat 301!
 
 # Handle SPA routing - redirect all non-file requests to index.html
 /*    /index.html   200
@@ -11,5 +11,5 @@ https://www.bettadayz.store/* https://bettadayz.store/:splat 301!
 # /old-path  /new-path  301
 
 # Force HTTPS
-http://bettadayz.store/* https://bettadayz.store/:splat 301!
-http://www.bettadayz.store/* https://bettadayz.store/:splat 301!
+http://bettadayz.shop/* https://bettadayz.shop/:splat 301!
+http://www.bettadayz.shop/* https://bettadayz.shop/:splat 301!

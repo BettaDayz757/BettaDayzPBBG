@@ -1,6 +1,62 @@
-# My Workflow App
+# BettaDayz PBBG
 
-A Next.js application with GitHub Actions CI/CD and GitHub Pages deployment.
+A Remix-based Persistent Browser-Based Game (PBBG) application with multiplayer features, game mechanics, and social interactions.
+
+**Live Site:** [https://bettadayz.shop](https://bettadayz.shop)
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 20.x or higher
+- npm 10.x or higher
+
+### Local Development
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/BettaDayz757/BettaDayzPBBG.git
+   cd BettaDayzPBBG
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:5173](http://localhost:5173) in your browser
+
+## 📦 Deployment
+
+This application is configured to deploy to **bettadayz.shop** using Hostinger.
+
+### Deployment Guides
+
+- **[Quick Start Guide](./DEPLOYMENT-QUICKSTART.md)** - Fast deployment overview
+- **[Hostinger Deployment Guide](./HOSTINGER-DEPLOYMENT-GUIDE.md)** - Comprehensive Hostinger VPS deployment
+- **[Cloudflare Pages Guide](./cloudflare-deployment-guide.md)** - Alternative deployment option
+
+### Deployment Options
+
+1. **Hostinger VPS** (Recommended)
+   - Full control over server
+   - Custom domain: bettadayz.shop
+   - Node.js support with PM2 process management
+   - [Full Guide →](./HOSTINGER-DEPLOYMENT-GUIDE.md)
+
+2. **Cloudflare Pages** (Alternative)
+   - Free tier available
+   - Automatic SSL and CDN
+   - Easy GitHub integration
+   - [Full Guide →](./cloudflare-deployment-guide.md)
 
 ## Development
 
