@@ -1,8 +1,8 @@
-# Cloudflare Pages Deployment Guide for BettaDayz.store
+# Cloudflare Pages Deployment Guide for BettaDayz.shop
 
 ## Prerequisites
 - Cloudflare account
-- Domain `bettadayz.store` added to Cloudflare
+- Domain `bettadayz.shop` added to Cloudflare
 - GitHub repository with your code
 
 ## Step 1: Connect Your Repository to Cloudflare Pages
@@ -29,7 +29,7 @@ In the Cloudflare Pages dashboard, go to your project settings and add these env
 ### Required Variables
 ```
 NODE_ENV=production
-SITE_URL=https://bettadayz.store
+SITE_URL=https://bettadayz.shop
 ```
 
 ### Optional Variables (add as needed)
@@ -46,14 +46,14 @@ SESSION_SECRET=your_session_secret_here
    - Go to your project
    - Click on "Custom domains" tab
    - Click "Set up a custom domain"
-   - Enter `bettadayz.store`
+   - Enter `bettadayz.shop`
    - Follow the verification process
 
 2. **DNS Configuration**
-   - In Cloudflare DNS settings for `bettadayz.store`
+   - In Cloudflare DNS settings for `bettadayz.shop`
    - Ensure you have:
      - `A` record: `@` pointing to your Pages project
-     - `CNAME` record: `www` pointing to `bettadayz.store`
+     - `CNAME` record: `www` pointing to `bettadayz.shop`
 
 ## Step 4: SSL/TLS Configuration
 
@@ -96,7 +96,7 @@ SESSION_SECRET=your_session_secret_here
    - Monitor the build logs in the Pages dashboard
 
 2. **Verify Deployment**
-   - Visit `https://bettadayz.store`
+   - Visit `https://bettadayz.shop`
    - Check that all features work correctly
    - Test the game functionality
 

@@ -28,11 +28,11 @@ name = "bettadayz-staging"
 
 # Custom domain configuration
 [[route]]
-pattern = "bettadayz.store/*"
+pattern = "bettadayz.shop/*"
 custom_domain = true
 
 [[route]]
-pattern = "www.bettadayz.store/*"
+pattern = "www.bettadayz.shop/*"
 custom_domain = true
 
 # Environment variables (add your actual values in Cloudflare dashboard)
