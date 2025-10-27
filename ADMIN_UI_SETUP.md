@@ -73,10 +73,21 @@ The required files are already in place:
 - ✅ `utils/supabase/browser.ts` - Browser client helper
 - ✅ `utils/supabase/server.ts` - Server client helper
 
-Install dependencies (if not already installed):
+Install dependencies:
 
 ```bash
-npm install @supabase/ssr
+npm install @supabase/ssr @supabase/supabase-js
+```
+
+Or add to your `package.json`:
+
+```json
+{
+  "dependencies": {
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.45.4"
+  }
+}
 ```
 
 ## Usage
@@ -115,10 +126,14 @@ npm install @supabase/ssr
 
 ### ⚠️ Hostinger Shared Hosting
 
-Hostinger shared hosting does **not support** Next.js SSR (Server-Side Rendering). The server proxy routes require Node.js runtime. Consider:
-- Using Vercel for free hosting with full Next.js support
-- Upgrading to Hostinger VPS for Node.js support
-- Using static export with direct Supabase client (less secure for admin operations)
+Hostinger shared hosting does **not support** Next.js with server-side API routes. The admin UI requires:
+- Node.js runtime for API routes (`app/api/proxy/todos/`)
+- Server-side rendering capabilities
+
+**Options:**
+- **Recommended**: Use Vercel for free hosting with full Next.js support
+- Upgrade to Hostinger VPS for Node.js support
+- Alternative: Create a static-only version that talks directly to Supabase (less secure for privileged operations and would require RLS configuration)
 
 ## Security Considerations
 
