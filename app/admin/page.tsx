@@ -1,20 +1,18 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { createBrowserSupabase } from '@/utils/supabase/browser';
+import React, { useState, useEffect, useCallback } from 'react';
 
-const supabase = createBrowserSupabase();
+interface Todo {
+  id: number;
+  title: string;
+}
 
 export default function AdminPage() {
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState<any | null>(null);
+  const [editing, setEditing] = useState<Todo | null>(null);
   const [title, setTitle] = useState('');
 
-  useEffect(() => {
-    fetchItems();
-  }, []);
-
-  async function fetchItems() {
+  const fetchItems = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch('/api/proxy/todos');
@@ -29,7 +27,12 @@ export default function AdminPage() {
       setItems([]);
     }
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchItems();
+  }, [fetchItems]);
 
   async function createItem(e: React.FormEvent) {
     e.preventDefault();
@@ -70,7 +73,7 @@ export default function AdminPage() {
 
       {loading ? <p>Loading...</p> : (
         <ul>
-          {items.map((it: any) => (
+          {items.map((it: Todo) => (
             <li key={it.id} style={{ marginBottom: 8 }}>
               {editing?.id === it.id ? (
                 <>
