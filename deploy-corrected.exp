@@ -1,0 +1,86 @@
+#!/usr/bin/expect -f
+
+set timeout 30
+
+puts "🚀 Deploying BettaDayz PBBG to Production Server"
+puts "==============================================="
+
+# Upload deployment package
+puts "📤 Uploading deployment package..."
+spawn scp -P 65002 -o StrictHostKeyChecking=no bettadayz-deployment-final.tar.gz u933155252@194.195.84.72:~/
+
+expect {
+    "password:" {
+        send "Jgallow2025\r"
+        exp_continue
+    }
+    "100%" {
+        puts "✅ Upload successful!"
+    }
+    timeout {
+        puts "❌ Upload timeout"
+        exit 1
+    }
+}
+
+# Connect to server and setup
+puts "🔧 Setting up application on server..."
+spawn ssh -p 65002 -o StrictHostKeyChecking=no u933155252@194.195.84.72
+
+expect "password:"
+send "Jgallow2025\r"
+
+expect "$ " {
+    send "echo '📂 Setting up BettaDayz PBBG...'\r"
+}
+
+expect "$ " {
+    send "mkdir -p ~/bettadayz\r"
+}
+
+expect "$ " {
+    send "cd ~/bettadayz\r"
+}
+
+expect "$ " {
+    send "tar -xzf ~/bettadayz-deployment-final.tar.gz\r"
+}
+
+expect "$ " {
+    send "rm ~/bettadayz-deployment-final.tar.gz\r"
+}
+
+expect "$ " {
+    send "ls -la\r"
+}
+
+expect "$ " {
+    send "npm ci --only=production\r"
+}
+
+expect "$ " {
+    send "cp .env.example .env.production\r"
+}
+
+expect "$ " {
+    send "echo '🎉 Deployment Complete! Edit .env.production and run: npm start'\r"
+}
+
+expect "$ " {
+    send "exit\r"
+}
+
+expect eof
+
+puts ""
+puts "🎉 BettaDayz PBBG Deployment Complete!"
+puts "====================================="
+puts ""
+puts "🔗 To start the application:"
+puts "   ssh -p 65002 u933155252@194.195.84.72"
+puts "   cd ~/bettadayz"
+puts "   npm start"
+puts ""
+puts "🌐 Your application will be ready for both domains:"
+puts "   https://bettadayz.shop"
+puts "   https://bettadayz.store"
