@@ -1,0 +1,332 @@
+#!/usr/bin/expect -f
+
+set timeout 120
+
+puts "🚀 BettaDayz PBBG - Complete Dual Domain Setup"
+puts "=============================================="
+
+# Upload deployment package
+puts "📤 Uploading deployment package..."
+spawn scp -P 65002 -o StrictHostKeyChecking=no bettadayz-deployment-final.tar.gz u933155252@194.195.84.72:~/
+
+expect {
+    "password:" {
+        send "@Jgallow20\r"
+        exp_continue
+    }
+    "100%" {
+        puts "✅ Upload successful!"
+    }
+    timeout {
+        puts "❌ Upload timeout"
+        exit 1
+    }
+}
+
+# Connect and deploy
+puts "🔧 Setting up both domains..."
+spawn ssh -p 65002 -o StrictHostKeyChecking=no u933155252@194.195.84.72
+
+expect "password:"
+send "@Jgallow20\r"
+
+expect "$ " {
+    send "echo '🚀 Starting BettaDayz PBBG Setup...'\r"
+}
+
+# Clean previous installation and extract fresh
+expect "$ " {
+    send "rm -rf ~/bettadayz && mkdir -p ~/bettadayz && cd ~/bettadayz\r"
+}
+
+expect "$ " {
+    send "tar -xzf ~/bettadayz-deployment-final.tar.gz\r"
+}
+
+expect "$ " {
+    send "ls -la\r"
+}
+
+# Download and install Node.js 18 LTS
+expect "$ " {
+    send "echo '📥 Installing Node.js 18 LTS...'\r"
+}
+
+expect "$ " {
+    send "wget -q https://nodejs.org/dist/v18.19.0/node-v18.19.0-linux-x64.tar.xz\r"
+}
+
+expect "$ " {
+    send "tar -xf node-v18.19.0-linux-x64.tar.xz\r"
+}
+
+expect "$ " {
+    send "export PATH=$HOME/bettadayz/node-v18.19.0-linux-x64/bin:$PATH\r"
+}
+
+expect "$ " {
+    send "echo 'export PATH=$HOME/bettadayz/node-v18.19.0-linux-x64/bin:$PATH' >> ~/.bashrc\r"
+}
+
+expect "$ " {
+    send "node --version && npm --version\r"
+}
+
+# Install dependencies
+expect "$ " {
+    send "echo '📦 Installing dependencies...'\r"
+}
+
+expect "$ " {
+    send "npm install --production --legacy-peer-deps\r"
+}
+
+# Create environment files
+expect "$ " {
+    send "echo '⚙️ Configuring environment files...'\r"
+}
+
+expect "$ " {
+    send "cat > .env.production << 'ENVEOF'\r"
+}
+
+expect "$ " {
+    send "# BettaDayz PBBG Production Environment\r"
+}
+
+expect "$ " {
+    send "NODE_ENV=production\r"
+}
+
+expect "$ " {
+    send "JWT_SECRET=9=N6H//qQ]?g+BDV\r"
+}
+
+expect "$ " {
+    send "NEXT_PUBLIC_SHOP_DOMAIN=bettadayz.shop\r"
+}
+
+expect "$ " {
+    send "NEXT_PUBLIC_STORE_DOMAIN=bettadayz.store\r"
+}
+
+expect "$ " {
+    send "# Add your Supabase credentials here\r"
+}
+
+expect "$ " {
+    send "# NEXT_PUBLIC_SUPABASE_URL=your_url_here\r"
+}
+
+expect "$ " {
+    send "# NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key_here\r"
+}
+
+expect "$ " {
+    send "ENVEOF\r"
+}
+
+# Create shop-specific environment
+expect "$ " {
+    send "cp .env.production .env.shop\r"
+}
+
+expect "$ " {
+    send "echo 'PORT=3000' >> .env.shop\r"
+}
+
+expect "$ " {
+    send "echo 'NEXT_PUBLIC_DOMAIN=bettadayz.shop' >> .env.shop\r"
+}
+
+# Create store-specific environment
+expect "$ " {
+    send "cp .env.production .env.store\r"
+}
+
+expect "$ " {
+    send "echo 'PORT=3001' >> .env.store\r"
+}
+
+expect "$ " {
+    send "echo 'NEXT_PUBLIC_DOMAIN=bettadayz.store' >> .env.store\r"
+}
+
+# Install PM2
+expect "$ " {
+    send "echo '🔧 Installing PM2...'\r"
+}
+
+expect "$ " {
+    send "npm install -g pm2\r"
+}
+
+# Create PM2 ecosystem configuration
+expect "$ " {
+    send "cat > ecosystem.config.js << 'PMEOF'\r"
+}
+
+expect "$ " {
+    send "module.exports = {\r"
+}
+
+expect "$ " {
+    send "  apps: [\r"
+}
+
+expect "$ " {
+    send "    {\r"
+}
+
+expect "$ " {
+    send "      name: 'bettadayz-shop',\r"
+}
+
+expect "$ " {
+    send "      script: './node-v18.19.0-linux-x64/bin/npm',\r"
+}
+
+expect "$ " {
+    send "      args: 'start',\r"
+}
+
+expect "$ " {
+    send "      cwd: '/home/u933155252/bettadayz',\r"
+}
+
+expect "$ " {
+    send "      env_file: '.env.shop',\r"
+}
+
+expect "$ " {
+    send "      instances: 1,\r"
+}
+
+expect "$ " {
+    send "      autorestart: true,\r"
+}
+
+expect "$ " {
+    send "      max_memory_restart: '1G'\r"
+}
+
+expect "$ " {
+    send "    },\r"
+}
+
+expect "$ " {
+    send "    {\r"
+}
+
+expect "$ " {
+    send "      name: 'bettadayz-store',\r"
+}
+
+expect "$ " {
+    send "      script: './node-v18.19.0-linux-x64/bin/npm',\r"
+}
+
+expect "$ " {
+    send "      args: 'start',\r"
+}
+
+expect "$ " {
+    send "      cwd: '/home/u933155252/bettadayz',\r"
+}
+
+expect "$ " {
+    send "      env_file: '.env.store',\r"
+}
+
+expect "$ " {
+    send "      instances: 1,\r"
+}
+
+expect "$ " {
+    send "      autorestart: true,\r"
+}
+
+expect "$ " {
+    send "      max_memory_restart: '1G'\r"
+}
+
+expect "$ " {
+    send "    }\r"
+}
+
+expect "$ " {
+    send "  ]\r"
+}
+
+expect "$ " {
+    send "};\r"
+}
+
+expect "$ " {
+    send "PMEOF\r"
+}
+
+# Start both applications
+expect "$ " {
+    send "echo '🚀 Starting both domains...'\r"
+}
+
+expect "$ " {
+    send "pm2 start ecosystem.config.js\r"
+}
+
+expect "$ " {
+    send "pm2 save\r"
+}
+
+expect "$ " {
+    send "pm2 startup\r"
+}
+
+# Show status
+expect "$ " {
+    send "pm2 status\r"
+}
+
+expect "$ " {
+    send "pm2 logs --lines 5\r"
+}
+
+expect "$ " {
+    send "echo '✅ Deployment complete!'\r"
+}
+
+expect "$ " {
+    send "echo 'Shop (bettadayz.shop): http://194.195.84.72:3000'\r"
+}
+
+expect "$ " {
+    send "echo 'Store (bettadayz.store): http://194.195.84.72:3001'\r"
+}
+
+expect "$ " {
+    send "echo 'Remember to configure DNS A records to point to 194.195.84.72'\r"
+}
+
+expect "$ " {
+    send "exit\r"
+}
+
+expect eof
+
+puts ""
+puts "🎉 BettaDayz PBBG Dual Domain Deployment Complete!"
+puts "================================================"
+puts ""
+puts "✅ Both domains are now running:"
+puts "   🎮 Shop: http://194.195.84.72:3000 (bettadayz.shop)"
+puts "   🛒 Store: http://194.195.84.72:3001 (bettadayz.store)"
+puts ""
+puts "🌐 Configure DNS A records:"
+puts "   bettadayz.shop → 194.195.84.72"
+puts "   bettadayz.store → 194.195.84.72"
+puts ""
+puts "🔧 To manage:"
+puts "   ssh -p 65002 u933155252@194.195.84.72"
+puts "   cd ~/bettadayz"
+puts "   pm2 status"

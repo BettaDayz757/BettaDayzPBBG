@@ -1,0 +1,247 @@
+#!/usr/bin/expect -f
+
+set timeout 60
+
+puts "🚀 BettaDayz PBBG - Dual Domain Deployment"
+puts "========================================"
+
+# Upload deployment package
+puts "📤 Uploading deployment package..."
+spawn scp -P 65002 -o StrictHostKeyChecking=no bettadayz-deployment-final.tar.gz u933155252@194.195.84.72:~/
+
+expect {
+    "password:" {
+        send "@Jgallow20\r"
+        exp_continue
+    }
+    "100%" {
+        puts "✅ Upload successful!"
+    }
+    timeout {
+        puts "❌ Upload timeout"
+        exit 1
+    }
+}
+
+# Connect and deploy
+puts "🔧 Deploying to server..."
+spawn ssh -p 65002 -o StrictHostKeyChecking=no u933155252@194.195.84.72
+
+expect "password:"
+send "@Jgallow20\r"
+
+expect "$ " {
+    send "echo '📂 Setting up BettaDayz PBBG dual domains...'\r"
+}
+
+expect "$ " {
+    send "mkdir -p ~/bettadayz\r"
+}
+
+expect "$ " {
+    send "cd ~/bettadayz\r"
+}
+
+expect "$ " {
+    send "tar -xzf ~/bettadayz-deployment-final.tar.gz\r"
+}
+
+expect "$ " {
+    send "rm ~/bettadayz-deployment-final.tar.gz\r"
+}
+
+expect "$ " {
+    send "ls -la\r"
+}
+
+# Install Node.js if needed
+expect "$ " {
+    send "node --version || (curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs)\r"
+}
+
+expect "$ " {
+    send "npm ci --only=production\r"
+}
+
+# Create environment files for both domains
+expect "$ " {
+    send "cp .env.example .env.production.shop\r"
+}
+
+expect "$ " {
+    send "cp .env.example .env.production.store\r"
+}
+
+# Install PM2 globally if not exists
+expect "$ " {
+    send "pm2 --version || sudo npm install -g pm2\r"
+}
+
+# Create PM2 ecosystem for dual domains
+expect "$ " {
+    send "cat > ecosystem.config.js << 'EOFPM2'\r"
+}
+
+expect "$ " {
+    send "module.exports = {\r"
+}
+
+expect "$ " {
+    send "  apps: [\r"
+}
+
+expect "$ " {
+    send "    {\r"
+}
+
+expect "$ " {
+    send "      name: 'bettadayz-shop',\r"
+}
+
+expect "$ " {
+    send "      script: 'npm',\r"
+}
+
+expect "$ " {
+    send "      args: 'start',\r"
+}
+
+expect "$ " {
+    send "      cwd: '/home/u933155252/bettadayz',\r"
+}
+
+expect "$ " {
+    send "      env: {\r"
+}
+
+expect "$ " {
+    send "        NODE_ENV: 'production',\r"
+}
+
+expect "$ " {
+    send "        PORT: 3000,\r"
+}
+
+expect "$ " {
+    send "        NEXT_PUBLIC_DOMAIN: 'bettadayz.shop'\r"
+}
+
+expect "$ " {
+    send "      }\r"
+}
+
+expect "$ " {
+    send "    },\r"
+}
+
+expect "$ " {
+    send "    {\r"
+}
+
+expect "$ " {
+    send "      name: 'bettadayz-store',\r"
+}
+
+expect "$ " {
+    send "      script: 'npm',\r"
+}
+
+expect "$ " {
+    send "      args: 'start',\r"
+}
+
+expect "$ " {
+    send "      cwd: '/home/u933155252/bettadayz',\r"
+}
+
+expect "$ " {
+    send "      env: {\r"
+}
+
+expect "$ " {
+    send "        NODE_ENV: 'production',\r"
+}
+
+expect "$ " {
+    send "        PORT: 3001,\r"
+}
+
+expect "$ " {
+    send "        NEXT_PUBLIC_DOMAIN: 'bettadayz.store'\r"
+}
+
+expect "$ " {
+    send "      }\r"
+}
+
+expect "$ " {
+    send "    }\r"
+}
+
+expect "$ " {
+    send "  ]\r"
+}
+
+expect "$ " {
+    send "};\r"
+}
+
+expect "$ " {
+    send "EOFPM2\r"
+}
+
+# Start both applications
+expect "$ " {
+    send "pm2 start ecosystem.config.js\r"
+}
+
+expect "$ " {
+    send "pm2 save\r"
+}
+
+expect "$ " {
+    send "pm2 startup\r"
+}
+
+expect "$ " {
+    send "pm2 status\r"
+}
+
+expect "$ " {
+    send "echo '🎉 Both domains deployed successfully!'\r"
+}
+
+expect "$ " {
+    send "echo 'Shop: http://$(curl -s ifconfig.me):3000'\r"
+}
+
+expect "$ " {
+    send "echo 'Store: http://$(curl -s ifconfig.me):3001'\r"
+}
+
+expect "$ " {
+    send "echo 'Configure your DNS to point bettadayz.shop and bettadayz.store to this server'\r"
+}
+
+expect "$ " {
+    send "exit\r"
+}
+
+expect eof
+
+puts ""
+puts "🎉 BettaDayz PBBG Dual Domain Deployment Complete!"
+puts "================================================"
+puts ""
+puts "✅ Shop Domain: Running on port 3000"
+puts "✅ Store Domain: Running on port 3001"
+puts ""
+puts "🌐 Configure DNS:"
+puts "   bettadayz.shop A record → 194.195.84.72"
+puts "   bettadayz.store A record → 194.195.84.72"
+puts ""
+puts "🔧 To manage applications:"
+puts "   ssh -p 65002 u933155252@194.195.84.72"
+puts "   pm2 status"
+puts "   pm2 logs"
+puts "   pm2 restart all"

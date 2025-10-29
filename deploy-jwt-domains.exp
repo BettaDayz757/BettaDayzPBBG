@@ -1,0 +1,142 @@
+#!/usr/bin/expect -f
+
+set timeout 60
+
+puts "🔐 BettaDayz PBBG - JWT Deployment to Both Domains"
+puts "==============================================="
+
+# Upload deployment package with JWT configuration
+puts "📤 Uploading JWT-configured deployment package..."
+spawn scp -P 65002 -o StrictHostKeyChecking=no bettadayz-jwt-deployment.tar.gz u933155252@194.195.84.72:~/
+
+expect {
+    "password:" {
+        send "@Jgallow20\r"
+        exp_continue
+    }
+    "100%" {
+        puts "✅ Upload successful!"
+    }
+    timeout {
+        puts "❌ Upload timeout"
+        exit 1
+    }
+}
+
+# Connect and deploy with JWT configuration
+puts "🔧 Deploying with JWT secret: 9=N6H//qQ]?g+BDV"
+spawn ssh -p 65002 -o StrictHostKeyChecking=no u933155252@194.195.84.72
+
+expect "password:"
+send "@Jgallow20\r"
+
+expect "$ " {
+    send "cd ~/bettadayz\r"
+}
+
+expect "$ " {
+    send "rm -rf * .*env* 2>/dev/null || true\r"
+}
+
+expect "$ " {
+    send "tar -xzf ~/bettadayz-jwt-deployment.tar.gz\r"
+}
+
+expect "$ " {
+    send "rm ~/bettadayz-jwt-deployment.tar.gz\r"
+}
+
+expect "$ " {
+    send "ls -la .env*\r"
+}
+
+expect "$ " {
+    send "echo 'JWT_SECRET=9=N6H//qQ]?g+BDV' >> .env.production\r"
+}
+
+expect "$ " {
+    send "echo 'JWT_SECRET=9=N6H//qQ]?g+BDV' >> .env.production.shop\r"
+}
+
+expect "$ " {
+    send "echo 'JWT_SECRET=9=N6H//qQ]?g+BDV' >> .env.production.store\r"
+}
+
+# Kill any existing processes
+expect "$ " {
+    send "pkill -f 'npm start' || true\r"
+}
+
+expect "$ " {
+    send "sleep 2\r"
+}
+
+# Start shop domain (port 3000)
+expect "$ " {
+    send "cd ~/bettadayz && cp .env.production.shop .env && nohup npm start > shop.log 2>&1 & echo $! > shop.pid\r"
+}
+
+expect "$ " {
+    send "sleep 5\r"
+}
+
+# Start store domain (port 3001) in a different way
+expect "$ " {
+    send "cd ~/bettadayz && PORT=3001 NEXT_PUBLIC_DOMAIN=bettadayz.store nohup npm start > store.log 2>&1 & echo $! > store.pid\r"
+}
+
+expect "$ " {
+    send "sleep 5\r"
+}
+
+# Check if processes are running
+expect "$ " {
+    send "ps aux | grep 'npm start' | grep -v grep\r"
+}
+
+expect "$ " {
+    send "curl -s http://localhost:3000 | head -n 5 || echo 'Shop domain not responding'\r"
+}
+
+expect "$ " {
+    send "curl -s http://localhost:3001 | head -n 5 || echo 'Store domain not responding'\r"
+}
+
+expect "$ " {
+    send "echo '🎉 Both domains deployed with JWT secret: 9=N6H//qQ]?g+BDV'\r"
+}
+
+expect "$ " {
+    send "echo 'Shop PID:' && cat shop.pid 2>/dev/null || echo 'No shop PID'\r"
+}
+
+expect "$ " {
+    send "echo 'Store PID:' && cat store.pid 2>/dev/null || echo 'No store PID'\r"
+}
+
+expect "$ " {
+    send "echo 'Public IP:' && curl -s ifconfig.me\r"
+}
+
+expect "$ " {
+    send "exit\r"
+}
+
+expect eof
+
+puts ""
+puts "🎉 BettaDayz PBBG JWT Deployment Complete!"
+puts "========================================"
+puts ""
+puts "🔐 JWT Secret: 9=N6H//qQ]?g+BDV"
+puts "🌐 Shop Domain: http://194.195.84.72:3000"
+puts "🛒 Store Domain: http://194.195.84.72:3001"
+puts ""
+puts "📋 Supabase Configuration:"
+puts "   1. Go to your Supabase project settings"
+puts "   2. Set JWT secret to: 9=N6H//qQ]?g+BDV"
+puts "   3. Run the SQL in supabase-jwt-config.sql"
+puts ""
+puts "🌍 DNS Configuration:"
+puts "   bettadayz.shop A → 194.195.84.72"
+puts "   bettadayz.store A → 194.195.84.72"
