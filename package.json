@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "ci": "npm run lint && npm run build",
-    "deploy:gh-pages": "npm run build"
+    "deploy:gh-pages": "npm run build",
+    "supabase:download-snippets": "bash supabase/download-snippets.sh"
   },
   "dependencies": {
     "react": "19.2.0",

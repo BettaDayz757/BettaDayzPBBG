@@ -1,0 +1,20 @@
+-- BettaDayz PBBG Products Seed Data
+-- 
+-- This file should contain the products seed data downloaded from Supabase snippet
+-- Snippet ID: 7d7c66fd-bb56-40c4-8123-5fb58bd0fcfc
+--
+-- To download the actual data, run:
+--   ./supabase/download-snippets.sh
+--
+-- Or manually with Supabase CLI:
+--   supabase snippets download 7d7c66fd-bb56-40c4-8123-5fb58bd0fcfc > supabase/seed/betta_dayz_products_seed_data.sql
+--
+-- Prerequisites:
+--   1. Install Supabase CLI: npm install -g supabase
+--   2. Authenticate: supabase login
+--      OR set SUPABASE_ACCESS_TOKEN environment variable
+--
+-- After downloading, this file will contain SQL INSERT statements for products data
+-- that can be used to seed your Supabase database.
+
+-- Placeholder: Replace this file with actual data by running the download script
