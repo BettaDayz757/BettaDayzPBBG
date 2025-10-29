@@ -26,13 +26,28 @@ A Remix-based Persistent Browser-Based Game (PBBG) application with multiplayer 
    npm install
    ```
 
-3. Start the development server:
+3. Set up Supabase (optional):
+
+   ```bash
+   # Install Supabase CLI
+   npm install -g supabase
+   
+   # Login to Supabase
+   supabase login
+   
+   # Download seed data
+   npm run supabase:download-snippets
+   ```
+
+   See [supabase/README.md](./supabase/README.md) for detailed Supabase setup instructions.
+
+4. Start the development server:
 
    ```bash
    npm run dev
    ```
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
+5. Open [http://localhost:5173](http://localhost:5173) in your browser
 
 ## 📦 Deployment
 
@@ -88,6 +103,20 @@ This application is configured to deploy to **bettadayz.shop** using Hostinger.
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
+## 🗄️ Database Setup
+
+This project uses Supabase for backend services. To set up the database:
+
+1. Create a Supabase account at [https://supabase.com](https://supabase.com)
+2. Create a new project
+3. Copy your project URL and anon key to `.env.local`
+4. Download seed data:
+   ```bash
+   npm run supabase:download-snippets
+   ```
+
+For detailed instructions, see [supabase/README.md](./supabase/README.md).
+
 ## GitHub Actions
 
 This project uses GitHub Actions for CI/CD:
@@ -115,6 +144,7 @@ The deployment workflow runs on pushes to the `main` branch:
 - `npm run lint` - Run ESLint
 - `npm run ci` - Run CI checks locally
 - `npm run deploy:gh-pages` - Build for GitHub Pages
+- `npm run supabase:download-snippets` - Download Supabase seed data
 
 ## GitHub Pages Setup
 
