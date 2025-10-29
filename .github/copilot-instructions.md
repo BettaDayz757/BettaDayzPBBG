@@ -12,7 +12,7 @@ BettaDayz PBBG is a browser-based multiplayer game application with the followin
 - **UI Library**: React 19
 - **Styling**: Tailwind CSS 4
 - **Live Site**: https://bettadayz.shop
-- **Deployment**: Hostinger VPS with PM2 process management
+- **Deployment**: Hostinger VPS (see deployment guides for configuration)
 
 ## Technology Stack
 
@@ -72,7 +72,7 @@ BettaDayz PBBG is a browser-based multiplayer game application with the followin
 # Install dependencies
 npm install
 
-# Start development server (runs on http://localhost:5173)
+# Start development server (runs on http://localhost:3000)
 npm run dev
 
 # Build for production
@@ -227,7 +227,7 @@ Runs on every push and PR to `main`:
 
 ### Documentation
 - [Next.js Documentation](https://nextjs.org/docs)
-- [React Documentation](https://react.dev)
+- [React Documentation](https://react.dev/)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs)
 
