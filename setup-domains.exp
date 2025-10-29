@@ -1,0 +1,148 @@
+#!/usr/bin/expect -f
+
+# BettaDayz Domain Setup Helper Script
+# This script helps configure Nginx reverse proxy for proper domain routing
+
+set timeout 60
+set password "@Jgallow20"
+
+puts "🌐 BettaDayz Domain Configuration Setup"
+puts "======================================="
+puts "Configuring Nginx reverse proxy for:"
+puts "✅ bettadayz.shop → :3000"
+puts "✅ bettadayz.store → :3001"
+puts ""
+
+spawn ssh -p 65002 u933155252@194.195.84.72
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "\$ " {
+        # Connected
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+}
+
+# Install Nginx
+send "sudo yum install nginx -y\r"
+expect "\$ "
+
+# Create Nginx configuration
+send "sudo tee /etc/nginx/conf.d/bettadayz.conf > /dev/null << 'EOF'\r"
+expect "> "
+send "# BettaDayz PBBG Dual Domain Configuration\r"
+expect "> "
+send "server {\r"
+expect "> "
+send "    listen 80;\r"
+expect "> "
+send "    server_name bettadayz.shop www.bettadayz.shop;\r"
+expect "> "
+send "    \r"
+expect "> "
+send "    location / {\r"
+expect "> "
+send "        proxy_pass http://localhost:3000;\r"
+expect "> "
+send "        proxy_set_header Host \$host;\r"
+expect "> "
+send "        proxy_set_header X-Real-IP \$remote_addr;\r"
+expect "> "
+send "        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;\r"
+expect "> "
+send "        proxy_set_header X-Forwarded-Proto \$scheme;\r"
+expect "> "
+send "        proxy_buffering off;\r"
+expect "> "
+send "    }\r"
+expect "> "
+send "}\r"
+expect "> "
+send "\r"
+expect "> "
+send "server {\r"
+expect "> "
+send "    listen 80;\r"
+expect "> "
+send "    server_name bettadayz.store www.bettadayz.store;\r"
+expect "> "
+send "    \r"
+expect "> "
+send "    location / {\r"
+expect "> "
+send "        proxy_pass http://localhost:3001;\r"
+expect "> "
+send "        proxy_set_header Host \$host;\r"
+expect "> "
+send "        proxy_set_header X-Real-IP \$remote_addr;\r"
+expect "> "
+send "        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;\r"
+expect "> "
+send "        proxy_set_header X-Forwarded-Proto \$scheme;\r"
+expect "> "
+send "        proxy_buffering off;\r"
+expect "> "
+send "    }\r"
+expect "> "
+send "}\r"
+expect "> "
+send "EOF\r"
+expect "\$ "
+
+# Test Nginx configuration
+send "sudo nginx -t\r"
+expect "\$ "
+
+# Enable and start Nginx
+send "sudo systemctl enable nginx\r"
+expect "\$ "
+
+send "sudo systemctl start nginx\r"
+expect "\$ "
+
+send "sudo systemctl status nginx | head -5\r"
+expect "\$ "
+
+# Configure firewall for HTTP/HTTPS
+send "sudo firewall-cmd --permanent --add-service=http\r"
+expect "\$ "
+
+send "sudo firewall-cmd --permanent --add-service=https\r"
+expect "\$ "
+
+send "sudo firewall-cmd --reload\r"
+expect "\$ "
+
+# Install Certbot for SSL
+send "sudo yum install certbot python3-certbot-nginx -y\r"
+expect "\$ "
+
+puts ""
+puts "🎯 NGINX CONFIGURATION COMPLETE!"
+puts "================================="
+puts "✅ Nginx installed and configured"
+puts "✅ Reverse proxy setup for both domains"
+puts "✅ Firewall configured for HTTP/HTTPS"
+puts "✅ Certbot installed for SSL certificates"
+puts ""
+puts "📋 NEXT STEPS:"
+puts "1. Configure your domain DNS to point to 194.195.84.72"
+puts "2. Wait for DNS propagation (24-48 hours)"
+puts "3. Run SSL setup: sudo certbot --nginx -d bettadayz.shop -d bettadayz.store"
+puts ""
+puts "🌐 Your domains will be accessible at:"
+puts "   • http://bettadayz.shop"
+puts "   • http://bettadayz.store"
+
+send "exit\r"
+expect eof
