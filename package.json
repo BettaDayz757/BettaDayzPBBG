@@ -1,28 +1,90 @@
 {
-  "name": "my-workflow-app",
-  "version": "0.1.0",
+  "name": "bettadayz-pbbg",
+  "version": "2.0.0",
+  "description": "BettaDayz Persistent Browser-Based Game with dual domain support",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
+    "dev:shop": "next dev -p 3000",
+    "dev:store": "next dev -p 3001",
     "build": "next build",
+    "build:shop": "NEXT_PUBLIC_DOMAIN=bettadayz.shop next build",
+    "build:store": "NEXT_PUBLIC_DOMAIN=bettadayz.store next build",
     "start": "next start",
-    "lint": "next lint",
-    "ci": "npm run lint && npm run build",
-    "deploy:gh-pages": "npm run build"
+    "lint": "npx eslint . --ext .js,.ts,.jsx,.tsx --max-warnings 5000",
+    "lint:fix": "npx eslint . --ext .js,.ts,.jsx,.tsx --fix",
+    "ci": "npm run build && npm run test && npm run lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "deploy:shop": "npm run build:shop && npm run start",
+    "deploy:store": "npm run build:store && npm run start",
+    "deploy:both": "concurrently \"npm run deploy:shop\" \"npm run deploy:store\"",
+    "postinstall": "patch-package"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.4.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/three": "^0.180.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "framer-motion": "^12.23.24",
+    "jsonwebtoken": "^9.0.2",
+    "next": "16.0.0",
+    "process": "^0.11.10",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "next": "16.0.0"
+    "stream-browserify": "^3.0.0",
+    "stripe": "^17.3.1",
+    "three": "^0.180.0",
+    "util": "^0.12.5"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@playwright/test": "^1.40.1",
+    "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
+    "concurrently": "^8.2.2",
     "eslint": "^9",
-    "eslint-config-next": "16.0.0"
-  }
+    "eslint-config-next": "16.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "patch-package": "^8.0.0",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "pbbg",
+    "persistent-browser-based-game",
+    "nextjs",
+    "typescript",
+    "supabase",
+    "stripe",
+    "cryptocurrency",
+    "dual-domain",
+    "bettadayz"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BettaDayz757/BettaDayzPBBG.git"
+  },
+  "author": "BettaDayz757",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BettaDayz757/BettaDayzPBBG/issues"
+  },
+  "homepage": "https://bettadayz.shop"
 }

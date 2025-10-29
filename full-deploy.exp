@@ -1,0 +1,62 @@
+#!/usr/bin/expect -f
+
+set timeout 30
+
+# First, upload the deployment package
+spawn scp -P 65002 -o StrictHostKeyChecking=no bettadayz-deployment.tar.gz u933155252@194.195.84.72:~/
+expect {
+    "password:" {
+        send "@Jgallow20\r"
+        exp_continue
+    }
+    "100%" {
+        puts "Upload successful!"
+    }
+    timeout {
+        puts "Upload timed out"
+        exit 1
+    }
+}
+
+# Now connect to the server and set up the application
+spawn ssh -p 65002 -o StrictHostKeyChecking=no u933155252@194.195.84.72
+expect "password:"
+send "@Jgallow20\r"
+
+expect "\$" {
+    send "echo 'Connected to server successfully!'\r"
+}
+
+expect "\$" {
+    send "mkdir -p ~/bettadayz\r"
+}
+
+expect "\$" {
+    send "cd ~/bettadayz\r"
+}
+
+expect "\$" {
+    send "tar -xzf ~/bettadayz-deployment.tar.gz\r"
+}
+
+expect "\$" {
+    send "ls -la\r"
+}
+
+expect "\$" {
+    send "echo 'Deployment package extracted successfully!'\r"
+}
+
+expect "\$" {
+    send "cp .env.example .env.production\r"
+}
+
+expect "\$" {
+    send "echo 'Environment template created. Please edit .env.production with your actual values.'\r"
+}
+
+expect "\$" {
+    send "exit\r"
+}
+
+expect eof

@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+
+# Upload deployment package to server
+spawn scp -P 65002 bettadayz-deployment.tar.gz u933155252@194.195.84.72:~/
+expect "password:"
+send "@Jgallow20\r"
+expect eof
