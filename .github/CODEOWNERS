@@ -1,0 +1,51 @@
+# CODEOWNERS - Define reviewers for different parts of the repository
+# This ensures proper review for Copilot coding agent PRs and critical changes
+
+# Default reviewers for all files
+* @BettaDayz757
+
+# Critical configuration files require extra review
+/.github/ @BettaDayz757
+/package.json @BettaDayz757
+/package-lock.json @BettaDayz757
+/next.config.js @BettaDayz757
+/tailwind.config.js @BettaDayz757
+/eslint.config.mjs @BettaDayz757
+/tsconfig.json @BettaDayz757
+
+# Security-sensitive areas - payment processing and authentication
+/lib/payments/ @BettaDayz757
+/lib/supabase/ @BettaDayz757
+/utils/supabase/ @BettaDayz757
+/src/utils/supabase/ @BettaDayz757
+api_token @BettaDayz757
+env.txt @BettaDayz757
+payments.json @BettaDayz757
+*.env* @BettaDayz757
+*.key @BettaDayz757
+*.pem @BettaDayz757
+
+# Copilot agent configuration files
+/.github/copilot-coding-agent.yml @BettaDayz757
+/COPILOT_AGENT.md @BettaDayz757
+
+# Deployment and infrastructure
+/Dockerfile @BettaDayz757
+/docker-compose.yaml @BettaDayz757
+/*deployment*.md @BettaDayz757
+/HOSTINGER-DEPLOYMENT-GUIDE.md @BettaDayz757
+/cloudflare-deployment-guide.md @BettaDayz757
+
+# Database and schema changes
+/sample-data.sql @BettaDayz757
+/DATABASE-SETUP-INSTRUCTIONS.md @BettaDayz757
+/SUPABASE-SETUP-COMPLETE.md @BettaDayz757
+
+# Documentation requiring review
+/README.md @BettaDayz757
+/CONTRIBUTING.md @BettaDayz757
+/LICENSE @BettaDayz757
+
+# Agent PRs (branches starting with agent/) always need review
+# Note: This pattern matches any file when the branch is agent/*
+# GitHub will automatically request review from codeowners for agent PRs

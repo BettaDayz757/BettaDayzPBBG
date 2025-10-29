@@ -30,5 +30,21 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "app/entry.client.tsx",
+    "app/entry.server.tsx", 
+    "app/root.tsx",
+    "app/routes",
+    "app/api/payments/stripe/webhook",
+    "entry.client.tsx",
+    "entry.server.tsx",
+    "root.tsx",
+    "_index.tsx",
+    "load-context.ts",
+    "middleware-loader.entry.ts",
+    "vite.config.ts",
+    ".wrangler",
+    "**/*.remix.*"
+  ]
 }

@@ -1,0 +1,67 @@
+# Copilot Coding Agent configuration for BettaDayzPBBG
+# Generated to follow GitHub's "Best practices for Copilot coding agent in your repository"
+
+version: 1
+metadata:
+  repository: BettaDayzPBBG
+  default_branch: main
+  contact: CODEOWNERS
+
+environment:
+  languages:
+    - javascript
+    - typescript
+    - jsx
+    - tsx
+  package_manager: npm
+  node_version: "20.x"
+  build_commands:
+    - npm run lint
+    - npm run build
+  dev_command: npm run dev
+  test_command: npm run ci
+
+rules:
+  allow_small_commits: true
+  recommended_pr_size: 200
+  require_checks_before_merge:
+    - lint
+    - build
+  do_not_modify:
+    - api_token
+    - payments.json
+    - env.txt
+    - .env
+    - **/*.pem
+    - **/*.key
+    - **/secrets/**
+
+security:
+  secret_handling: |
+    - Never read or exfiltrate secrets or private keys.
+    - If a task requires secrets (API keys, DB credentials) the agent must stop and request a human or reference secure secret mechanisms (GitHub Secrets, Vault).
+
+behavior:
+  commit_message_prefix: "chore(agent):"
+  branch_name_prefix: "agent/"
+  ask_for_clarification: true
+  prefer_small_changes: true
+  test_before_pr: true
+  run_lint_and_build_before_pr: true
+
+paths:
+  src_dirs:
+    - app
+    - components
+    - src
+  public_dirs:
+    - public
+  tests:
+    - __tests__
+
+links:
+  onboarding_doc: /COPILOT_AGENT.md
+
+notes: |
+  - This file contains high-level rules for an automated coding agent. It is not a substitute for human code review.
+  - The agent should follow repository coding styles and run `npm run ci` prior to opening a PR.

@@ -1,0 +1,136 @@
+name: Copilot Agent Validation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate-agent-config:
+    name: Validate Copilot Agent Configuration
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Validate agent config exists
+      run: |
+        if [ ! -f ".github/copilot-coding-agent.yml" ]; then
+          echo "❌ Missing .github/copilot-coding-agent.yml"
+          exit 1
+        fi
+        echo "✅ Agent config file exists"
+        
+    - name: Validate agent documentation exists
+      run: |
+        if [ ! -f "COPILOT_AGENT.md" ]; then
+          echo "❌ Missing COPILOT_AGENT.md"
+          exit 1
+        fi
+        echo "✅ Agent documentation exists"
+        
+    - name: Check for protected file modifications
+      if: github.event_name == 'pull_request'
+      run: |
+        # Get the list of changed files
+        CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+        
+        # Define protected files from agent config
+        PROTECTED_FILES="api_token env.txt payments.json"
+        
+        for file in $PROTECTED_FILES; do
+          if echo "$CHANGED_FILES" | grep -q "^$file$"; then
+            echo "❌ Protected file $file was modified. Agent should not modify this file."
+            exit 1
+          fi
+        done
+        
+        # Check for secret files
+        if echo "$CHANGED_FILES" | grep -E '\.(key|pem)$'; then
+          echo "❌ Secret files (.key/.pem) were modified. This is not allowed."
+          exit 1
+        fi
+        
+        echo "✅ No protected files were modified"
+        
+    - name: Validate branch naming for agent PRs
+      if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'agent/')
+      run: |
+        echo "🤖 Detected agent branch: ${{ github.head_ref }}"
+        
+        # Validate commit messages for agent PRs
+        COMMITS=$(git log --oneline origin/main..HEAD)
+        if ! echo "$COMMITS" | grep -q "^[a-f0-9]* \(chore\|fix\)(agent):"; then
+          echo "❌ Agent commits should use format: 'chore(agent):' or 'fix(agent):'"
+          echo "Found commits:"
+          echo "$COMMITS"
+          exit 1
+        fi
+        
+        echo "✅ Agent branch and commit naming follows conventions"
+        
+    - name: Run CI checks
+      run: npm run ci
+      
+    - name: Validate PR size for agent PRs
+      if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'agent/')
+      run: |
+        # Count lines changed
+        LINES_CHANGED=$(git diff --stat origin/main...HEAD | tail -1 | grep -o '[0-9]* insertions\|[0-9]* deletions' | grep -o '[0-9]*' | paste -sd+ | bc)
+        
+        if [ "$LINES_CHANGED" -gt 200 ]; then
+          echo "⚠️ Agent PR has $LINES_CHANGED lines changed (recommended: <200)"
+          echo "Consider breaking this into smaller PRs"
+        else
+          echo "✅ Agent PR size is appropriate ($LINES_CHANGED lines changed)"
+        fi
+        
+    - name: Check for test requirements
+      if: github.event_name == 'pull_request'
+      run: |
+        # Check if code changes were made to core functionality
+        CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+        
+        if echo "$CHANGED_FILES" | grep -E '\.(ts|tsx|js|jsx)$' | grep -v -E '(test|spec)\.(ts|tsx|js|jsx)$'; then
+          echo "📝 Code changes detected. Consider adding tests for new functionality."
+        fi
+        
+        echo "✅ Test requirements check completed"
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Scan for secrets
+      run: |
+        # Basic secret scanning for common patterns
+        if grep -r -E "(api[_-]?key|secret|password|token)" --include="*.ts" --include="*.js" --include="*.tsx" --include="*.jsx" . | grep -v -E "(test|spec|mock)" | grep -E "=|:" | head -10; then
+          echo "⚠️ Potential secrets found in code. Please review."
+          echo "Ensure secrets are stored in environment variables or GitHub Secrets."
+        else
+          echo "✅ No obvious secrets detected in code"
+        fi
+        
+    - name: Check for hardcoded URLs
+      run: |
+        if grep -r -E "https?://[^/]*\.(com|org|net|io)" --include="*.ts" --include="*.js" --include="*.tsx" --include="*.jsx" . | grep -v -E "(test|spec|example|localhost)" | head -5; then
+          echo "⚠️ Hardcoded URLs found. Consider using environment variables."
+        else
+          echo "✅ No hardcoded production URLs detected"
+        fi

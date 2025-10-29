@@ -7,7 +7,7 @@ interface PurchaseItem {
   description: string;
   price: number;
   currency: 'coins' | 'gems' | 'cash';
-  category: 'vehicles' | 'properties' | 'clothing' | 'weapons' | 'currency' | 'premium';
+  category: 'vehicles' | 'properties' | 'clothing' | 'weapons' | 'currency' | 'premium' | 'jewelry';
   icon: string;
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
   discount?: number;
@@ -55,7 +55,7 @@ const purchaseItems: PurchaseItem[] = [
     rarity: 'epic'
   },
 
-  // Vehicles
+  // Vehicles - Exotic Cars Collection
   {
     id: 'sports_car',
     name: 'Lightning Sports Car',
@@ -84,6 +84,190 @@ const purchaseItems: PurchaseItem[] = [
     currency: 'coins',
     category: 'vehicles',
     icon: '🏍️',
+    rarity: 'rare'
+  },
+  {
+    id: 'bugatti_chiron',
+    name: 'Bugatti Chiron Super Sport',
+    description: 'Ultimate hypercar with 1600HP, limited edition',
+    price: 150,
+    currency: 'gems',
+    category: 'vehicles',
+    icon: '🏎️',
+    rarity: 'legendary',
+    limited: true
+  },
+  {
+    id: 'mclaren_p1',
+    name: 'McLaren P1',
+    description: 'Hybrid hypercar with active aerodynamics',
+    price: 120,
+    currency: 'gems',
+    category: 'vehicles',
+    icon: '🏁',
+    rarity: 'legendary'
+  },
+  {
+    id: 'koenigsegg_jesko',
+    name: 'Koenigsegg Jesko Absolut',
+    description: 'Swedish hypercar built for top speed',
+    price: 125,
+    currency: 'gems',
+    category: 'vehicles',
+    icon: '⚡',
+    rarity: 'legendary'
+  },
+  {
+    id: 'ferrari_laferrari',
+    name: 'Ferrari LaFerrari',
+    description: 'Italian masterpiece with hybrid V12',
+    price: 110,
+    currency: 'gems',
+    category: 'vehicles',
+    icon: '🐎',
+    rarity: 'legendary'
+  },
+  {
+    id: 'lamborghini_aventador',
+    name: 'Lamborghini Aventador SVJ',
+    description: 'Raging bull with naturally aspirated V12',
+    price: 85,
+    currency: 'gems',
+    category: 'vehicles',
+    icon: '🟡',
+    rarity: 'epic'
+  },
+  {
+    id: 'porsche_918',
+    name: 'Porsche 918 Spyder',
+    description: 'German engineering at its finest',
+    price: 95,
+    currency: 'gems',
+    category: 'vehicles',
+    icon: '🏃',
+    rarity: 'legendary'
+  },
+  {
+    id: 'pagani_huayra',
+    name: 'Pagani Huayra BC',
+    description: 'Artistic Italian hypercar with AMG V12',
+    price: 105,
+    currency: 'gems',
+    category: 'vehicles',
+    icon: '🎨',
+    rarity: 'legendary'
+  },
+  {
+    id: 'rolls_royce_phantom',
+    name: 'Rolls-Royce Phantom VIII',
+    description: 'Ultimate luxury sedan with hand-crafted interior',
+    price: 75,
+    currency: 'gems',
+    category: 'vehicles',
+    icon: '👑',
+    rarity: 'epic'
+  },
+
+  // Luxury Jewelry Collection
+  {
+    id: 'rolex_daytona',
+    name: 'Rolex Daytona Platinum',
+    description: 'Iconic racing chronograph in precious metal',
+    price: 45,
+    currency: 'gems',
+    category: 'jewelry',
+    icon: '⌚',
+    rarity: 'legendary'
+  },
+  {
+    id: 'patek_philippe_nautilus',
+    name: 'Patek Philippe Nautilus',
+    description: 'Swiss luxury sports watch, investment grade',
+    price: 65,
+    currency: 'gems',
+    category: 'jewelry',
+    icon: '⌚',
+    rarity: 'legendary',
+    limited: true
+  },
+  {
+    id: 'audemars_piguet_royal_oak',
+    name: 'Audemars Piguet Royal Oak',
+    description: 'Octagonal luxury sports watch',
+    price: 55,
+    currency: 'gems',
+    category: 'jewelry',
+    icon: '⌚',
+    rarity: 'legendary'
+  },
+  {
+    id: 'cartier_santos',
+    name: 'Cartier Santos',
+    description: 'Classic French luxury timepiece',
+    price: 35,
+    currency: 'gems',
+    category: 'jewelry',
+    icon: '⌚',
+    rarity: 'epic'
+  },
+  {
+    id: 'diamond_chain_cuban',
+    name: 'Cuban Link Diamond Chain',
+    description: '18K gold chain with VVS diamonds',
+    price: 25,
+    currency: 'gems',
+    category: 'jewelry',
+    icon: '💎',
+    rarity: 'epic'
+  },
+  {
+    id: 'tennis_bracelet',
+    name: 'Diamond Tennis Bracelet',
+    description: 'Classic tennis bracelet with flawless diamonds',
+    price: 30,
+    currency: 'gems',
+    category: 'jewelry',
+    icon: '💍',
+    rarity: 'epic'
+  },
+  {
+    id: 'pinky_ring_diamond',
+    name: 'Diamond Pinky Ring',
+    description: 'Statement pinky ring with rare pink diamond',
+    price: 40,
+    currency: 'gems',
+    category: 'jewelry',
+    icon: '💍',
+    rarity: 'legendary'
+  },
+  {
+    id: 'grillz_custom',
+    name: 'Custom Diamond Grillz',
+    description: 'Personalized diamond grillz set',
+    price: 20,
+    currency: 'gems',
+    category: 'jewelry',
+    icon: '😁',
+    rarity: 'epic'
+  },
+  {
+    id: 'earrings_studs',
+    name: 'Diamond Stud Earrings',
+    description: '5-carat diamond studs, flawless clarity',
+    price: 35,
+    currency: 'gems',
+    category: 'jewelry',
+    icon: '💎',
+    rarity: 'epic'
+  },
+  {
+    id: 'necklace_pendant',
+    name: 'Gold Pendant Necklace',
+    description: 'Custom pendant with rare gemstones',
+    price: 15,
+    currency: 'gems',
+    category: 'jewelry',
+    icon: '📿',
     rarity: 'rare'
   },
 
@@ -162,6 +346,7 @@ export default function InGamePurchases({
     { id: 'all', name: 'All Items', icon: '🛍️' },
     { id: 'currency', name: 'Currency', icon: '💰' },
     { id: 'vehicles', name: 'Vehicles', icon: '🚗' },
+    { id: 'jewelry', name: 'Jewelry', icon: '💎' },
     { id: 'properties', name: 'Properties', icon: '🏠' },
     { id: 'clothing', name: 'Clothing', icon: '👔' },
     { id: 'premium', name: 'Premium', icon: '👑' }

@@ -109,7 +109,7 @@ function Vehicle({
   const [hovered, setHovered] = useState(false);
   const vehicleRef = useRef<THREE.Group>(null);
 
-  useFrame((state) => {
+  useFrame((state: any) => {
     if (vehicleRef.current && hovered) {
       vehicleRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 2) * 0.05;
     }
@@ -136,7 +136,7 @@ function Vehicle({
       onClick={onInteract}
     >
       {/* Vehicle Body */}
-      <Box args={size} position={[0, size[1] / 2, 0]} castShadow>
+      <Box args={size as [number, number, number]} position={[0, size[1] / 2, 0]} castShadow>
         <meshStandardMaterial color={hovered ? '#ffff00' : color} metalness={0.8} roughness={0.2} />
       </Box>
       
@@ -191,7 +191,7 @@ function StreetLight({ position }: { position: [number, number, number] }) {
 function TrafficLight({ position }: { position: [number, number, number] }) {
   const [currentLight, setCurrentLight] = useState<'red' | 'yellow' | 'green'>('red');
   
-  useFrame((state) => {
+  useFrame((state: any) => {
     const time = Math.floor(state.clock.elapsedTime / 3) % 3;
     const lights: ('red' | 'yellow' | 'green')[] = ['red', 'yellow', 'green'];
     setCurrentLight(lights[time]);

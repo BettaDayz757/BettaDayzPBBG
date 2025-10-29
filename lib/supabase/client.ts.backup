@@ -1,0 +1,1237 @@
+// Supabase Client Configuration
+// Enhanced client for dual-domain PBBG system
+
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+if (!supabaseUrl) {
+  throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_URL');
+}
+
+if (!supabaseAnonKey) {
+  throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_ANON_KEY');
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10
+    }
+  }
+});
+
+// Enhanced database operations helper class
+export class SupabaseHelper {
+  public client: SupabaseClient;
+
+  // User Profile Operations
+  async getUserProfile(userId: string) {
+    const { data, error } = await this.client
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async updateUserProfile(userId: string, updates: any) {
+    const { data, error } = await this.client
+      .from('user_profiles')
+      .update(updates)
+      .eq('user_id', userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // BettaBuckZ Operations
+  async getBettaBuckZWallet(userId: string) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) throw new Error('User profile not found');
+
+    const { data, error } = await this.client
+      .from('bettabuckz_wallets')
+      .select('*')
+      .eq('user_id', profile.id)
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getBettaBuckZTransactions(userId: string, limit = 50) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) throw new Error('User profile not found');
+
+    const { data, error } = await this.client
+      .from('bettabuckz_transactions')
+      .select('*')
+      .eq('user_id', profile.id)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return data;
+  }
+
+  async processBettaBuckZTransaction(
+    userId: string,
+    type: string,
+    amount: number,
+    source: string,
+    description?: string,
+    referenceId?: string
+  ) {
+    const { data, error } = await this.client.rpc('process_bettabuckz_transaction', {
+      p_user_id: userId,
+      p_type: type,
+      p_amount: amount,
+      p_source: source,
+      p_description: description || null,
+      p_reference_id: referenceId || null
+    });
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Guild Operations
+  async getGuild(guildId: string) {
+    const { data, error } = await this.client
+      .from('guilds')
+      .select(`
+        *,
+        guild_members (
+          *,
+          user_profiles (username, display_name, level, avatar_url)
+        ),
+        guild_perks (*)
+      `)
+      .eq('id', guildId)
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getUserGuild(userId: string) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) return null;
+
+    const { data, error } = await this.client
+      .from('guild_members')
+      .select(`
+        *,
+        guilds (
+          *,
+          guild_perks (*)
+        )
+      `)
+      .eq('user_id', profile.id)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error;
+    return data;
+  }
+
+  async createGuild(leaderId: string, name: string, tag: string, description: string) {
+    const profile = await this.getUserProfile(leaderId);
+    if (!profile) throw new Error('User profile not found');
+
+    const { data: guild, error: guildError } = await this.client
+      .from('guilds')
+      .insert({
+        name,
+        tag: tag.toUpperCase(),
+        description,
+        leader_id: profile.id
+      })
+      .select()
+      .single();
+
+    if (guildError) throw guildError;
+
+    // Add leader as member
+    const { error: memberError } = await this.client
+      .from('guild_members')
+      .insert({
+        user_id: profile.id,
+        guild_id: guild.id,
+        role: 'leader',
+        permissions: ['invite_members', 'kick_members', 'manage_treasury', 'edit_guild', 'manage_perks', 'create_events']
+      });
+
+    if (memberError) throw memberError;
+    return guild;
+  }
+
+  // Tournament Operations
+  async getTournaments(status?: string) {
+    let query = this.client
+      .from('tournaments')
+      .select(`
+        *,
+        tournament_participants (
+          *,
+          user_profiles (username, display_name, level)
+        )
+      `)
+      .order('start_date', { ascending: true });
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  }
+
+  async registerForTournament(userId: string, tournamentId: string, guildId?: string) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) throw new Error('User profile not found');
+
+    const { data, error } = await this.client
+      .from('tournament_participants')
+      .insert({
+        tournament_id: tournamentId,
+        user_id: profile.id,
+        guild_id: guildId || null,
+        score: 0,
+        is_disqualified: false
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Achievement Operations
+  async getUserAchievements(userId: string) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) return [];
+
+    const { data, error } = await this.client
+      .from('user_achievements')
+      .select(`
+        *,
+        achievements (*)
+      `)
+      .eq('user_id', profile.id);
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getAchievements(category?: string) {
+    let query = this.client
+      .from('achievements')
+      .select('*')
+      .order('points', { ascending: true });
+
+    if (category && category !== 'all') {
+      query = query.eq('category', category);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  }
+
+  async awardAchievementProgress(userId: string, achievementId: string, progressIncrement = 1) {
+    const { data, error } = await this.client.rpc('award_achievement_progress', {
+      p_user_id: userId,
+      p_achievement_id: achievementId,
+      p_progress_increment: progressIncrement
+    });
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Store Operations
+  async getStoreItems(category?: string, type?: string) {
+    let query = this.client
+      .from('store_items')
+      .select('*')
+      .order('price_bettabuckz', { ascending: true });
+
+    if (category && category !== 'all') {
+      query = query.eq('category', category);
+    }
+    if (type) {
+      query = query.eq('type', type);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  }
+
+  async getUserInventory(userId: string) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) return [];
+
+    const { data, error } = await this.client
+      .from('user_inventory')
+      .select(`
+        *,
+        store_items (*)
+      `)
+      .eq('user_id', profile.id);
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Purchase Operations
+  async createPurchase(purchase: any) {
+    const { data, error } = await this.client
+      .from('purchases')
+      .insert(purchase)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getPurchases(userId: string) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) return [];
+
+    const { data, error } = await this.client
+      .from('purchases')
+      .select(`
+        *,
+        purchase_packages (*),
+        subscription_plans (*)
+      `)
+      .eq('user_id', profile.id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  }
+
+  async updatePurchaseStatus(purchaseId: string, status: string, metadata?: any) {
+    const updateData: any = { status };
+    
+    if (status === 'completed') {
+      updateData.processed_at = new Date().toISOString();
+    }
+    if (metadata) {
+      updateData.metadata = metadata;
+    }
+
+    const { data, error } = await this.client
+      .from('purchases')
+      .update(updateData)
+      .eq('id', purchaseId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Package and Subscription Operations
+  async getPurchasePackages(category?: string) {
+    let query = this.client
+      .from('purchase_packages')
+      .select('*')
+      .eq('is_active', true)
+      .order('price_usd_cents', { ascending: true });
+
+    if (category && category !== 'all') {
+      query = query.eq('category', category);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  }
+
+  async getSubscriptionPlans() {
+    const { data, error } = await this.client
+      .from('subscription_plans')
+      .select('*')
+      .eq('is_active', true)
+      .order('price_monthly_cents', { ascending: true });
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Crypto Payment Operations
+  async createCryptoPayment(payment: any) {
+    const { data, error } = await this.client
+      .from('crypto_payments')
+      .insert(payment)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getCryptoPayments(userId: string, status?: string) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) return [];
+
+    let query = this.client
+      .from('crypto_payments')
+      .select('*')
+      .eq('user_id', profile.id)
+      .order('created_at', { ascending: false });
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  }
+
+  async updateCryptoPaymentStatus(paymentId: string, status: string, confirmationCount?: number, transactionHash?: string) {
+    const updateData: any = { status };
+    
+    if (confirmationCount !== undefined) {
+      updateData.confirmation_count = confirmationCount;
+    }
+    if (transactionHash) {
+      updateData.transaction_hash = transactionHash;
+    }
+    if (status === 'confirmed') {
+      updateData.confirmed_at = new Date().toISOString();
+    }
+
+    const { data, error } = await this.client
+      .from('crypto_payments')
+      .update(updateData)
+      .eq('id', paymentId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Social Operations
+  async getFriends(userId: string) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) return [];
+
+    const { data, error } = await this.client
+      .from('social_connections')
+      .select(`
+        *,
+        friend_profile:user_profiles!social_connections_friend_id_fkey (*)
+      `)
+      .eq('user_id', profile.id)
+      .eq('status', 'accepted');
+
+    if (error) throw error;
+    return data;
+  }
+
+  async sendFriendRequest(fromUserId: string, toUserId: string) {
+    const fromProfile = await this.getUserProfile(fromUserId);
+    const toProfile = await this.getUserProfile(toUserId);
+    
+    if (!fromProfile || !toProfile) {
+      throw new Error('User profiles not found');
+    }
+
+    const { data, error } = await this.client
+      .from('social_connections')
+      .insert({
+        user_id: fromProfile.id,
+        friend_id: toProfile.id,
+        status: 'pending',
+        initiated_by: fromProfile.id
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Leaderboard Operations
+  async getLeaderboard(type: string, category: string) {
+    const { data, error } = await this.client
+      .from('leaderboards')
+      .select('*')
+      .eq('type', type)
+      .eq('category', category)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error;
+    return data;
+  }
+
+  // Cross-domain Integration
+  async getCrossDomainIntegration(userId: string) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) return null;
+
+    const { data, error } = await this.client
+      .from('cross_domain_integrations')
+      .select('*')
+      .eq('user_id', profile.id)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error;
+    return data;
+  }
+
+  async updateCrossDomainIntegration(userId: string, updates: any) {
+    const profile = await this.getUserProfile(userId);
+    if (!profile) throw new Error('User profile not found');
+
+    const { data, error } = await this.client
+      .from('cross_domain_integrations')
+      .upsert({
+        user_id: profile.id,
+        ...updates,
+        last_sync_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Real-time subscriptions
+  subscribeToUserUpdates(userId: string, callback: (payload: any) => void) {
+    return this.client
+      .channel(`user_${userId}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'user_profiles',
+        filter: `user_id=eq.${userId}`
+      }, callback)
+      .subscribe();
+  }
+
+  subscribeToGuildUpdates(guildId: string, callback: (payload: any) => void) {
+    return this.client
+      .channel(`guild_${guildId}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'guilds',
+        filter: `id=eq.${guildId}`
+      }, callback)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'guild_members',
+        filter: `guild_id=eq.${guildId}`
+      }, callback)
+      .subscribe();
+  }
+}
+
+export const supabaseHelper = new SupabaseHelper();
+
+// Helper functions for common database operations
+export class SupabaseClient {
+  private client = supabase;
+
+  // User Profile Operations
+  async getUserProfile(userId: string) {
+    const { data, error } = await this.client
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async updateUserProfile(userId: string, updates: Partial<Database['public']['Tables']['user_profiles']['Update']>) {
+    const { data, error } = await this.client
+      .from('user_profiles')
+      .update(updates)
+      .eq('user_id', userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async createUserProfile(userProfile: Database['public']['Tables']['user_profiles']['Insert']) {
+    const { data, error } = await this.client
+      .from('user_profiles')
+      .insert(userProfile)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // BettaBuckZ Operations
+  async getBettaBuckZWallet(userId: string) {
+    const { data, error } = await this.client
+      .from('bettabuckz_wallets')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getBettaBuckZTransactions(userId: string, limit = 50) {
+    const { data, error } = await this.client
+      .from('bettabuckz_transactions')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return data;
+  }
+
+  async processBettaBuckZTransaction(
+    userId: string,
+    type: string,
+    amount: number,
+    source: string,
+    description?: string,
+    referenceId?: string
+  ) {
+    const { data, error } = await this.client.rpc('process_bettabuckz_transaction', {
+      p_user_id: userId,
+      p_type: type,
+      p_amount: amount,
+      p_source: source,
+      p_description: description,
+      p_reference_id: referenceId
+    });
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Guild Operations
+  async getGuild(guildId: string) {
+    const { data, error } = await this.client
+      .from('guilds')
+      .select(`
+        *,
+        guild_members (
+          *,
+          user_profiles (username, display_name, level, avatar_url)
+        ),
+        guild_perks (*)
+      `)
+      .eq('id', guildId)
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getUserGuild(userId: string) {
+    const { data, error } = await this.client
+      .from('guild_members')
+      .select(`
+        *,
+        guilds (
+          *,
+          guild_perks (*)
+        )
+      `)
+      .eq('user_id', userId)
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async createGuild(guild: Database['public']['Tables']['guilds']['Insert']) {
+    const { data, error } = await this.client
+      .from('guilds')
+      .insert(guild)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async joinGuild(userId: string, guildId: string) {
+    const { data, error } = await this.client
+      .from('guild_members')
+      .insert({
+        user_id: userId,
+        guild_id: guildId,
+        role: 'recruit',
+        permissions: [],
+        contribution_bettabuckz: 0,
+        contribution_game_money: 0,
+        contribution_experience: 0
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Tournament Operations
+  async getTournaments(status?: string) {
+    let query = this.client
+      .from('tournaments')
+      .select(`
+        *,
+        tournament_participants (
+          *,
+          user_profiles (username, display_name, level)
+        )
+      `)
+      .order('start_date', { ascending: true });
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  }
+
+  async registerForTournament(userId: string, tournamentId: string, guildId?: string) {
+    const { data, error } = await this.client
+      .from('tournament_participants')
+      .insert({
+        tournament_id: tournamentId,
+        user_id: userId,
+        guild_id: guildId,
+        score: 0,
+        is_disqualified: false
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Achievement Operations
+  async getUserAchievements(userId: string) {
+    const { data, error } = await this.client
+      .from('user_achievements')
+      .select(`
+        *,
+        achievements (*)
+      `)
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getAchievements(category?: string) {
+    let query = this.client
+      .from('achievements')
+      .select('*')
+      .order('points', { ascending: true });
+
+    if (category) {
+      query = query.eq('category', category);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  }
+
+  async awardAchievementProgress(userId: string, achievementId: string, progressIncrement = 1) {
+    const { data, error } = await this.client.rpc('award_achievement_progress', {
+      p_user_id: userId,
+      p_achievement_id: achievementId,
+      p_progress_increment: progressIncrement
+    });
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Store Operations
+  async getStoreItems(category?: string, type?: string) {
+    let query = this.client
+      .from('store_items')
+      .select('*')
+      .order('price_bettabuckz', { ascending: true });
+
+    if (category) {
+      query = query.eq('category', category);
+    }
+    if (type) {
+      query = query.eq('type', type);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  }
+
+  async getUserInventory(userId: string) {
+    const { data, error } = await this.client
+      .from('user_inventory')
+      .select(`
+        *,
+        store_items (*)
+      `)
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return data;
+  }
+
+  async purchaseItem(userId: string, itemId: string, quantity = 1) {
+    // This would be handled by a more complex transaction in a real implementation
+    const { data, error } = await this.client
+      .from('user_inventory')
+      .upsert({
+        user_id: userId,
+        item_id: itemId,
+        quantity
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Purchase Operations
+  async createPurchase(purchase: Database['public']['Tables']['purchases']['Insert']) {
+    const { data, error } = await this.client
+      .from('purchases')
+      .insert(purchase)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getPurchases(userId: string) {
+    const { data, error } = await this.client
+      .from('purchases')
+      .select(`
+        *,
+        purchase_packages (*),
+        subscription_plans (*)
+      `)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  }
+
+  async updatePurchaseStatus(purchaseId: string, status: string, metadata?: any) {
+    const { data, error } = await this.client
+      .from('purchases')
+      .update({
+        status,
+        ...(status === 'completed' && { processed_at: new Date().toISOString() }),
+        ...(metadata && { metadata })
+      })
+      .eq('id', purchaseId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Subscription Operations
+  async getUserSubscriptions(userId: string) {
+    const { data, error } = await this.client
+      .from('user_subscriptions')
+      .select(`
+        *,
+        subscription_plans (*)
+      `)
+      .eq('user_id', userId)
+      .eq('status', 'active');
+
+    if (error) throw error;
+    return data;
+  }
+
+  async createSubscription(subscription: Database['public']['Tables']['user_subscriptions']['Insert']) {
+    const { data, error } = await this.client
+      .from('user_subscriptions')
+      .insert(subscription)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Crypto Payment Operations
+  async createCryptoPayment(payment: Database['public']['Tables']['crypto_payments']['Insert']) {
+    const { data, error } = await this.client
+      .from('crypto_payments')
+      .insert(payment)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getCryptoPayments(userId: string, status?: string) {
+    let query = this.client
+      .from('crypto_payments')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  }
+
+  async updateCryptoPaymentStatus(paymentId: string, status: string, confirmationCount?: number, transactionHash?: string) {
+    const updateData: any = { status };
+    
+    if (confirmationCount !== undefined) {
+      updateData.confirmation_count = confirmationCount;
+    }
+    if (transactionHash) {
+      updateData.transaction_hash = transactionHash;
+    }
+    if (status === 'confirmed') {
+      updateData.confirmed_at = new Date().toISOString();
+    }
+
+    const { data, error } = await this.client
+      .from('crypto_payments')
+      .update(updateData)
+      .eq('id', paymentId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Social Operations
+  async getFriends(userId: string) {
+    const { data, error } = await this.client
+      .from('social_connections')
+      .select(`
+        *,
+        friend_profile:user_profiles!social_connections_friend_id_fkey (*)
+      `)
+      .eq('user_id', userId)
+      .eq('status', 'accepted');
+
+    if (error) throw error;
+    return data;
+  }
+
+  async sendFriendRequest(fromUserId: string, toUserId: string) {
+    const { data, error } = await this.client
+      .from('social_connections')
+      .insert({
+        user_id: fromUserId,
+        friend_id: toUserId,
+        status: 'pending',
+        initiated_by: fromUserId
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async acceptFriendRequest(connectionId: string) {
+    const { data, error } = await this.client
+      .from('social_connections')
+      .update({
+        status: 'accepted',
+        accepted_at: new Date().toISOString()
+      })
+      .eq('id', connectionId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Leaderboard Operations
+  async getLeaderboard(type: string, category: string) {
+    const { data, error } = await this.client
+      .from('leaderboards')
+      .select('*')
+      .eq('type', type)
+      .eq('category', category)
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  // Real-time subscriptions
+  subscribeToUserUpdates(userId: string, callback: (payload: any) => void) {
+    return this.client
+      .channel(`user_${userId}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'user_profiles',
+        filter: `user_id=eq.${userId}`
+      }, callback)
+      .subscribe();
+  }
+
+  subscribeToGuildUpdates(guildId: string, callback: (payload: any) => void) {
+    return this.client
+      .channel(`guild_${guildId}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'guilds',
+        filter: `id=eq.${guildId}`
+      }, callback)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'guild_members',
+        filter: `guild_id=eq.${guildId}`
+      }, callback)
+      .subscribe();
+  }
+
+  subscribeToTournamentUpdates(tournamentId: string, callback: (payload: any) => void) {
+    return this.client
+      .channel(`tournament_${tournamentId}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'tournament_participants',
+        filter: `tournament_id=eq.${tournamentId}`
+      }, callback)
+      .subscribe();
+  }
+}
+
+export const supabaseClient = new SupabaseClient();
+
+export type Database = {
+  public: {
+    Tables: {
+      users: {
+        Row: {
+          id: string
+          email: string
+          username: string
+          wallet_coins: number
+          wallet_gems: number
+          wallet_cash: number
+          level: number
+          experience: number
+          avatar_url: string | null
+          created_at: string
+          updated_at: string
+          last_active: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          username: string
+          wallet_coins?: number
+          wallet_gems?: number
+          wallet_cash?: number
+          level?: number
+          experience?: number
+          avatar_url?: string | null
+          created_at?: string
+          updated_at?: string
+          last_active?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          username?: string
+          wallet_coins?: number
+          wallet_gems?: number
+          wallet_cash?: number
+          level?: number
+          experience?: number
+          avatar_url?: string | null
+          created_at?: string
+          updated_at?: string
+          last_active?: string
+        }
+      }
+      purchases: {
+        Row: {
+          id: string
+          user_id: string
+          item_id: string
+          item_name: string
+          item_category: string
+          price: number
+          currency: string
+          payment_method: string
+          transaction_id: string | null
+          status: 'pending' | 'completed' | 'failed' | 'refunded'
+          created_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          item_id: string
+          item_name: string
+          item_category: string
+          price: number
+          currency: string
+          payment_method: string
+          transaction_id?: string | null
+          status?: 'pending' | 'completed' | 'failed' | 'refunded'
+          created_at?: string
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          item_id?: string
+          item_name?: string
+          item_category?: string
+          price?: number
+          currency?: string
+          payment_method?: string
+          transaction_id?: string | null
+          status?: 'pending' | 'completed' | 'failed' | 'refunded'
+          created_at?: string
+          completed_at?: string | null
+        }
+      }
+      inventory: {
+        Row: {
+          id: string
+          user_id: string
+          item_id: string
+          item_type: string
+          quantity: number
+          equipped: boolean
+          acquired_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          item_id: string
+          item_type: string
+          quantity?: number
+          equipped?: boolean
+          acquired_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          item_id?: string
+          item_type?: string
+          quantity?: number
+          equipped?: boolean
+          acquired_at?: string
+        }
+      }
+      leaderboards: {
+        Row: {
+          id: string
+          user_id: string
+          category: string
+          score: number
+          rank: number
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          category: string
+          score: number
+          rank?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          category?: string
+          score?: number
+          rank?: number
+          updated_at?: string
+        }
+      }
+      achievements: {
+        Row: {
+          id: string
+          user_id: string
+          achievement_id: string
+          unlocked_at: string
+          progress: number
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          achievement_id: string
+          unlocked_at?: string
+          progress?: number
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          achievement_id?: string
+          unlocked_at?: string
+          progress?: number
+        }
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+  }
+}

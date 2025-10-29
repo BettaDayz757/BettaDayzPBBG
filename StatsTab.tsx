@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface StatsTabProps {
+  character?: any;
   player?: {
     level?: number;
     experience?: number;

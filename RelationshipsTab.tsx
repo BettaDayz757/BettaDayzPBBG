@@ -13,7 +13,7 @@ interface RelationshipsTabProps {
   updateCharacter: (character: Character) => void;
 }
 
-const relationshipIcons = {
+const relationshipIcons: { [key: string]: string } = {
   friend: '👥',
   partner: '💕',
   sibling: '👫',

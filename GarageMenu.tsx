@@ -21,7 +21,9 @@ interface Vehicle {
     spoiler?: boolean;
     tint?: string;
     engine?: string;
+    [key: string]: any;
   };
+  [key: string]: any;
 }
 
 interface GarageMenuProps {

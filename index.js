@@ -1413,14 +1413,14 @@ const BusinessDashboard = ({ player, onBusinessUpdate }) => {
     season: getCurrentSeason()
   });
   const businessSim = new BusinessSimulation();
-  useEffect(() => {
-    if (player.businesses) {
-      setBusinesses(player.businesses);
-    }
-    updateMarketConditions();
-    generateDailyOpportunities();
-    generateActiveChallenges();
-  }, [player]);
+  
+  const getCurrentSeasonalEffect = () => {
+    const month = (/* @__PURE__ */ new Date()).getMonth();
+    if (month >= 5 && month <= 7) return "summer_boost";
+    if (month >= 11 || month <= 1) return "holiday_season";
+    return "normal";
+  };
+  
   const updateMarketConditions = () => {
     const conditions = ["poor", "stable", "good", "excellent"];
     const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
@@ -1433,12 +1433,7 @@ const BusinessDashboard = ({ player, onBusinessUpdate }) => {
       season: getCurrentSeason()
     }));
   };
-  const getCurrentSeasonalEffect = () => {
-    const month = (/* @__PURE__ */ new Date()).getMonth();
-    if (month >= 5 && month <= 7) return "summer_boost";
-    if (month >= 11 || month <= 1) return "holiday_season";
-    return "normal";
-  };
+  
   const generateActiveChallenges = () => {
     const currentSeason = getCurrentSeason();
     const availableChallenges = Object.entries(norfolkChallenges).filter(([key, challenge]) => {
@@ -1450,6 +1445,7 @@ const BusinessDashboard = ({ player, onBusinessUpdate }) => {
     });
     setActiveChallenges(availableChallenges.map(([key, challenge]) => ({ id: key, ...challenge })));
   };
+  
   const generateDailyOpportunities = () => {
     getCurrentSeason();
     businesses.length > 0 ? businesses[0].location : "DOWNTOWN";
@@ -1496,6 +1492,16 @@ const BusinessDashboard = ({ player, onBusinessUpdate }) => {
     });
     setActiveOpportunities(availableOpportunities);
   };
+  
+  useEffect(() => {
+    if (player.businesses) {
+      setBusinesses(player.businesses);
+    }
+    updateMarketConditions();
+    generateDailyOpportunities();
+    generateActiveChallenges();
+  }, [player, updateMarketConditions, generateDailyOpportunities, generateActiveChallenges]);
+  
   const handleStartBusiness = (businessConfig) => {
     try {
       const newBusiness = businessSim.startBusiness(businessConfig);
@@ -2145,21 +2151,7 @@ const GameMain = ({ player, onBusinessAction }) => {
   const [currentView, setCurrentView] = useState("dashboard");
   const [currentChallenge, setCurrentChallenge] = useState(null);
   const [availableOpportunities, setAvailableOpportunities] = useState([]);
-  useEffect(() => {
-    if (player) {
-      setPlayerState(player);
-    }
-    generateOpportunities();
-  }, [player]);
-  const loadPlayerState = async (userId) => {
-    try {
-      const response = await fetch(`/api/player/${userId}`);
-      const data = await response.json();
-      setPlayerState(data);
-    } catch (error) {
-      console.error("Error loading player state:", error);
-    }
-  };
+  
   const generateOpportunities = () => {
     const opportunities = [
       {
@@ -2180,6 +2172,24 @@ const GameMain = ({ player, onBusinessAction }) => {
     ];
     setAvailableOpportunities(opportunities);
   };
+  
+  const loadPlayerState = async (userId) => {
+    try {
+      const response = await fetch(`/api/player/${userId}`);
+      const data = await response.json();
+      setPlayerState(data);
+    } catch (error) {
+      console.error("Error loading player state:", error);
+    }
+  };
+  
+  useEffect(() => {
+    if (player) {
+      setPlayerState(player);
+    }
+    generateOpportunities();
+  }, [player, generateOpportunities]);
+  
   const handleBusinessUpdate = (updateData) => {
     switch (updateData.type) {
       case "BUSINESS_STARTED":
@@ -2430,10 +2440,7 @@ const CommunityHub = ({ player, onCommunityInteraction }) => {
   const [activeOrgs, setActiveOrgs] = useState([]);
   const [currentEvents, setCurrentEvents] = useState([]);
   const [relationships, setRelationships] = useState(/* @__PURE__ */ new Map());
-  useEffect(() => {
-    loadCommunityData();
-    generateEvents();
-  }, []);
+  
   const loadCommunityData = () => {
     setActiveOrgs(COMMUNITY_ORGANIZATIONS);
     const initialRelationships = /* @__PURE__ */ new Map();
@@ -2446,6 +2453,7 @@ const CommunityHub = ({ player, onCommunityInteraction }) => {
     });
     setRelationships(initialRelationships);
   };
+  
   const generateEvents = () => {
     const events = [
       {
@@ -2473,6 +2481,12 @@ const CommunityHub = ({ player, onCommunityInteraction }) => {
     ];
     setCurrentEvents(events);
   };
+  
+  useEffect(() => {
+    loadCommunityData();
+    generateEvents();
+  }, []);
+  
   const handleEventParticipation = (eventId) => {
     const event = currentEvents.find((e) => e.id === eventId);
     if (!event) return;
