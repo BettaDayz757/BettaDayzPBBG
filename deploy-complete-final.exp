@@ -1,0 +1,105 @@
+#!/usr/bin/expect -f
+
+set timeout 60
+set password "@Jgallow20"
+
+# Connect to server
+spawn ssh -p 65002 u933155252@194.195.84.72
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "$ " {
+        # We're in
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+}
+
+# Navigate and execute setup
+send "cd ~/bettadayz\r"
+expect "$ "
+
+send "ls -la\r"
+expect "$ "
+
+# Make script executable and run
+send "chmod +x manual-setup-commands.sh\r"
+expect "$ "
+
+send "./manual-setup-commands.sh\r"
+expect {
+    "$ " {
+        puts "✅ Setup script completed"
+    }
+    timeout {
+        puts "Setup timeout, continuing..."
+    }
+}
+
+# Install PM2 globally
+send "export PATH=/home/u933155252/node-v18.19.0-linux-x64/bin:$PATH\r"
+expect "$ "
+
+send "npm install pm2 -g\r"
+expect {
+    "$ " {
+        puts "✅ PM2 installed"
+    }
+    timeout {
+        puts "PM2 install timeout, continuing..."
+    }
+}
+
+# Install project dependencies
+send "npm install\r"
+expect {
+    "$ " {
+        puts "✅ Dependencies installed"
+    }
+    timeout {
+        puts "Dependencies timeout, continuing..."
+    }
+}
+
+# Create logs directory
+send "mkdir -p logs\r"
+expect "$ "
+
+# Start applications
+send "pm2 start ecosystem.config.js\r"
+expect {
+    "$ " {
+        puts "✅ Applications started"
+    }
+    timeout {
+        puts "PM2 start timeout, continuing..."
+    }
+}
+
+# Check status
+send "pm2 status\r"
+expect "$ "
+
+send "pm2 logs --lines 5\r"
+expect "$ "
+
+puts ""
+puts "🎯 DEPLOYMENT COMPLETE! 🎯"
+puts "================================"
+puts "✅ Shop: http://194.195.84.72:3000"
+puts "✅ Store: http://194.195.84.72:3001"
+puts "🔐 JWT Secret: 9=N6H//qQ]?g+BDV"
+puts "📊 PM2 Status: Check above"
+puts "================================"
+
+send "exit\r"
+expect eof

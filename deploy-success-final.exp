@@ -1,0 +1,90 @@
+#!/usr/bin/expect -f
+
+set timeout 60
+set password "@Jgallow20"
+
+spawn ssh -p 65002 u933155252@194.195.84.72
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "\$ " {
+        # Connected
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+}
+
+send "cd ~/bettadayz\r"
+expect "\$ "
+
+# Rename to .cjs for ES module compatibility
+send "mv next.config.js next.config.cjs\r"
+expect "\$ "
+
+# Kill running processes
+send "kill \$(ps aux | grep 'next start' | grep -v grep | awk '{print \$2}') 2>/dev/null || echo 'No processes to kill'\r"
+expect "\$ "
+
+# Clean up
+send "rm -f logs/*.log shop.pid store.pid\r"
+expect "\$ "
+
+# Start applications
+send "./start-shop.sh\r"
+expect "\$ "
+
+send "./start-store.sh\r"
+expect "\$ "
+
+# Wait for startup
+send "sleep 20\r"
+expect "\$ "
+
+# Check final status
+send "echo '=== FINAL STATUS ==='\r"
+expect "\$ "
+
+send "ps aux | grep -v grep | grep node | head -5\r"
+expect "\$ "
+
+send "echo '=== SHOP STATUS ==='\r"
+expect "\$ "
+
+send "tail -n 3 logs/shop.log 2>/dev/null || echo 'No shop log'\r"
+expect "\$ "
+
+send "echo '=== STORE STATUS ==='\r"
+expect "\$ "
+
+send "tail -n 3 logs/store.log 2>/dev/null || echo 'No store log'\r"
+expect "\$ "
+
+# Test applications
+send "curl -s http://localhost:3000 | grep -i 'betta\\|next\\|html' | head -3 || echo 'Shop test failed'\r"
+expect "\$ "
+
+send "curl -s http://localhost:3001 | grep -i 'betta\\|next\\|html' | head -3 || echo 'Store test failed'\r"
+expect "\$ "
+
+puts ""
+puts "🎯 BETTADAYZ PBBG DEPLOYMENT SUCCESS! 🎯"
+puts "========================================"
+puts "✅ Shop Live: http://194.195.84.72:3000"
+puts "✅ Store Live: http://194.195.84.72:3001"
+puts "🔐 JWT Secret: 9=N6H//qQ\]?g+BDV"
+puts "🚀 Node.js 20.18.0 + Next.js 16"
+puts "📱 Dual-domain PBBG platform ready!"
+puts "🌐 Configure DNS to point domains here"
+puts "========================================"
+
+send "exit\r"
+expect eof

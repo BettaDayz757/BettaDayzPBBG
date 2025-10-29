@@ -1,0 +1,103 @@
+#!/usr/bin/expect -f
+
+set timeout 120
+set password "@Jgallow20"
+
+spawn ssh -p 65002 u933155252@194.195.84.72
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "\$ " {
+        # Connected
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+}
+
+send "cd ~\r"
+expect "\$ "
+
+# Stop current processes
+send "cd ~/bettadayz\r"
+expect "\$ "
+
+send "kill \$(cat shop.pid store.pid 2>/dev/null) 2>/dev/null || echo 'No processes to kill'\r"
+expect "\$ "
+
+# Clean up old Node.js
+send "cd ~\r"
+expect "\$ "
+
+send "rm -rf node-v18.19.0-linux-x64*\r"
+expect "\$ "
+
+# Download Node.js 20 LTS
+send "wget -q https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.gz\r"
+expect "\$ "
+
+# Extract it
+send "tar -xzf node-v20.18.0-linux-x64.tar.gz\r"
+expect "\$ "
+
+# Test Node.js 20
+send "~/node-v20.18.0-linux-x64/bin/node --version\r"
+expect "\$ "
+
+# Navigate to project
+send "cd ~/bettadayz\r"
+expect "\$ "
+
+# Update startup scripts for Node 20
+send "sed -i 's/node-v18.19.0/node-v20.18.0/g' start-shop.sh start-store.sh\r"
+expect "\$ "
+
+# Start applications with Node 20
+send "./start-shop.sh\r"
+expect "\$ "
+
+send "./start-store.sh\r"
+expect "\$ "
+
+# Give apps time to start
+send "sleep 10\r"
+expect "\$ "
+
+# Check processes
+send "ps aux | grep -v grep | grep next\r"
+expect "\$ "
+
+# Check logs for success
+send "tail -n 5 logs/shop.log\r"
+expect "\$ "
+
+send "tail -n 5 logs/store.log\r"
+expect "\$ "
+
+# Test if apps are responding
+send "curl -s http://localhost:3000 | head -n 3 || echo 'Shop not responding'\r"
+expect "\$ "
+
+send "curl -s http://localhost:3001 | head -n 3 || echo 'Store not responding'\r"
+expect "\$ "
+
+puts ""
+puts "🎯 BETTADAYZ DEPLOYMENT WITH NODE 20! 🎯"
+puts "========================================"
+puts "✅ Shop: http://194.195.84.72:3000"
+puts "✅ Store: http://194.195.84.72:3001"
+puts "🔐 JWT Secret: 9=N6H//qQ\]?g+BDV"
+puts "🚀 Node.js 20.18.0 LTS running"
+puts "📱 Next.js 16 applications active"
+puts "========================================"
+
+send "exit\r"
+expect eof

@@ -1,0 +1,144 @@
+#!/usr/bin/expect -f
+
+set timeout 120
+set password "@Jgallow20"
+
+spawn ssh -p 65002 u933155252@194.195.84.72
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "\$ " {
+        # Connected
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+}
+
+send "cd ~\r"
+expect "\$ "
+
+# Clean up broken download
+send "rm -f node-v18.19.0-linux-x64.tar.xz\r"
+expect "\$ "
+
+send "rm -rf node-v18.19.0-linux-x64\r"
+expect "\$ "
+
+# Download Node.js as tar.gz (CloudLinux compatible)
+send "wget -q https://nodejs.org/dist/v18.19.0/node-v18.19.0-linux-x64.tar.gz\r"
+expect "\$ "
+
+# Extract it
+send "tar -xzf node-v18.19.0-linux-x64.tar.gz\r"
+expect "\$ "
+
+# Test Node.js
+send "~/node-v18.19.0-linux-x64/bin/node --version\r"
+expect "\$ "
+
+# Test npm
+send "~/node-v18.19.0-linux-x64/bin/npm --version\r"
+expect "\$ "
+
+# Navigate to project
+send "cd ~/bettadayz\r"
+expect "\$ "
+
+# Create startup scripts for both domains
+send "cat > start-shop.sh << 'EOF'\r"
+expect "> "
+send "#!/bin/bash\r"
+expect "> "
+send "cd /home/u933155252/bettadayz\r"
+expect "> "
+send "export PATH=/home/u933155252/node-v18.19.0-linux-x64/bin:\$PATH\r"
+expect "> "
+send "export PORT=3000\r"
+expect "> "
+send "export JWT_SECRET='9=N6H//qQ]?g+BDV'\r"
+expect "> "
+send "export NODE_ENV=production\r"
+expect "> "
+send "nohup node node_modules/.bin/next start > logs/shop.log 2>&1 &\r"
+expect "> "
+send "echo \$! > shop.pid\r"
+expect "> "
+send "EOF\r"
+expect "\$ "
+
+send "cat > start-store.sh << 'EOF'\r"
+expect "> "
+send "#!/bin/bash\r"
+expect "> "
+send "cd /home/u933155252/bettadayz\r"
+expect "> "
+send "export PATH=/home/u933155252/node-v18.19.0-linux-x64/bin:\$PATH\r"
+expect "> "
+send "export PORT=3001\r"
+expect "> "
+send "export JWT_SECRET='9=N6H//qQ]?g+BDV'\r"
+expect "> "
+send "export NODE_ENV=production\r"
+expect "> "
+send "nohup node node_modules/.bin/next start > logs/store.log 2>&1 &\r"
+expect "> "
+send "echo \$! > store.pid\r"
+expect "> "
+send "EOF\r"
+expect "\$ "
+
+# Make scripts executable
+send "chmod +x start-shop.sh start-store.sh\r"
+expect "\$ "
+
+# Create logs directory
+send "mkdir -p logs\r"
+expect "\$ "
+
+# Start both applications
+send "./start-shop.sh\r"
+expect "\$ "
+
+send "./start-store.sh\r"
+expect "\$ "
+
+# Give apps time to start
+send "sleep 8\r"
+expect "\$ "
+
+# Check processes
+send "ps aux | grep -v grep | grep next\r"
+expect "\$ "
+
+# Check PIDs
+send "cat shop.pid store.pid 2>/dev/null || echo 'PID files not found'\r"
+expect "\$ "
+
+# Check logs
+send "tail -n 3 logs/shop.log 2>/dev/null || echo 'Shop log not found'\r"
+expect "\$ "
+
+send "tail -n 3 logs/store.log 2>/dev/null || echo 'Store log not found'\r"
+expect "\$ "
+
+puts ""
+puts "🎯 BETTADAYZ DEPLOYMENT COMPLETE! 🎯"
+puts "====================================="
+puts "✅ Shop: http://194.195.84.72:3000"
+puts "✅ Store: http://194.195.84.72:3001"
+puts "🔐 JWT Secret: 9=N6H//qQ\]?g+BDV"
+puts "📱 Both domains running with Next.js"
+puts "🚀 Ready for DNS configuration!"
+puts "====================================="
+
+send "exit\r"
+expect eof

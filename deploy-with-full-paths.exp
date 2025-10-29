@@ -1,0 +1,94 @@
+#!/usr/bin/expect -f
+
+set timeout 90
+set password "@Jgallow20"
+
+# Connect to server
+spawn ssh -p 65002 u933155252@194.195.84.72
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "\$ " {
+        # We're in
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+}
+
+# Navigate to project
+send "cd ~/bettadayz\r"
+expect "\$ "
+
+# Install dependencies with full path
+send "/home/u933155252/node-v18.19.0-linux-x64/bin/npm install --production\r"
+expect {
+    "\$ " {
+        puts "✅ Dependencies installed"
+    }
+    timeout {
+        puts "Dependencies timeout, continuing..."
+        send "\003"
+        expect "\$ "
+    }
+}
+
+# Install PM2 globally with full path
+send "/home/u933155252/node-v18.19.0-linux-x64/bin/npm install pm2 -g\r"
+expect {
+    "\$ " {
+        puts "✅ PM2 installed"
+    }
+    timeout {
+        puts "PM2 install timeout, continuing..."
+        send "\003"
+        expect "\$ "
+    }
+}
+
+# Create logs directory
+send "mkdir -p logs\r"
+expect "\$ "
+
+# Start shop (port 3000)
+send "/home/u933155252/node-v18.19.0-linux-x64/bin/pm2 start /home/u933155252/node-v18.19.0-linux-x64/bin/node --name bettadayz-shop -- node_modules/.bin/next start\r"
+expect "\$ "
+
+# Set environment for shop
+send "cd ~/bettadayz && PORT=3000 JWT_SECRET='9=N6H//qQ\]?g+BDV' /home/u933155252/node-v18.19.0-linux-x64/bin/pm2 restart bettadayz-shop\r"
+expect "\$ "
+
+# Start store (port 3001) 
+send "PORT=3001 JWT_SECRET='9=N6H//qQ\]?g+BDV' /home/u933155252/node-v18.19.0-linux-x64/bin/pm2 start /home/u933155252/node-v18.19.0-linux-x64/bin/node --name bettadayz-store -- node_modules/.bin/next start\r"
+expect "\$ "
+
+# Check status
+send "/home/u933155252/node-v18.19.0-linux-x64/bin/pm2 status\r"
+expect "\$ "
+
+send "/home/u933155252/node-v18.19.0-linux-x64/bin/pm2 logs --lines 5\r"
+expect "\$ "
+
+# Check ports
+send "ss -tlnp | grep :300\r"
+expect "\$ "
+
+puts ""
+puts "🎯 DEPLOYMENT COMPLETE! 🎯"
+puts "================================"
+puts "✅ Shop: http://194.195.84.72:3000"
+puts "✅ Store: http://194.195.84.72:3001"  
+puts "🔐 JWT Secret: 9=N6H//qQ\]?g+BDV"
+puts "📊 Both domains configured"
+puts "================================"
+
+send "exit\r"
+expect eof

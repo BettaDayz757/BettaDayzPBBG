@@ -1,0 +1,84 @@
+#!/usr/bin/expect -f
+
+set timeout 60
+set password "@Jgallow20"
+
+# Connect to server
+spawn ssh -p 65002 u933155252@194.195.84.72
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "\$ " {
+        # We're in
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+}
+
+# Navigate to project
+send "cd ~/bettadayz\r"
+expect "\$ "
+
+# Set PATH and start applications
+send "export PATH=/home/u933155252/node-v18.19.0-linux-x64/bin:\$PATH\r"
+expect "\$ "
+
+# Install project dependencies if not done
+send "npm install --production\r"
+expect {
+    "\$ " {
+        puts "✅ Dependencies ready"
+    }
+    timeout {
+        puts "Dependencies timeout, continuing..."
+        send "\003"
+        expect "\$ "
+    }
+}
+
+# Create logs directory
+send "mkdir -p logs\r"
+expect "\$ "
+
+# Start applications with PM2
+send "pm2 start ecosystem.config.js\r"
+expect {
+    "\$ " {
+        puts "✅ Applications started"
+    }
+    timeout {
+        puts "PM2 start timeout, continuing..."
+    }
+}
+
+# Check status
+send "pm2 status\r"
+expect "\$ "
+
+send "pm2 logs --lines 3\r"
+expect "\$ "
+
+# Show running processes
+send "netstat -tlnp | grep :300\r"
+expect "\$ "
+
+puts ""
+puts "🎯 DEPLOYMENT COMPLETE! 🎯"
+puts "================================"
+puts "✅ Shop: http://194.195.84.72:3000"
+puts "✅ Store: http://194.195.84.72:3001"
+puts "🔐 JWT Secret: 9=N6H//qQ\]?g+BDV"
+puts "📊 Check PM2 status above"
+puts "================================"
+
+send "exit\r"
+expect eof

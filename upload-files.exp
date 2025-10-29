@@ -1,0 +1,27 @@
+#!/usr/bin/expect -f
+
+set timeout 30
+set password "@Jgallow20"
+
+# Upload setup files
+spawn scp -P 65002 manual-setup-commands.sh ecosystem.config.js .env.production.shop .env.production.store u933155252@194.195.84.72:~/bettadayz/
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "100%" {
+        puts "Files uploaded successfully"
+    }
+    timeout {
+        puts "Upload timeout"
+        exit 1
+    }
+}
+
+expect eof

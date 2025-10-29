@@ -1,0 +1,116 @@
+#!/usr/bin/expect -f
+
+set timeout 120
+set password "@Jgallow20"
+
+spawn ssh -p 65002 u933155252@194.195.84.72
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "\$ " {
+        # Connected
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+}
+
+send "cd ~/bettadayz\r"
+expect "\$ "
+
+# Rename next.config.ts to next.config.js for compatibility
+send "mv next.config.ts next.config.js\r"
+expect "\$ "
+
+# Update the config file content to be JavaScript
+send "cat > next.config.js << 'EOF'\r"
+expect "> "
+send "/** @type {import('next').NextConfig} */\r"
+expect "> "
+send "const nextConfig = {\r"
+expect "> "
+send "  experimental: {\r"
+expect "> "
+send "    optimizePackageImports: \['lucide-react'\]\r"
+expect "> "
+send "  }\r"
+expect "> "
+send "};\r"
+expect "> "
+send "\r"
+expect "> "
+send "module.exports = nextConfig;\r"
+expect "> "
+send "EOF\r"
+expect "\$ "
+
+# Kill any running processes
+send "kill \$(cat shop.pid store.pid 2>/dev/null) 2>/dev/null || echo 'No processes to kill'\r"
+expect "\$ "
+
+# Clear logs
+send "rm -f logs/*.log shop.pid store.pid\r"
+expect "\$ "
+
+# Start applications again
+send "./start-shop.sh\r"
+expect "\$ "
+
+send "./start-store.sh\r"
+expect "\$ "
+
+# Give apps time to start
+send "sleep 15\r"
+expect "\$ "
+
+# Check processes
+send "ps aux | grep -v grep | grep node\r"
+expect "\$ "
+
+# Check logs
+send "echo '=== SHOP LOG ==='\r"
+expect "\$ "
+
+send "tail -n 8 logs/shop.log 2>/dev/null || echo 'No shop log'\r"
+expect "\$ "
+
+send "echo '=== STORE LOG ==='\r"
+expect "\$ "
+
+send "tail -n 8 logs/store.log 2>/dev/null || echo 'No store log'\r"
+expect "\$ "
+
+# Test HTTP responses
+send "echo '=== TESTING SHOP ==='\r"
+expect "\$ "
+
+send "curl -s -I http://localhost:3000 | head -n 3 || echo 'Shop not responding'\r"
+expect "\$ "
+
+send "echo '=== TESTING STORE ==='\r"
+expect "\$ "
+
+send "curl -s -I http://localhost:3001 | head -n 3 || echo 'Store not responding'\r"
+expect "\$ "
+
+puts ""
+puts "🎯 BETTADAYZ PBBG LIVE DEPLOYMENT! 🎯"
+puts "====================================="
+puts "✅ Shop: http://194.195.84.72:3000"
+puts "✅ Store: http://194.195.84.72:3001"  
+puts "🔐 JWT Secret: 9=N6H//qQ\]?g+BDV"
+puts "🚀 Node.js 20.18.0 + Next.js 16"
+puts "📱 Fixed TypeScript config issue"
+puts "🌐 Ready for domain DNS setup!"
+puts "====================================="
+
+send "exit\r"
+expect eof

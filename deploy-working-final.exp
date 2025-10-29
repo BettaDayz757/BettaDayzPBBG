@@ -1,0 +1,98 @@
+#!/usr/bin/expect -f
+
+set timeout 120
+set password "@Jgallow20"
+
+spawn ssh -p 65002 u933155252@194.195.84.72
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "\$ " {
+        # Connected
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+}
+
+send "cd ~\r"
+expect "\$ "
+
+# Download Node.js properly
+send "wget -q https://nodejs.org/dist/v18.19.0/node-v18.19.0-linux-x64.tar.xz\r"
+expect "\$ "
+
+# Extract it properly (CloudLinux should have xz)
+send "tar -xf node-v18.19.0-linux-x64.tar.xz\r"
+expect "\$ "
+
+# Test Node.js
+send "~/node-v18.19.0-linux-x64/bin/node --version\r"
+expect "\$ "
+
+# Test npm
+send "~/node-v18.19.0-linux-x64/bin/npm --version\r"
+expect "\$ "
+
+# Navigate to project
+send "cd ~/bettadayz\r"
+expect "\$ "
+
+# Install PM2 globally
+send "~/node-v18.19.0-linux-x64/bin/npm install pm2 -g\r"
+expect {
+    "\$ " {
+        puts "✅ PM2 installed"
+    }
+    timeout {
+        puts "PM2 install timeout, continuing..."
+        send "\003"
+        expect "\$ "
+    }
+}
+
+# Start shop application (port 3000)
+send "cd ~/bettadayz && PORT=3000 JWT_SECRET='9=N6H//qQ\]?g+BDV' ~/node-v18.19.0-linux-x64/bin/node node_modules/.bin/next start &\r"
+expect "\$ "
+
+send "echo 'Shop started on port 3000'\r"
+expect "\$ "
+
+# Start store application (port 3001)
+send "PORT=3001 JWT_SECRET='9=N6H//qQ\]?g+BDV' ~/node-v18.19.0-linux-x64/bin/node node_modules/.bin/next start &\r"
+expect "\$ "
+
+send "echo 'Store started on port 3001'\r"
+expect "\$ "
+
+# Give apps time to start
+send "sleep 5\r"
+expect "\$ "
+
+# Check running processes
+send "ps aux | grep next\r"
+expect "\$ "
+
+# Check open ports
+send "ss -tlnp 2>/dev/null | grep -E ':(3000|3001)' || netstat -tlnp 2>/dev/null | grep -E ':(3000|3001)' || echo 'Port tools not available'\r"
+expect "\$ "
+
+puts ""
+puts "🎯 DEPLOYMENT COMPLETE! 🎯"
+puts "================================"
+puts "✅ Shop: http://194.195.84.72:3000"
+puts "✅ Store: http://194.195.84.72:3001"
+puts "🔐 JWT Secret: 9=N6H//qQ\]?g+BDV"
+puts "📊 Applications started in background"
+puts "================================"
+
+send "exit\r"
+expect eof

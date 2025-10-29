@@ -1,0 +1,62 @@
+#!/usr/bin/expect -f
+
+set timeout 60
+set password "@Jgallow20"
+
+spawn ssh -p 65002 u933155252@194.195.84.72
+
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "Password:" {
+        send "$password\r"
+        exp_continue
+    }
+    "\$ " {
+        # Connected
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+}
+
+send "cd ~/bettadayz\r"
+expect "\$ "
+
+# Check what's actually installed
+send "ls -la node-v18.19.0-linux-x64/\r"
+expect "\$ "
+
+send "find ~/node-v18.19.0-linux-x64 -name npm -type f 2>/dev/null || echo 'npm not found'\r"
+expect "\$ "
+
+send "find ~/node-v18.19.0-linux-x64 -name node -type f 2>/dev/null || echo 'node not found'\r"
+expect "\$ "
+
+# Try to find Node.js
+send "which node 2>/dev/null || echo 'system node not found'\r"
+expect "\$ "
+
+send "which npm 2>/dev/null || echo 'system npm not found'\r"
+expect "\$ "
+
+# Check if we can run Node directly
+send "~/node-v18.19.0-linux-x64/bin/node --version 2>/dev/null || echo 'direct node failed'\r"
+expect "\$ "
+
+# Try alternative approach - use nohup to start the app
+send "ls -la .next/\r"
+expect "\$ "
+
+send "ls -la node_modules/.bin/next 2>/dev/null || echo 'next binary not found'\r"
+expect "\$ "
+
+puts ""
+puts "🔍 SYSTEM INSPECTION COMPLETE"
+puts "Will now try direct deployment..."
+
+send "exit\r"
+expect eof
