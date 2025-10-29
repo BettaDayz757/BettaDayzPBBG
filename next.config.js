@@ -1,10 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',  // Enable static exports
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',  // Support GitHub Pages path
+  // Enable server-side features for API routes and Supabase integration
+  // Note: output: 'export' removed to support API routes
   images: {
-    unoptimized: true  // Required for static export
-  }
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
+    ],
+  },
+  // Environment variable configuration
+  env: {
+    NEXT_PUBLIC_DOMAIN: process.env.NEXT_PUBLIC_DOMAIN,
+  },
 }
 
 export default nextConfig

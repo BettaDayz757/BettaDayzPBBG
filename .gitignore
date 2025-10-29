@@ -8,6 +8,7 @@ lerna-debug.log*
 
 node_modules
 .next
+out
 dist
 dist-ssr
 *.local
@@ -47,4 +48,13 @@ docs/instructions/Roadmap.md
 .cursorrules
 *.md
 !.github/copilot-instructions.md
+!docs/*.md
+!README.md
+!CONTRIBUTING.md
+!LICENSE
 .qodo
+
+# Build artifacts and large files to ignore
+_index-Clus-2QJ.js
+*.tar.gz
+*.zip
