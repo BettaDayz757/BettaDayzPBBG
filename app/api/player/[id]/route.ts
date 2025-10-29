@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import supabase from '../../../../lib/supabase/client'
 
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
-  const { id } = params
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
 
   if (!id) {
     return NextResponse.json({ error: 'Missing player id' }, { status: 400 })

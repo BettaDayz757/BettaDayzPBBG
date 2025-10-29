@@ -57,7 +57,20 @@ const nextConfig = {
   
   images: {
     unoptimized: true,
-    domains: ['bettadayz.shop', 'bettadayz.store', 'btcfpizydmcdjhltwbil.supabase.co'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'bettadayz.shop',
+      },
+      {
+        protocol: 'https',
+        hostname: 'bettadayz.store',
+      },
+      {
+        protocol: 'https',
+        hostname: 'btcfpizydmcdjhltwbil.supabase.co',
+      },
+    ],
   },
   
   // Environment variable configuration
