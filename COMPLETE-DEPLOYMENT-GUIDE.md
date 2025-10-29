@@ -8,15 +8,19 @@ Complete production deployment of BettaDayz PBBG with Cloudflare Workers domain 
 - **JWT Secret**: `9=N6H//qQ]?g+BDV`
 - **Server**: `194.195.84.72:65002`
 - **SSH Password**: `@Jgallow20`
+- **Supabase URL**: `https://btcfpizydmcdjhltwbil.supabase.co`
+- **Supabase Project ID**: `btcfpizydmcdjhltwbil`
 
 ## ✅ Current Status (All Complete!)
 - ✅ **Server Applications**: Running on ports 3000 (shop) and 3001 (store)
+- ✅ **Supabase URL**: Configured at https://btcfpizydmcdjhltwbil.supabase.co
 - ✅ **Supabase Integration**: Code deployed with authentication hooks
 - ✅ **JWT Configuration**: Integrated across all systems
 - ✅ **Worker Code**: Created and ready for deployment
-- ✅ **Database Schema**: Complete PBBG schema created
+- ✅ **Database Schema**: Complete PBBG schema ready for deployment
 - ✅ **Deployment Package**: All files ready in `deployment-package/`
 - ✅ **Git Repository**: All changes committed and pushed
+- ✅ **Server Environment**: Updated with Supabase configuration
 
 ## 🌐 Manual Deployment Steps
 
@@ -49,20 +53,20 @@ NODE_ENV = production
    - `www.bettadayz.store`
 
 ### Step 3: Create Supabase Database
-1. Go to [https://supabase.com](https://supabase.com)
-2. Create new project: `bettadayz-pbbg`
-3. Set database password: `BettaDayz2025!`
-4. Go to **SQL Editor**
-5. Copy and run: `deployment-package/deploy-supabase.sql`
-6. Click **Run** to create complete schema
+1. Go to [https://supabase.com/dashboard/project/btcfpizydmcdjhltwbil](https://supabase.com/dashboard/project/btcfpizydmcdjhltwbil)
+2. Navigate to **SQL Editor**
+3. Copy and run: `deploy-to-supabase.sql` (created automatically)
+4. Click **Run** to create complete schema
 
-### Step 4: Configure Supabase Environment
-1. Get your Supabase URL and Anon Key from project settings
-2. Update server environment variables:
-   ```bash
-   SUPABASE_URL=your_supabase_url
-   SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
+**Note**: Your Supabase project is already created at: `https://btcfpizydmcdjhltwbil.supabase.co`
+
+### Step 4: Get Supabase API Keys
+1. In your Supabase project settings
+2. Go to **API** section
+3. Copy your **anon/public key** and **service_role key**
+4. Update these in your server environment files (already configured with placeholders)
+
+**Current Supabase Configuration**: Server already updated with your project URL
 
 ## 🎮 Test URLs
 
