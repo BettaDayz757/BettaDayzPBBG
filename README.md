@@ -1,8 +1,50 @@
-# BettaDayz PBBG
+# BettaDayz PBBG - Norfolk Business Empire
 
-A Remix-based Persistent Browser-Based Game (PBBG) application with multiplayer features, game mechanics, and social interactions.
+A Next.js-based Persistent Browser-Based Game (PBBG) celebrating African American and minority culture in Norfolk, VA. Build your business empire, create your legacy, and experience life simulation inspired by IMVU, BitLife, and Torn.com.
 
-**Live Site:** [https://bettadayz.shop](https://bettadayz.shop)
+**Live Sites:** 
+- [https://bettadayz.shop](https://bettadayz.shop)
+- [https://bettadayz.store](https://bettadayz.store)
+
+## 🎮 Game Features
+
+### Inspired By
+- **IMVU**: Social networking, character customization, virtual spaces
+- **BitLife**: Life simulation, aging system, major life decisions
+- **Torn.com**: Competitive gameplay, territory control, crew/gang system
+
+### Core Gameplay
+- 🏢 **Build Business Empire** in authentic Norfolk, VA locations
+- 🎓 **HBCU Integration** with Norfolk State, Hampton, Virginia State
+- ✊🏾 **Cultural Heritage** celebrating African American excellence
+- 👤 **Life Simulation** from age 18 to 85 with meaningful choices
+- 🤝 **Social Network** with crews, mentorship, and community impact
+- 🏆 **Competitive Play** with territory control and reputation systems
+
+## 🌍 Norfolk, VA Locations
+
+- **Downtown Norfolk**: Historic Black Wall Street revival area
+- **Norfolk State District**: Premier HBCU campus and innovation hub  
+- **Berkley**: Historic African American neighborhood renaissance
+- **Ocean View**: Beach community with rich cultural heritage
+- **Military Circle**: Near Naval Station Norfolk
+- **Ghent**: Arts and culture district
+- **Park Place**: Family business community
+- **Churchland**: Spiritual and community center
+
+## 🎓 HBCU Connections
+
+- **Norfolk State University** - Business partnerships, student recruitment
+- **Hampton University** - Entrepreneurship programs, alumni network
+- **Virginia State University** - Career fairs, talent pipeline
+- **HBCU Alumni Association** - Mentorship and networking
+
+## ✊🏾 Cultural Elements
+
+- **Business Types**: Barbershops, soul food restaurants, music studios, fashion/streetwear
+- **Historical Landmarks**: Church Street, Attucks Theatre, NSU Campus
+- **Cultural Icons**: Pharrell Williams, Missy Elliott, Timbaland inspiration
+- **Community Organizations**: Black Chamber of Commerce, Urban League, 100 Black Men
 
 ## 🚀 Quick Start
 
@@ -23,7 +65,7 @@ A Remix-based Persistent Browser-Based Game (PBBG) application with multiplayer 
 2. Install dependencies:
 
    ```bash
-   npm install
+   npm install --legacy-peer-deps
    ```
 
 3. Start the development server:
@@ -32,7 +74,7 @@ A Remix-based Persistent Browser-Based Game (PBBG) application with multiplayer 
    npm run dev
    ```
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## 📦 Deployment
 
@@ -110,11 +152,22 @@ The deployment workflow runs on pushes to the `main` branch:
 ## Available Scripts
 
 - `npm run dev` - Start development server
+- `npm run dev:shop` - Start dev server for bettadayz.shop (port 3000)
+- `npm run dev:store` - Start dev server for bettadayz.store (port 3001)
 - `npm run build` - Build for production
+- `npm run build:shop` - Build for bettadayz.shop
+- `npm run build:store` - Build for bettadayz.store
 - `npm run start` - Run production server
 - `npm run lint` - Run ESLint
 - `npm run ci` - Run CI checks locally
-- `npm run deploy:gh-pages` - Build for GitHub Pages
+
+## 🌐 Dual Domain Deployment
+
+This game supports two domains:
+- **bettadayz.shop** - Primary domain
+- **bettadayz.store** - Secondary domain
+
+Both domains serve the same game with shared backend and player data. See `DUAL-DOMAIN-DEPLOYMENT.md` for configuration details.
 
 ## GitHub Pages Setup
 
