@@ -83,7 +83,7 @@ export function proxy(request: NextRequest) {
 }
 
 // Keep the old middleware export for compatibility during transition
-export const middleware = proxy;
+export const _proxy1 = proxy;
 
 export const config = {
   matcher: [
