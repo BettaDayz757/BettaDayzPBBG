@@ -10,7 +10,7 @@
 
 # === VPS Configuration (EDIT THESE) ===
 VPS_USER="your_user"          # Replace with your SSH username (e.g., root, ubuntu)
-VPS_IP="your_vps_ip"          # Replace with your VPS IP address (e.g., 194.195.84.72)
+VPS_IP="your_vps_ip"          # Replace with your VPS IP address (e.g., 203.0.113.10)
 VPS_SSH_PORT="22"             # SSH port (default is 22)
 VPS_DEPLOY_PATH="/var/www/BettaDayzPBBG"  # Where to deploy on VPS
 
