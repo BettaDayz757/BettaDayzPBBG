@@ -31,9 +31,11 @@ npm run build
 
 ### Prerequisites
 
-- Node.js 18 or higher
+- Node.js 20 or higher
 - Git
 - VS Code (recommended)
+- Supabase account (for backend/database)
+- Vercel account (for deployment)
 
 ### Local Development
 
@@ -56,7 +58,61 @@ npm install
 npm run dev
 ```
 
-4. Open http://localhost:5173 in your browser
+4. Open http://localhost:3000 in your browser
+
+## Environment Configuration
+
+### Quick Setup
+
+For complete Supabase and Vercel setup instructions, see **[SUPABASE-VERCEL-SETUP.md](./SUPABASE-VERCEL-SETUP.md)**
+
+### Automated Setup Scripts
+
+```bash
+# Configure Supabase (interactive)
+./setup-supabase.sh
+
+# Configure Vercel environment variables
+./setup-vercel-env.sh
+
+# Validate security and deployment
+./security-validation.sh
+./check-deployment.sh
+```
+
+### Manual Configuration
+
+1. Copy the environment template:
+
+```bash
+cp .env.example .env.local
+```
+
+2. Get your Supabase credentials:
+   - Go to https://supabase.com/dashboard
+   - Select project: `btcfpizydmcdjhltwbil`
+   - Copy URL, anon key, and service role key
+   - Update `.env.local`
+
+3. Get your Vercel credentials:
+   - Go to https://vercel.com/account/tokens
+   - Generate a token
+   - Create 3 projects (bestdayz, bestdayz1, bettaday)
+   - Update `.env.local` with project IDs
+
+4. Generate secure secrets:
+
+```bash
+# Generate JWT secret
+openssl rand -base64 32
+
+# Generate NextAuth secret
+openssl rand -base64 32
+```
+
+5. Run database schema:
+   - Open Supabase SQL Editor
+   - Execute `supabase-schema.sql`
 
 ## Payment Integration
 
