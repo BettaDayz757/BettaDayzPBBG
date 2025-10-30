@@ -92,6 +92,8 @@ nano vps-config.sh  # Update VPS_USER and VPS_IP
 ./deploy-to-vps.sh
 ```
 
+> **📝 New to deployment?** See [QUICK-DEPLOY.md](./QUICK-DEPLOY.md) for a simple reference card!
+
 ### Deployment Guides
 
 - **[📖 Deployment Overview](./DEPLOYMENT-README.md)** - Complete guide to all deployment options
