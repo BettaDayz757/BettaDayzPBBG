@@ -19,8 +19,26 @@ Your repository is now configured to work with the domain **bettadayz.shop**. Th
 - Node.js 18+ support
 - SSH access
 
-**Quick Steps:**
-1. SSH into your Hostinger VPS
+**🚀 Automated Deployment (Easiest):**
+Use our automated deployment script:
+
+```bash
+# On your local machine
+git clone https://github.com/BettaDayz757/BettaDayzPBBG.git
+cd BettaDayzPBBG
+
+# Configure your VPS details
+cp vps-config.template.sh vps-config.sh
+nano vps-config.sh  # Update VPS_USER and VPS_IP
+
+# Deploy automatically
+./deploy-to-vps.sh
+```
+
+**Full Automated Instructions:** See [VPS-DEPLOYMENT.md](./VPS-DEPLOYMENT.md)
+
+**Manual Steps:**
+1. SSH into your Hostinger VPS (replace with your actual IP)
 2. Clone this repository: `git clone https://github.com/BettaDayz757/BettaDayzPBBG.git`
 3. Install dependencies: `npm install`
 4. Build the app: `npm run build`
@@ -29,7 +47,7 @@ Your repository is now configured to work with the domain **bettadayz.shop**. Th
 7. Point DNS to your VPS IP in Hostinger DNS settings
 8. Set up SSL with Certbot
 
-**Full Instructions:** See [HOSTINGER-DEPLOYMENT-GUIDE.md](./HOSTINGER-DEPLOYMENT-GUIDE.md)
+**Full Manual Instructions:** See [HOSTINGER-DEPLOYMENT-GUIDE.md](./HOSTINGER-DEPLOYMENT-GUIDE.md)
 
 ### Option 2: Cloudflare Pages (Alternative)
 
@@ -164,7 +182,8 @@ pm2 monit
 ### Manual Updates (Hostinger VPS):
 
 ```bash
-# SSH into server
+# IMPORTANT: Replace 'your-server-ip' with your actual VPS IP address
+# Example: ssh root@194.195.84.72
 ssh root@your-server-ip
 
 # Navigate to project
@@ -179,6 +198,9 @@ npm run build
 
 # Restart
 pm2 restart bettadayz
+
+# Or use the automated script from your local machine:
+# ./deploy-to-vps.sh
 ```
 
 ### Automatic Updates:

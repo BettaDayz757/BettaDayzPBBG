@@ -80,25 +80,51 @@ A Next.js-based Persistent Browser-Based Game (PBBG) celebrating African America
 
 This application is configured to deploy to **bettadayz.shop** using Hostinger.
 
+### 🚀 Quick Deployment
+
+**Automated VPS Deployment (Easiest):**
+```bash
+# Configure your VPS settings
+cp vps-config.template.sh vps-config.sh
+nano vps-config.sh  # Update VPS_USER and VPS_IP
+
+# Deploy automatically
+./deploy-to-vps.sh
+```
+
 ### Deployment Guides
 
-- **[Quick Start Guide](./DEPLOYMENT-QUICKSTART.md)** - Fast deployment overview
-- **[Hostinger Deployment Guide](./HOSTINGER-DEPLOYMENT-GUIDE.md)** - Comprehensive Hostinger VPS deployment
-- **[Cloudflare Pages Guide](./cloudflare-deployment-guide.md)** - Alternative deployment option
+- **[📖 Deployment Overview](./DEPLOYMENT-README.md)** - Complete guide to all deployment options
+- **[🚀 VPS Deployment](./VPS-DEPLOYMENT.md)** - Automated VPS deployment with script
+- **[⚡ Quick Start Guide](./DEPLOYMENT-QUICKSTART.md)** - Fast deployment overview
+- **[🏢 Hostinger Guide](./HOSTINGER-DEPLOYMENT-GUIDE.md)** - Comprehensive Hostinger VPS deployment
+- **[☁️ Cloudflare Pages](./cloudflare-deployment-guide.md)** - Alternative deployment option
 
 ### Deployment Options
 
-1. **Hostinger VPS** (Recommended)
+1. **Automated VPS Deployment** (Easiest) ⭐
+   - One-command deployment script
+   - Automatic Node.js and PM2 setup
+   - Works with any VPS provider
+   - [Full Guide →](./VPS-DEPLOYMENT.md)
+
+2. **Manual VPS Deployment** (Hostinger, DigitalOcean, etc.)
    - Full control over server
-   - Custom domain: bettadayz.shop
-   - Node.js support with PM2 process management
+   - Custom domain support
+   - Node.js with PM2 process management
    - [Full Guide →](./HOSTINGER-DEPLOYMENT-GUIDE.md)
 
-2. **Cloudflare Pages** (Alternative)
+3. **Cloudflare Pages** (Alternative)
    - Free tier available
    - Automatic SSL and CDN
    - Easy GitHub integration
    - [Full Guide →](./cloudflare-deployment-guide.md)
+
+4. **GitHub Actions** (Automatic)
+   - Deploy on every push to main
+   - Copy `.github/workflows/deploy-vps.yml.template`
+   - Add VPS secrets to repository
+   - [See DEPLOYMENT-README.md](./DEPLOYMENT-README.md)
 
 ## Development
 

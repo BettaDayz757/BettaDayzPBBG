@@ -2,6 +2,8 @@
 
 This guide will walk you through deploying your BettaDayz PBBG application to Hostinger and connecting it to your domain **bettadayz.shop**.
 
+> **⚡ Quick Start**: For automated deployment, see [VPS-DEPLOYMENT.md](./VPS-DEPLOYMENT.md) and use the `deploy-to-vps.sh` script!
+
 ## Prerequisites
 
 - Hostinger account with VPS or Business hosting plan (required for Node.js applications)
@@ -13,6 +15,34 @@ This guide will walk you through deploying your BettaDayz PBBG application to Ho
 ## Overview
 
 This application is built with Remix (React framework) and requires a Node.js environment to run. Hostinger supports Node.js applications through their VPS or Business hosting plans.
+
+## Automated Deployment (Recommended)
+
+Use the automated deployment script for quick setup:
+
+1. **Clone the repository locally:**
+   ```bash
+   git clone https://github.com/BettaDayz757/BettaDayzPBBG.git
+   cd BettaDayzPBBG
+   ```
+
+2. **Configure your VPS settings:**
+   ```bash
+   cp vps-config.template.sh vps-config.sh
+   nano vps-config.sh
+   # Update VPS_USER and VPS_IP with your actual values
+   ```
+
+3. **Run the deployment script:**
+   ```bash
+   ./deploy-to-vps.sh
+   ```
+
+For detailed instructions, see [VPS-DEPLOYMENT.md](./VPS-DEPLOYMENT.md).
+
+## Manual Deployment
+
+If you prefer manual deployment or need more control:
 
 ## Part 1: Prepare Your Local Build
 
@@ -42,7 +72,10 @@ This will create a `build` directory with your production-ready application.
 4. Connect via SSH:
 
 ```bash
+# IMPORTANT: Replace 'your-server-ip' with your actual Hostinger VPS IP address
+# Example: ssh root@194.195.84.72
 ssh root@your-server-ip
+
 # Or use the credentials provided by Hostinger
 ```
 
@@ -278,7 +311,8 @@ systemctl status certbot.timer
 To deploy updates:
 
 ```bash
-# SSH into server
+# IMPORTANT: Replace 'your-server-ip' with your actual IP address
+# Example: ssh root@194.195.84.72
 ssh root@your-server-ip
 
 # Navigate to project

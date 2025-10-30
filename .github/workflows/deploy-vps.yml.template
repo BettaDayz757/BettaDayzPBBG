@@ -1,0 +1,64 @@
+name: Deploy to VPS
+
+# This is a template workflow for automatic VPS deployment
+# To use this workflow:
+# 1. Rename this file to deploy-vps.yml
+# 2. Add the following secrets to your GitHub repository:
+#    - VPS_HOST: Your VPS IP address or hostname
+#    - VPS_USERNAME: Your SSH username (e.g., root)
+#    - VPS_SSH_KEY: Your SSH private key
+#    - VPS_PORT: SSH port (optional, defaults to 22)
+#    - VPS_DEPLOY_PATH: Path where app is deployed (optional, defaults to /var/www/BettaDayzPBBG)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || '22' }}
+          script: |
+            # Navigate to deployment directory
+            cd ${{ secrets.VPS_DEPLOY_PATH || '/var/www/BettaDayzPBBG' }}
+            
+            # Pull latest changes
+            echo "Pulling latest changes..."
+            git pull origin main
+            
+            # Install dependencies
+            echo "Installing dependencies..."
+            npm install --production --legacy-peer-deps
+            
+            # Build application
+            echo "Building application..."
+            npm run build
+            
+            # Restart application with PM2
+            echo "Restarting application..."
+            pm2 restart bettadayz || pm2 start npm --name "bettadayz" -- start
+            pm2 save
+            
+            # Show status
+            echo "Deployment complete!"
+            pm2 status
+            pm2 logs bettadayz --lines 20 --nostream
+
+      - name: Notify Deployment Status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment successful!"
+          else
+            echo "❌ Deployment failed!"
+          fi
