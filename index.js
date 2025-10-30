@@ -3350,25 +3350,33 @@ function Game3D({ gamepadControls }) {
         className: "w-full h-full",
         children: [
           /* @__PURE__ */ jsx(CameraController, {}),
-          /* @__PURE__ */ jsx("ambientLight", { intensity: 0.4 }),
+          /* @__PURE__ */ jsx("ambientLight", { intensity: 0.6 }),
           /* @__PURE__ */ jsx(
             "directionalLight",
             {
-              position: [10, 10, 5],
-              intensity: 1,
+              position: [10, 20, 5],
+              intensity: 1.2,
               castShadow: true,
               "shadow-mapSize-width": 2048,
-              "shadow-mapSize-height": 2048
+              "shadow-mapSize-height": 2048,
+              "shadow-camera-far": 50,
+              "shadow-camera-left": -20,
+              "shadow-camera-right": 20,
+              "shadow-camera-top": 20,
+              "shadow-camera-bottom": -20
             }
           ),
-          /* @__PURE__ */ jsx("pointLight", { position: [0, 10, 0], intensity: 0.5 }),
+          /* @__PURE__ */ jsx("pointLight", { position: [0, 15, 0], intensity: 0.3, color: "#ffffff" }),
           /* @__PURE__ */ jsx(
             Sky,
             {
-              distance: 45e4,
-              sunPosition: [0, 1, 0],
-              inclination: 0,
-              azimuth: 0.25
+              distance: 450000,
+              inclination: 0.49,
+              azimuth: 0.25,
+              turbidity: 8,
+              rayleigh: 6,
+              mieCoefficient: 0.005,
+              mieDirectionalG: 0.8
             }
           ),
           /* @__PURE__ */ jsxs(Suspense, { fallback: null, children: [
