@@ -2,29 +2,33 @@
 
 A Next.js-based Persistent Browser-Based Game (PBBG) celebrating African American and minority culture in Norfolk, VA. Build your business empire, create your legacy, and experience life simulation inspired by IMVU, BitLife, and Torn.com.
 
-**Live Sites:** 
+**Live Sites:**
+
 - [https://bettadayz.shop](https://bettadayz.shop)
 - [https://bettadayz.store](https://bettadayz.store)
+- [Vercel Deployment](https://bettaday-klg30l6a4-betta-day-z.vercel.app)
 
 ## 🎮 Game Features
 
 ### Inspired By
-- **IMVU**: Social networking, character customization, virtual spaces
-- **BitLife**: Life simulation, aging system, major life decisions
-- **Torn.com**: Competitive gameplay, territory control, crew/gang system
+
+- **IMVU**: Social networking, avatar chat, social rooms, customization ([Social Lounge](/app/social/page.tsx))
+- **BitLife**: Life simulation, aging system, major life decisions ([Life Simulator](/app/life/page.tsx))
+- **Torn.com**: Competitive gameplay, leaderboards, PvP, resource battles ([Competitive Arena](/app/competitive/page.tsx))
 
 ### Core Gameplay
-- 🏢 **Build Business Empire** in authentic Norfolk, VA locations
-- 🎓 **HBCU Integration** with Norfolk State, Hampton, Virginia State
-- ✊🏾 **Cultural Heritage** celebrating African American excellence
-- 👤 **Life Simulation** from age 18 to 85 with meaningful choices
-- 🤝 **Social Network** with crews, mentorship, and community impact
-- 🏆 **Competitive Play** with territory control and reputation systems
 
-## 🌍 Norfolk, VA Locations
+- 🏢 **Build Business Empire** in authentic Norfolk, VA locations ([Norfolk Locations](/app/norfolk/page.tsx))
+- 🎓 **HBCU Integration** with Norfolk State, Hampton, Virginia State ([HBCU Connections](/app/hbcu/page.tsx))
+- ✊🏾 **Cultural Heritage** celebrating African American excellence ([Culture](/app/culture/page.tsx))
+- 👤 **Life Simulation** from age 18 to 85 with meaningful choices ([Life Simulator](/app/life/page.tsx))
+- 🤝 **Social Network** with crews, mentorship, and community impact ([Social Lounge](/app/social/page.tsx))
+- 🏆 **Competitive Play** with leaderboards, PvP, and resource battles ([Competitive Arena](/app/competitive/page.tsx))
+
+## 🌍 Norfolk, VA Locations ([Norfolk Page](/app/norfolk/page.tsx))
 
 - **Downtown Norfolk**: Historic Black Wall Street revival area
-- **Norfolk State District**: Premier HBCU campus and innovation hub  
+- **Norfolk State District**: Premier HBCU campus and innovation hub
 - **Berkley**: Historic African American neighborhood renaissance
 - **Ocean View**: Beach community with rich cultural heritage
 - **Military Circle**: Near Naval Station Norfolk
@@ -32,14 +36,14 @@ A Next.js-based Persistent Browser-Based Game (PBBG) celebrating African America
 - **Park Place**: Family business community
 - **Churchland**: Spiritual and community center
 
-## 🎓 HBCU Connections
+## 🎓 HBCU Connections ([HBCU Page](/app/hbcu/page.tsx))
 
 - **Norfolk State University** - Business partnerships, student recruitment
 - **Hampton University** - Entrepreneurship programs, alumni network
 - **Virginia State University** - Career fairs, talent pipeline
 - **HBCU Alumni Association** - Mentorship and networking
 
-## ✊🏾 Cultural Elements
+## ✊🏾 Cultural Elements ([Culture Page](/app/culture/page.tsx))
 
 - **Business Types**: Barbershops, soul food restaurants, music studios, fashion/streetwear
 - **Historical Landmarks**: Church Street, Attucks Theatre, NSU Campus
@@ -76,9 +80,9 @@ A Next.js-based Persistent Browser-Based Game (PBBG) celebrating African America
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## 📦 Deployment
+## 📦 Deployment Options
 
-This application is configured to deploy to **bettadayz.shop** using Hostinger.
+This application is deployed to **bettadayz.shop** using Vercel with Supabase backend integration.
 
 ### Deployment Guides
 
@@ -86,28 +90,34 @@ This application is configured to deploy to **bettadayz.shop** using Hostinger.
 - **[Hostinger Deployment Guide](./HOSTINGER-DEPLOYMENT-GUIDE.md)** - Comprehensive Hostinger VPS deployment
 - **[Cloudflare Pages Guide](./cloudflare-deployment-guide.md)** - Alternative deployment option
 
-### Deployment Options
+### Platform Options
 
-1. **Hostinger VPS** (Recommended)
+1. **Vercel** (Current)
+   - Active deployment for bettadayz.shop
+   - Automatic scaling and global CDN
+   - Integrated with Supabase backend
+   - Real-time features enabled
+
+2. **Hostinger VPS** (Alternative)
    - Full control over server
-   - Custom domain: bettadayz.shop
+   - Custom domain support
    - Node.js support with PM2 process management
    - [Full Guide →](./HOSTINGER-DEPLOYMENT-GUIDE.md)
 
-2. **Cloudflare Pages** (Alternative)
+3. **Cloudflare Pages** (Alternative)
    - Free tier available
    - Automatic SSL and CDN
    - Easy GitHub integration
    - [Full Guide →](./cloudflare-deployment-guide.md)
 
-## Development
+## 🔧 Development Environment
 
-### Prerequisites
+### System Requirements
 
 - Node.js 20.x
 - npm 10.x
 
-### Local Development
+### Setup Instructions
 
 1. Clone the repository:
 
@@ -164,6 +174,7 @@ The deployment workflow runs on pushes to the `main` branch:
 ## 🌐 Dual Domain Deployment
 
 This game supports two domains:
+
 - **bettadayz.shop** - Primary domain
 - **bettadayz.store** - Secondary domain
 

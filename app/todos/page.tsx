@@ -1,7 +1,7 @@
-import { createServerSupabase } from "@/utils/supabase/server";
+import { createServerSupabase } from "../../src/utils/supabase/server";
 
 export default async function Page() {
-  const supabase = createServerSupabase();
+  const supabase = await createServerSupabase();
   const { data: todos, error } = await supabase.from("todos").select("id, title");
 
   if (error) {

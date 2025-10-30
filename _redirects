@@ -20,3 +20,5 @@ https://www.bettadayz.store/* https://bettadayz.store/:splat 301!
 # Force HTTPS
 http://bettadayz.shop/* https://bettadayz.shop/:splat 301!
 http://www.bettadayz.shop/* https://bettadayz.shop/:splat 301!
+http://bettadayz.store/* https://bettadayz.store/:splat 301!
+http://www.bettadayz.store/* https://bettadayz.store/:splat 301!

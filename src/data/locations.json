@@ -1,0 +1,91 @@
+[
+  {
+    "id": "downtown-norfolk",
+    "name": "Downtown Norfolk",
+    "cost": 15000,
+    "traffic": "high",
+    "demographics": {
+      "africanAmericanPercentage": 35,
+      "primaryDemographic": "professional"
+    },
+    "significance": "Historic Black Wall Street revival area"
+  },
+  {
+    "id": "norfolk-state-district",
+    "name": "Norfolk State University District",
+    "cost": 7000,
+    "traffic": "high",
+    "demographics": {
+      "africanAmericanPercentage": 85,
+      "primaryDemographic": "students"
+    },
+    "significance": "Premier HBCU campus and innovation hub",
+    "unlockLevel": 1
+  },
+  {
+    "id": "berkley",
+    "name": "Berkley",
+    "cost": 4000,
+    "traffic": "growing",
+    "demographics": {
+      "africanAmericanPercentage": 70,
+      "primaryDemographic": "working class"
+    },
+    "significance": "Historic African American neighborhood renaissance"
+  },
+  {
+    "id": "ocean-view",
+    "name": "Ocean View",
+    "cost": 8000,
+    "traffic": "medium",
+    "demographics": {
+      "africanAmericanPercentage": 50,
+      "primaryDemographic": "family-oriented"
+    },
+    "significance": "Historic beach community with rich heritage"
+  },
+  {
+    "id": "military-circle",
+    "name": "Military Circle",
+    "cost": 5000,
+    "traffic": "medium",
+    "demographics": {
+      "africanAmericanPercentage": 45,
+      "primaryDemographic": "military"
+    },
+    "significance": "Near Naval Station Norfolk"
+  },
+  {
+    "id": "ghent-district",
+    "name": "Ghent District",
+    "cost": 12000,
+    "traffic": "high",
+    "demographics": {
+      "africanAmericanPercentage": 25,
+      "primaryDemographic": "arts community"
+    },
+    "significance": "Cultural melting pot with growing diversity"
+  },
+  {
+    "id": "park-place",
+    "name": "Park Place",
+    "cost": 6000,
+    "traffic": "medium",
+    "demographics": {
+      "africanAmericanPercentage": 65,
+      "primaryDemographic": "family businesses"
+    },
+    "significance": "Heart of African American business community"
+  },
+  {
+    "id": "churchland",
+    "name": "Churchland",
+    "cost": 5500,
+    "traffic": "medium",
+    "demographics": {
+      "africanAmericanPercentage": 60,
+      "primaryDemographic": "church community"
+    },
+    "significance": "Center of African American spiritual life"
+  }
+]

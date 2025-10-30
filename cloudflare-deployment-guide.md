@@ -1,8 +1,8 @@
-# Cloudflare Pages Deployment Guide for BettaDayz.shop
+# Cloudflare Pages Deployment Guide for BettaDayz PBBG
 
 ## Prerequisites
-- Cloudflare account
-- Domain `bettadayz.shop` added to Cloudflare
+- Cloudflare account (Account ID: 9b9fcaead55610e5dd235878e702ee69)
+- Domains `bettadayz.shop` (Zone ID: a86f94f72b26e7f33fdd3f4b5ccd4b6a) and `bettadayz.store` added to Cloudflare
 - GitHub repository with your code
 
 ## Step 1: Connect Your Repository to Cloudflare Pages
@@ -17,9 +17,9 @@
    - Select your GitHub repository containing this code
 
 3. **Configure Build Settings**
-   - **Framework preset**: Remix
+   - **Framework preset**: Next.js
    - **Build command**: `npm run build`
-   - **Build output directory**: `build/client`
+   - **Build output directory**: `.next` (for full Next.js deployment)
    - **Root directory**: `/` (leave empty if repository root)
 
 ## Step 2: Environment Variables
@@ -29,15 +29,18 @@ In the Cloudflare Pages dashboard, go to your project settings and add these env
 ### Required Variables
 ```
 NODE_ENV=production
-SITE_URL=https://bettadayz.shop
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+JWT_SECRET=9=N6H//qQ]?g+BDV
 ```
 
-### Optional Variables (add as needed)
+### Domain Variables
 ```
-DATABASE_URL=your_database_url_here
-STRIPE_PUBLIC_KEY=your_stripe_public_key
-STRIPE_SECRET_KEY=your_stripe_secret_key
-SESSION_SECRET=your_session_secret_here
+NEXT_PUBLIC_PRIMARY_DOMAIN=https://bettadayz.shop
+NEXT_PUBLIC_SECONDARY_DOMAIN=https://bettadayz.store
+NEXT_PUBLIC_SITE_URL=https://bettadayz.shop
+NEXT_PUBLIC_ALT_SITE_URL=https://bettadayz.store
 ```
 
 ## Step 3: Custom Domain Setup
@@ -48,12 +51,13 @@ SESSION_SECRET=your_session_secret_here
    - Click "Set up a custom domain"
    - Enter `bettadayz.shop`
    - Follow the verification process
+   - Repeat for `bettadayz.store`
 
 2. **DNS Configuration**
-   - In Cloudflare DNS settings for `bettadayz.shop`
+   - In Cloudflare DNS settings for `bettadayz.shop` (Zone ID: a86f94f72b26e7f33fdd3f4b5ccd4b6a)
    - Ensure you have:
-     - `A` record: `@` pointing to your Pages project
-     - `CNAME` record: `www` pointing to `bettadayz.shop`
+     - `CNAME` record: `bettadayz` pointing to `bettadayzpbbg.pages.dev`
+   - Repeat for `bettadayz.store` with its Zone ID
 
 ## Step 4: SSL/TLS Configuration
 
@@ -67,28 +71,11 @@ SESSION_SECRET=your_session_secret_here
    - Enable "Always Use HTTPS"
    - Enable "HTTP Strict Transport Security (HSTS)"
 
-## Step 5: Performance Optimization
+## Step 5: Functions Configuration
 
-1. **Caching Rules**
-   - Go to Caching → Configuration
-   - Set Browser Cache TTL to "Respect Existing Headers"
+Since this is a Next.js app with API routes, Cloudflare Pages will automatically handle the functions. No additional configuration needed.
 
-2. **Speed Optimization**
-   - Go to Speed → Optimization
-   - Enable "Auto Minify" for HTML, CSS, and JavaScript
-   - Enable "Brotli" compression
-
-## Step 6: Security Settings
-
-1. **Firewall Rules**
-   - Go to Security → WAF
-   - Enable "OWASP Core Ruleset"
-
-2. **Bot Fight Mode**
-   - Go to Security → Bots
-   - Enable "Bot Fight Mode"
-
-## Step 7: Deploy
+## Step 6: Deploy
 
 1. **Trigger Deployment**
    - Push changes to your main branch
@@ -97,8 +84,9 @@ SESSION_SECRET=your_session_secret_here
 
 2. **Verify Deployment**
    - Visit `https://bettadayz.shop`
+   - Visit `https://bettadayz.store`
    - Check that all features work correctly
-   - Test the game functionality
+   - Test the game functionality, chat, PvP, admin dashboard
 
 ## Troubleshooting
 
@@ -107,11 +95,11 @@ SESSION_SECRET=your_session_secret_here
 1. **Build Failures**
    - Check build logs in Cloudflare Pages dashboard
    - Ensure all dependencies are in `package.json`
-   - Verify Node.js version compatibility
+   - Verify Node.js version compatibility (20.x)
 
-2. **404 Errors**
-   - Check that `_redirects` file is in the `public` folder
-   - Verify SPA routing configuration
+2. **API Route Issues**
+   - Next.js API routes are handled as Cloudflare Functions
+   - Check function logs in the Pages dashboard
 
 3. **Environment Variables**
    - Ensure all required environment variables are set
@@ -121,23 +109,20 @@ SESSION_SECRET=your_session_secret_here
 
 - **Development**: `npm run dev`
 - **Build**: `npm run build`
-- **Deploy**: `npm run deploy` (uses wrangler)
-- **Preview**: `npm run preview`
+- **Start**: `npm run start`
 
 ## Files Created for Cloudflare Deployment
 
 - `wrangler.toml` - Cloudflare configuration
-- `public/_headers` - HTTP headers configuration
-- `public/_redirects` - URL redirects and SPA routing
-- `functions/[[path]].js` - Cloudflare Functions for SSR
+- `next.config.ts` - Next.js configuration with headers and redirects
 - `.env.production` - Production environment variables
 
 ## Support
 
 If you encounter issues:
-1. Check Cloudflare Pages documentation
+1. Check Cloudflare Pages documentation for Next.js
 2. Review build logs in the dashboard
-3. Test locally with `npm run build && npm run preview`
+3. Test locally with `npm run build && npm run start`
 4. Check the Cloudflare Community forum
 
 ## Next Steps
@@ -145,5 +130,5 @@ If you encounter issues:
 After successful deployment:
 1. Set up monitoring and analytics
 2. Configure additional security rules
-3. Set up automated backups
-4. Monitor performance metrics
+3. Monitor performance metrics
+4. Test real-time features (chat, PvP)

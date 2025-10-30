@@ -1,6 +1,7 @@
 name = "bettadayz-pbbg"
 main = "cloudflare-worker.js"
 compatibility_date = "2023-12-01"
+account_id = "9b9fcaead55610e5dd235878e702ee69"
 
 [vars]
 SERVER_IP = "194.195.84.72"
@@ -18,13 +19,14 @@ command = "npm run build"
 cwd = ""
 
 # Custom domains for dual domain setup
-[[route]]
-pattern = "bettadayz.shop/*"
-zone_name = "bettadayz.shop"
+## Note: route entries were removed because Wrangler expects either a single
+## route string or an object with `pattern` and `zone_id`/`zone_name` and the
+## previous array-style entries caused parsing errors. Configure routes in
+## Cloudflare dashboard or add valid `route` entries if needed.
 
-[[route]]
-pattern = "bettadayz.store/*"
-zone_name = "bettadayz.store"
+[[routes]]
+pattern = "bettadayz.shop/*"
+zone_id = "a86f94f72b26e7f33fdd3f4b5ccd4b6a"
 
 [observability]
 enabled = true
