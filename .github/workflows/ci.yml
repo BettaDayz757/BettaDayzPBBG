@@ -34,3 +34,11 @@ jobs:
       - name: Lint
         run: npm run lint
         continue-on-error: true  # Don't block PR if linting fails
+
+      - name: 'notify vercel'
+        uses: 'vercel/repository-dispatch/actions/status@v1'
+        with:
+          name: 'Vercel - bettaday: lint'
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
