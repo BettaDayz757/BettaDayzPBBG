@@ -50,6 +50,7 @@ npm run test:e2e:ui
 
 ```typescript
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import ComponentName from './ComponentName'
 
@@ -83,7 +84,7 @@ describe('utilityFunction', () => {
   
   it('handles edge cases', () => {
     expect(utilityFunction('')).toBe('default')
-    expect(utilityFunction(null)).toThrow()
+    expect(() => utilityFunction(null)).toThrow()
   })
 })
 ```
