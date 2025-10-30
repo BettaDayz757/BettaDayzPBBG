@@ -1,6 +1,6 @@
 name = "bettadayz-pbbg"
 main = "cloudflare-worker.js"
-compatibility_date = "2023-12-01"
+compatibility_date = "2024-10-30"
 
 [vars]
 SERVER_IP = "194.195.84.72"
@@ -10,8 +10,26 @@ JWT_SECRET = "9=N6H//qQ]?g+BDV"
 WORKER_TOKEN = "after9b9fcaead55610e5dd235878e702ee69"
 NODE_ENV = "production"
 
+# Pages-specific configuration for Next.js deployment
+[pages_config]
+build_command = "npm run build"
+build_output_directory = ".next"
+compatibility_date = "2024-10-30"
+
+# Environment variables for Pages (also set in dashboard)
+[pages_config.env_vars]
+NODE_VERSION = "18"
+NPM_VERSION = "9"
+NEXT_TELEMETRY_DISABLED = "1"
+
 [build]
-command = ""
+command = "npm run build"
 
 [observability]
 enabled = true
+
+# Bindings for dual domain functionality
+[[bindings]]
+name = "DUAL_DOMAIN_CONFIG"
+type = "json"
+value = { shop_domain = "bettadayz.shop", store_domain = "bettadayz.store" }

@@ -1,20 +1,53 @@
 {
   "version": 2,
+  "name": "bettadayz-pbbg",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/$1"
     }
   ],
   "env": {
-    "DOMAIN": "bettadayz.shop"
+    "NODE_VERSION": "18",
+    "NPM_VERSION": "9",
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "NEXT_PUBLIC_DOMAIN": "bettadayz.shop"
   },
   "build": {
     "env": {
-      "DOMAIN": "bettadayz.shop"
+      "NODE_VERSION": "18",
+      "NPM_VERSION": "9",
+      "NEXT_PUBLIC_DOMAIN": "bettadayz.shop"
     }
   },
   "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization, X-Requested-With"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
@@ -29,6 +62,10 @@
         {
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     }
