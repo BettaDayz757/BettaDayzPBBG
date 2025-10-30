@@ -1,17 +1,33 @@
 name = "bettadayz-pbbg"
+account_id = "9b9fcaead55610e5dd235878e702ee69"
 main = "cloudflare-worker.js"
 compatibility_date = "2024-10-30"
 
 [vars]
+# Non-sensitive environment variables
 SERVER_IP = "194.195.84.72"
 SHOP_PORT = "3000"
 STORE_PORT = "3001"
-JWT_SECRET = "9=N6H//qQ]?g+BDV"
-WORKER_TOKEN = "after9b9fcaead55610e5dd235878e702ee69"
 NODE_ENV = "production"
+NEXT_PUBLIC_DOMAIN = "bettadayz.shop"
+NEXT_PUBLIC_STORE_DOMAIN = "bettadayz.store"
+
+# Secrets (configure with: wrangler secret put SECRET_NAME)
+# JWT_SECRET = "configured via wrangler secret put JWT_SECRET"
+# SUPABASE_SERVICE_ROLE_KEY = "configured via wrangler secret put SUPABASE_SERVICE_ROLE_KEY"
+# CASHAPP_API_KEY = "configured via wrangler secret put CASHAPP_API_KEY"
 
 [build]
 command = "npm run build"
 
 [observability]
 enabled = true
+
+# Uncomment for custom domain routing
+# [[route]]
+# pattern = "bettadayz.shop/*"
+# custom_domain = true
+
+# [[route]]
+# pattern = "bettadayz.store/*"
+# custom_domain = true

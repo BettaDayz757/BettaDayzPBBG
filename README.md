@@ -1,155 +1,183 @@
-# BettaDayz PBBG
+# Supabase CLI
 
-A Remix-based Persistent Browser-Based Game (PBBG) application with multiplayer features, game mechanics, and social interactions.
+[![Coverage Status](https://coveralls.io/repos/github/supabase/cli/badge.svg?branch=main)](https://coveralls.io/github/supabase/cli?branch=main) [![Bitbucket Pipelines](https://img.shields.io/bitbucket/pipelines/supabase-cli/setup-cli/master?style=flat-square&label=Bitbucket%20Canary)](https://bitbucket.org/supabase-cli/setup-cli/pipelines) [![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/sweatybridge%2Fsetup-cli?label=Gitlab%20Canary)
+](https://gitlab.com/sweatybridge/setup-cli/-/pipelines)
 
-**Live Site:** [https://bettadayz.shop](https://bettadayz.shop)
+[Supabase](https://supabase.io) is an open source Firebase alternative. We're building the features of Firebase using enterprise-grade open source tools.
 
-## 🚀 Quick Start
+This repository contains all the functionality for Supabase CLI.
 
-### Prerequisites
+- [x] Running Supabase locally
+- [x] Managing database migrations
+- [x] Creating and deploying Supabase Functions
+- [x] Generating types directly from your database schema
+- [x] Making authenticated HTTP requests to [Management API](https://supabase.com/docs/reference/api/introduction)
 
-- Node.js 20.x or higher
-- npm 10.x or higher
+## Getting started
 
-### Local Development
+### Install the CLI
 
-1. Clone the repository:
+Available via [NPM](https://www.npmjs.com) as dev dependency. To install:
 
-   ```bash
-   git clone https://github.com/BettaDayz757/BettaDayzPBBG.git
-   cd BettaDayzPBBG
-   ```
+```bash
+npm i supabase --save-dev
+```
 
-2. Install dependencies:
+To install the beta release channel:
 
-   ```bash
-   npm install
-   ```
+```bash
+npm i supabase@beta --save-dev
+```
 
-3. Start the development server:
+When installing with yarn 4, you need to disable experimental fetch with the following nodejs config.
 
-   ```bash
-   npm run dev
-   ```
+```
+NODE_OPTIONS=--no-experimental-fetch yarn add supabase
+```
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
+> **Note**
+For Bun versions below v1.0.17, you must add `supabase` as a [trusted dependency](https://bun.sh/guides/install/trusted) before running `bun add -D supabase`.
 
-## 📦 Deployment
+<details>
+  <summary><b>macOS</b></summary>
 
-This application is configured to deploy to **bettadayz.shop** using Hostinger.
+  Available via [Homebrew](https://brew.sh). To install:
 
-### Deployment Guides
+  ```sh
+  brew install supabase/tap/supabase
+  ```
 
-- **[Quick Start Guide](./DEPLOYMENT-QUICKSTART.md)** - Fast deployment overview
-- **[Hostinger Deployment Guide](./HOSTINGER-DEPLOYMENT-GUIDE.md)** - Comprehensive Hostinger VPS deployment
-- **[Cloudflare Pages Guide](./cloudflare-deployment-guide.md)** - Alternative deployment option
+  To install the beta release channel:
+  
+  ```sh
+  brew install supabase/tap/supabase-beta
+  brew link --overwrite supabase-beta
+  ```
+  
+  To upgrade:
 
-### Deployment Options
+  ```sh
+  brew upgrade supabase
+  ```
+</details>
 
-1. **Hostinger VPS** (Recommended)
-   - Full control over server
-   - Custom domain: bettadayz.shop
-   - Node.js support with PM2 process management
-   - [Full Guide →](./HOSTINGER-DEPLOYMENT-GUIDE.md)
+<details>
+  <summary><b>Windows</b></summary>
 
-2. **Cloudflare Pages** (Alternative)
-   - Free tier available
-   - Automatic SSL and CDN
-   - Easy GitHub integration
-   - [Full Guide →](./cloudflare-deployment-guide.md)
+  Available via [Scoop](https://scoop.sh). To install:
 
-## Development
+  ```powershell
+  scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
+  scoop install supabase
+  ```
 
-### Prerequisites
+  To upgrade:
 
-- Node.js 20.x
-- npm 10.x
+  ```powershell
+  scoop update supabase
+  ```
+</details>
 
-### Local Development
+<details>
+  <summary><b>Linux</b></summary>
 
-1. Clone the repository:
+  Available via [Homebrew](https://brew.sh) and Linux packages.
 
-   ```bash
-   git clone <your-repo-url>
-   cd my-workflow-app
-   ```
+  #### via Homebrew
 
-2. Install dependencies:
+  To install:
 
-   ```bash
-   npm install
-   ```
+  ```sh
+  brew install supabase/tap/supabase
+  ```
 
-3. Start the development server:
+  To upgrade:
 
-   ```bash
-   npm run dev
-   ```
+  ```sh
+  brew upgrade supabase
+  ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+  #### via Linux packages
 
-## GitHub Actions
+  Linux packages are provided in [Releases](https://github.com/supabase/cli/releases). To install, download the `.apk`/`.deb`/`.rpm`/`.pkg.tar.zst` file depending on your package manager and run the respective commands.
 
-This project uses GitHub Actions for CI/CD:
+  ```sh
+  sudo apk add --allow-untrusted <...>.apk
+  ```
 
-### Continuous Integration
+  ```sh
+  sudo dpkg -i <...>.deb
+  ```
 
-The CI workflow runs on every push and pull request to the `main` branch:
+  ```sh
+  sudo rpm -i <...>.rpm
+  ```
 
-- Lints the code
-- Builds the application
-- Runs tests (when added)
+  ```sh
+  sudo pacman -U <...>.pkg.tar.zst
+  ```
+</details>
 
-### GitHub Pages Deployment
+<details>
+  <summary><b>Other Platforms</b></summary>
 
-The deployment workflow runs on pushes to the `main` branch:
+  You can also install the CLI via [go modules](https://go.dev/ref/mod#go-install) without the help of package managers.
 
-- Builds the application
-- Deploys to GitHub Pages
+  ```sh
+  go install github.com/supabase/cli@latest
+  ```
 
-## Available Scripts
+  Add a symlink to the binary in `$PATH` for easier access:
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Run production server
-- `npm run lint` - Run ESLint
-- `npm run ci` - Run CI checks locally
-- `npm run deploy:gh-pages` - Build for GitHub Pages
+  ```sh
+  ln -s "$(go env GOPATH)/bin/cli" /usr/bin/supabase
+  ```
 
-## GitHub Pages Setup
+  This works on other non-standard Linux distros.
+</details>
 
-1. In your repository settings, go to Pages
-2. Under "Build and deployment":
-   - Source: "GitHub Actions"
-   - Find the latest deployment in the "Deployments" section
+<details>
+  <summary><b>Community Maintained Packages</b></summary>
 
-## Contributing
+  Available via [pkgx](https://pkgx.sh/). Package script [here](https://github.com/pkgxdev/pantry/blob/main/projects/supabase.com/cli/package.yml).
+  To install in your working directory:
 
-1. Create a new branch from `main`
-2. Make your changes
-3. Create a pull request
-4. Wait for CI checks to pass
-5. Request review
+  ```bash
+  pkgx install supabase
+  ```
 
-## License
+  Available via [Nixpkgs](https://nixos.org/). Package script [here](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/tools/supabase-cli/default.nix).
+</details>
 
-MIT
+### Run the CLI
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+supabase bootstrap
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Or using npx:
 
-## Learn More
+```bash
+npx supabase bootstrap
+```
 
-To learn more about Next.js, take a look at the following resources:
+The bootstrap command will guide you through the process of setting up a Supabase project using one of the [starter](https://github.com/supabase-community/supabase-samples/blob/main/samples.json) templates.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Docs
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Command & config reference can be found [here](https://supabase.com/docs/reference/cli/about).
 
-## Deploy on Vercel
+## Breaking changes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+We follow semantic versioning for changes that directly impact CLI commands, flags, and configurations.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+However, due to dependencies on other service images, we cannot guarantee that schema migrations, seed.sql, and generated types will always work for the same CLI major version. If you need such guarantees, we encourage you to pin a specific version of CLI in package.json.
+
+## Developing
+
+To run from source:
+
+```sh
+# Go >= 1.22
+go run . help
+```

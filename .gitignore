@@ -58,3 +58,4 @@ docs/instructions/Roadmap.md
 _index-Clus-2QJ.js
 *.tar.gz
 *.zip
+.vercel

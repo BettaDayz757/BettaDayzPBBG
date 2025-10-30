@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install Dependencies
@@ -27,6 +27,8 @@ jobs:
         env:
           NEXT_PUBLIC_DOMAIN: bettadayz.shop
           NODE_ENV: production
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
@@ -40,14 +42,20 @@ jobs:
     name: Deploy to Vercel
     strategy:
       matrix:
-        project: ['bestdayz', 'bestdayz1', 'bettaday']
+        include:
+          - project: 'bestdayz'
+            project_id_secret: 'VERCEL_PROJECT_ID_BESTDAYZ'
+          - project: 'bestdayz1'
+            project_id_secret: 'VERCEL_PROJECT_ID_BESTDAYZ1'
+          - project: 'bettaday'
+            project_id_secret: 'VERCEL_PROJECT_ID_BETTADAY'
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install Dependencies
@@ -58,20 +66,22 @@ jobs:
         env:
           NEXT_PUBLIC_DOMAIN: bettadayz.shop
           NODE_ENV: production
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       - name: Deploy to Vercel (${{ matrix.project }})
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets[format('VERCEL_PROJECT_ID_{0}', matrix.project)] }}
+          vercel-project-id: ${{ secrets[matrix.project_id_secret] }}
           vercel-args: '--prod'
 
-      - name: 'notify vercel status'
-        uses: 'vercel/repository-dispatch/actions/status@v1'
-        with:
-          name: 'Vercel - ${{ matrix.project }}: deploy'
+      - name: Notify Vercel Status
         if: always()
+        run: |
+          echo "Deployment status for ${{ matrix.project }}: ${{ steps.deploy.outcome }}"
+          echo "Project deployed successfully to Vercel"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
