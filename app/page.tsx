@@ -36,7 +36,7 @@ export default function Home() {
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-gray-300">
             A life simulation game celebrating African American and minority culture,
-            HBCU excellence, and Norfolk&apos;s rich history
+            HBCU excellence, and Norfolk{"'"}s rich history
           </p>
           <div className="flex flex-wrap justify-center gap-4 mb-8">
             <span className="bg-purple-700/50 px-4 py-2 rounded-full">🎮 IMVU-Style Social</span>
@@ -134,7 +134,7 @@ export default function Home() {
       <section className="container mx-auto px-4 py-16">
         <h2 className="text-4xl font-bold text-center mb-8">Inspired By Norfolk Legends</h2>
         <p className="text-center text-xl mb-12 text-gray-300">
-          Follow in the footsteps of Norfolk&apos;s cultural icons
+          Follow in the footsteps of Norfolk{"'"}s cultural icons
         </p>
         
         <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
