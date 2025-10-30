@@ -16,8 +16,8 @@ nano vps-config.sh
 
 **Edit these values:**
 ```bash
-VPS_USER="root"              # Your SSH username
-VPS_IP="194.195.84.72"       # Your VPS IP address
+VPS_USER="root"              # Your SSH username (e.g., root, ubuntu)
+VPS_IP="203.0.113.10"        # Your VPS IP address (replace with your actual IP)
 ```
 
 ### Step 3: Deploy
@@ -34,8 +34,8 @@ That's it! 🎉
 | Placeholder | Replace With | Example |
 |------------|-------------|---------|
 | `your_user` or `your_username` | Your SSH username | `root`, `ubuntu`, `admin` |
-| `your_vps_ip` or `your.vps.ip.address` | Your VPS IP | `194.195.84.72` |
-| `your-server-ip` | Your VPS IP | `194.195.84.72` |
+| `your_vps_ip` or `your.vps.ip.address` | Your VPS IP | `203.0.113.10` |
+| `your-server-ip` | Your VPS IP | `203.0.113.10` |
 | `yourdomain.com` | Your domain | `bettadayz.shop` |
 
 ---
@@ -48,7 +48,7 @@ That's it! 🎉
 ssh your_user@your_vps_ip
 
 # ✅ CORRECT - Use your actual values
-ssh root@194.195.84.72
+ssh root@203.0.113.10
 ```
 
 ### Mistake #2: Script Not Configured
@@ -69,7 +69,7 @@ nano vps-config.sh  # Edit with your values
 
 # ✅ CORRECT - Set up SSH key once
 ssh-keygen -t rsa -b 4096
-ssh-copy-id root@194.195.84.72
+ssh-copy-id root@203.0.113.10  # Replace with your VPS IP
 ```
 
 ---

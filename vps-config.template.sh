@@ -13,7 +13,7 @@
 
 # === VPS Connection Settings ===
 export VPS_USER="your_username"           # SSH username (e.g., root, ubuntu, admin)
-export VPS_IP="your.vps.ip.address"       # VPS IP address (e.g., 194.195.84.72)
+export VPS_IP="your.vps.ip.address"       # VPS IP address (e.g., 203.0.113.10)
 export VPS_SSH_PORT="22"                  # SSH port (usually 22)
 
 # === Deployment Paths ===

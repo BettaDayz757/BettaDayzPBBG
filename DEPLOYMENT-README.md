@@ -146,7 +146,7 @@ These are already in `.gitignore`.
 
 When you see these in documentation, **you must replace them**:
 - `your_user` or `your_username` → Your actual SSH username (e.g., `root`, `ubuntu`)
-- `your_vps_ip` or `your.vps.ip.address` → Your actual VPS IP (e.g., `194.195.84.72`)
+- `your_vps_ip` or `your.vps.ip.address` → Your actual VPS IP (e.g., `203.0.113.10`)
 - `your-server-ip` → Your actual VPS IP
 - `yourdomain.com` → Your actual domain (e.g., `bettadayz.shop`)
 
@@ -155,7 +155,7 @@ When you see these in documentation, **you must replace them**:
 Correct format:
 ```bash
 ssh username@ip_address
-# Example: ssh root@194.195.84.72
+# Example: ssh root@203.0.113.10
 ```
 
 Common mistakes:
@@ -164,7 +164,7 @@ Common mistakes:
 ssh your_user@your_vps_ip
 
 # ✅ CORRECT - Use actual values
-ssh root@194.195.84.72
+ssh root@203.0.113.10
 ```
 
 ## Troubleshooting
@@ -179,7 +179,7 @@ ssh root@194.195.84.72
 ssh your_user@your_vps_ip
 
 # Correct:
-ssh root@194.195.84.72
+ssh root@203.0.113.10
 ```
 
 ### "Permission denied (publickey)"

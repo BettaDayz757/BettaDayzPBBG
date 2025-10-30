@@ -30,7 +30,7 @@ This guide provides step-by-step instructions for deploying BettaDayz PBBG to yo
    
    Update these values:
    - `VPS_USER`: Your SSH username (e.g., `root`, `ubuntu`)
-   - `VPS_IP`: Your VPS IP address (e.g., `194.195.84.72`)
+   - `VPS_IP`: Your VPS IP address (e.g., `203.0.113.10`)
    - `VPS_SSH_PORT`: SSH port (usually `22`)
 
 3. **Set up SSH key authentication (recommended):**
@@ -88,7 +88,7 @@ If you prefer to deploy manually or the automated script fails:
 ssh your_username@your.vps.ip.address
 
 # Example:
-# ssh root@194.195.84.72
+# ssh root@203.0.113.10
 ```
 
 ### Step 2: Install Node.js
@@ -459,16 +459,16 @@ cd BettaDayzPBBG
 cp vps-config.template.sh vps-config.sh
 nano vps-config.sh
 # Set VPS_USER="root"
-# Set VPS_IP="194.195.84.72"
+# Set VPS_IP="203.0.113.10"  # Use your actual VPS IP
 
 # Set up SSH key
-ssh-copy-id -p 22 root@194.195.84.72
+ssh-copy-id -p 22 root@203.0.113.10
 
 # Deploy
 ./deploy-to-vps.sh
 
 # After deployment, verify
-ssh root@194.195.84.72
+ssh root@203.0.113.10
 pm2 status
 pm2 logs bettadayz
 curl http://localhost:3000

@@ -57,7 +57,7 @@ if [[ "$VPS_USER" == "your_user" ]] || [[ "$VPS_IP" == "your_vps_ip" ]]; then
     echo ""
     echo "Example:"
     echo "  VPS_USER=\"root\""
-    echo "  VPS_IP=\"194.195.84.72\""
+    echo "  VPS_IP=\"203.0.113.10\"  # Use your actual VPS IP"
     exit 1
 fi
 
