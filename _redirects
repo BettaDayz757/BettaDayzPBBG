@@ -1,13 +1,20 @@
-# Redirect www to non-www
+# Cloudflare Pages Redirects Configuration
+# Dual domain redirects for both bettadayz.shop and bettadayz.store
+
+# Redirect www to non-www for both domains
 https://www.bettadayz.shop/* https://bettadayz.shop/:splat 301!
+https://www.bettadayz.store/* https://bettadayz.store/:splat 301!
+
+# API routes to ensure proper routing
+/api/*  /api/:splat  200
+
+# Static files
+/sitemap.xml /sitemap.xml 200
+/robots.txt /robots.txt 200
+/_next/* /_next/:splat 200
 
 # Handle SPA routing - redirect all non-file requests to index.html
 /*    /index.html   200
-
-# API routes (if you have any backend API)
-/api/*  /api/:splat  200
-
-# Redirect old paths (add any legacy URLs you want to redirect)
 # /old-path  /new-path  301
 
 # Force HTTPS

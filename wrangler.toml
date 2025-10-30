@@ -9,9 +9,22 @@ STORE_PORT = "3001"
 JWT_SECRET = "9=N6H//qQ]?g+BDV"
 WORKER_TOKEN = "after9b9fcaead55610e5dd235878e702ee69"
 NODE_ENV = "production"
+PRIMARY_DOMAIN = "bettadayz.shop"
+SECONDARY_DOMAIN = "bettadayz.store"
+NEXT_PUBLIC_SUPABASE_URL = "https://btcfpizydmcdjhltwbil.supabase.co"
 
 [build]
-command = ""
+command = "npm run build"
+cwd = ""
+
+# Custom domains for dual domain setup
+[[route]]
+pattern = "bettadayz.shop/*"
+zone_name = "bettadayz.shop"
+
+[[route]]
+pattern = "bettadayz.store/*"
+zone_name = "bettadayz.store"
 
 [observability]
 enabled = true

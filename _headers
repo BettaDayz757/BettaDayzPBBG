@@ -1,11 +1,12 @@
-# Global headers
+# Global headers for dual domain setup
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   X-XSS-Protection: 1; mode=block
-  Referrer-Policy: strict-origin-when-cross-origin
+  Referrer-Policy: origin-when-cross-origin
+  X-DNS-Prefetch-Control: false
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss:; media-src 'self'; object-src 'none'; frame-src 'none';
+  Content-Security-Policy: default-src 'self' https://btcfpizydmcdjhltwbil.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://btcfpizydmcdjhltwbil.supabase.co https://api.stripe.com https: wss:;
 
 # Cache static assets
 /assets/*
