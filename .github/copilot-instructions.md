@@ -2,6 +2,13 @@
 
 This document provides guidance for GitHub Copilot when working on the BettaDayz PBBG (Persistent Browser-Based Game) repository.
 
+## Path-Specific Instructions
+
+For more detailed guidance on specific areas of the codebase, see:
+- `.github/instructions/api.instructions.md` - API routes and endpoints
+- `.github/instructions/testing.instructions.md` - Testing guidelines and patterns
+- `.github/instructions/security.instructions.md` - Security best practices
+
 ## Project Overview
 
 BettaDayz PBBG is a browser-based multiplayer game application with the following characteristics:
@@ -89,9 +96,13 @@ npm run ci
 ```
 
 ### Testing
-- Currently no test framework is set up
-- When adding tests, follow React Testing Library conventions
+- **Unit/Integration Tests**: Jest with React Testing Library
+- **E2E Tests**: Playwright
+- Run tests with: `npm run test`, `npm run test:watch`, `npm run test:coverage`
+- Run E2E tests with: `npm run test:e2e`, `npm run test:e2e:ui`
+- Follow React Testing Library conventions
 - Ensure new features include appropriate test coverage
+- See `.github/instructions/testing.instructions.md` for detailed testing guidelines
 
 ### Linting and Building
 - Always run `npm run lint` before committing
@@ -207,10 +218,12 @@ Runs on every push and PR to `main`:
 - Monitor bundle size
 
 ### Security
-- Never commit secrets or API keys
+- **CRITICAL**: Never commit secrets or API keys
 - Use environment variables for sensitive data
-- Validate user inputs
+- Validate and sanitize all user inputs
 - Implement proper authentication/authorization
+- Follow OWASP security guidelines
+- See `.github/instructions/security.instructions.md` for comprehensive security practices
 
 ### Accessibility
 - Use semantic HTML elements
