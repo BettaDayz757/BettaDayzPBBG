@@ -486,7 +486,7 @@ const PaymentInterface = ({ userId, onSuccess }) => {
       console.error("Payment submission error:", error);
     }
   };
-  const checkTransactionStatus = async () => {
+  const checkTransactionStatus = useCallback(async () => {
     if (!transactionId) return;
     try {
       const result = await PaymentProcessor.getTransactionStatus(transactionId);
@@ -500,13 +500,13 @@ const PaymentInterface = ({ userId, onSuccess }) => {
     } catch (error) {
       console.error("Error checking transaction status:", error);
     }
-  };
+  }, [transactionId, onSuccess, selectedPackage]);
   useEffect(() => {
     if (status === "pending" && transactionId && selectedMethod === "bitcoin") {
       const interval = setInterval(checkTransactionStatus, 3e4);
       return () => clearInterval(interval);
     }
-  }, [status, transactionId, selectedMethod]);
+  }, [status, transactionId, selectedMethod, checkTransactionStatus]);
   return /* @__PURE__ */ jsxs("div", { className: "max-w-4xl mx-auto p-6 bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl shadow-xl", children: [
     /* @__PURE__ */ jsx("h2", { className: "text-3xl font-bold text-gray-800 mb-6", children: "Grow Your Norfolk Empire" }),
     !selectedMethod && /* @__PURE__ */ jsxs("div", { className: "mb-8", children: [
