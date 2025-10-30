@@ -243,7 +243,7 @@ npm run build
 - Check all environment variables are set in Vercel dashboard
 - Verify project IDs are correct
 - Check build logs in Vercel dashboard
-- Ensure Node.js version matches (20.x)
+- Ensure Node.js version is 18.0.0 or higher (20.x recommended)
 
 ## 🎯 Common Tasks
 
