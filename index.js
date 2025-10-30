@@ -1413,14 +1413,7 @@ const BusinessDashboard = ({ player, onBusinessUpdate }) => {
     season: getCurrentSeason()
   });
   const businessSim = new BusinessSimulation();
-  useEffect(() => {
-    if (player.businesses) {
-      setBusinesses(player.businesses);
-    }
-    updateMarketConditions();
-    generateDailyOpportunities();
-    generateActiveChallenges();
-  }, [player]);
+  
   const updateMarketConditions = () => {
     const conditions = ["poor", "stable", "good", "excellent"];
     const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
@@ -1428,11 +1421,81 @@ const BusinessDashboard = ({ player, onBusinessUpdate }) => {
       ...prev,
       economy: randomCondition,
       competition: Math.random() > 0.5 ? "high" : "moderate",
-      seasonality: getCurrentSeasonalEffect(),
-      tourism: Math.random() > 0.3 ? "high" : "average",
-      season: getCurrentSeason()
+      regulation: Math.random() > 0.7 ? "strict" : "normal"
     }));
   };
+  
+  const getCurrentSeasonalEffect = () => {
+    const month = (/* @__PURE__ */ new Date()).getMonth();
+    if (month >= 5 && month <= 7) return "summer_boost";
+    if (month >= 8 && month <= 10) return "fall_stable";
+    if (month >= 11 || month <= 1) return "winter_slow";
+    return "normal";
+  };
+  
+  const generateActiveChallenges = () => {
+    const currentSeason = getCurrentSeason();
+    const availableChallenges = Object.entries(norfolkChallenges).filter(([, challenge]) => {
+      return !challenge.seasonal || challenge.seasonal === currentSeason;
+    });
+    setActiveChallenges(availableChallenges.map(([key, challenge]) => ({ id: key, ...challenge })));
+  };
+  
+  const generateDailyOpportunities = () => {
+    getCurrentSeason();
+    businesses.length > 0 ? businesses[0].location : "DOWNTOWN";
+    const opportunities = [
+      {
+        id: "local_partnership",
+        title: "Local Partnership Opportunity",
+        description: "Partner with a Norfolk business for mutual growth",
+        requirements: { money: 5000, reputation: 20 },
+        rewards: { money: 15000, reputation: 10 },
+        deadline: /* @__PURE__ */ new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      },
+      {
+        id: "community_event",
+        title: "Norfolk Community Event Sponsorship",
+        description: "Sponsor a local event to boost your reputation",
+        requirements: { money: 2000 },
+        rewards: { reputation: 25, connections: 5 },
+        deadline: /* @__PURE__ */ new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+      },
+      {
+        id: "tech_upgrade",
+        title: "Technology Upgrade Program",
+        description: "Invest in new technology for your business",
+        requirements: { money: 10000, level: 3 },
+        rewards: { efficiency: 20, money: 25000 },
+        deadline: /* @__PURE__ */ new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+      }
+    ];
+    const availableOpportunities = opportunities.filter((opp) => {
+      return Object.entries(opp.requirements).every(([req, value]) => {
+        switch (req) {
+          case "money":
+            return player.money >= value;
+          case "reputation":
+            return player.reputation >= value;
+          case "level":
+            return player.level >= value;
+          default:
+            return true;
+        }
+      });
+    });
+    setActiveOpportunities(availableOpportunities);
+  };
+  
+  useEffect(() => {
+    if (player.businesses) {
+      setBusinesses(player.businesses);
+    }
+    updateMarketConditions();
+    generateDailyOpportunities();
+    generateActiveChallenges();
+  }, [player, updateMarketConditions, generateDailyOpportunities, generateActiveChallenges]);
+  
   const getCurrentSeasonalEffect = () => {
     const month = (/* @__PURE__ */ new Date()).getMonth();
     if (month >= 5 && month <= 7) return "summer_boost";
@@ -2145,12 +2208,37 @@ const GameMain = ({ player, onBusinessAction }) => {
   const [currentView, setCurrentView] = useState("dashboard");
   const [currentChallenge, setCurrentChallenge] = useState(null);
   const [availableOpportunities, setAvailableOpportunities] = useState([]);
+  
+  const generateOpportunities = () => {
+    const opportunities = [
+      {
+        type: "investment",
+        title: "Tech Startup Partnership",
+        description: "Invest in a promising Norfolk tech startup",
+        cost: 15000,
+        potential_return: 45000,
+        risk: "medium",
+        deadline: "7 days"
+      },
+      {
+        type: "business_acquisition",
+        title: "Local Restaurant Chain",
+        description: "Acquire a popular Norfolk restaurant chain",
+        cost: 50000,
+        potential_return: 120000,
+        risk: "high",
+        deadline: "14 days"
+      }
+    ];
+    setAvailableOpportunities(opportunities);
+  };
+  
   useEffect(() => {
     if (player) {
       setPlayerState(player);
     }
     generateOpportunities();
-  }, [player]);
+  }, [player, generateOpportunities]);
   const loadPlayerState = async (userId) => {
     try {
       const response = await fetch(`/api/player/${userId}`);
@@ -2430,10 +2518,7 @@ const CommunityHub = ({ player, onCommunityInteraction }) => {
   const [activeOrgs, setActiveOrgs] = useState([]);
   const [currentEvents, setCurrentEvents] = useState([]);
   const [relationships, setRelationships] = useState(/* @__PURE__ */ new Map());
-  useEffect(() => {
-    loadCommunityData();
-    generateEvents();
-  }, []);
+  
   const loadCommunityData = () => {
     setActiveOrgs(COMMUNITY_ORGANIZATIONS);
     const initialRelationships = /* @__PURE__ */ new Map();
@@ -2446,6 +2531,7 @@ const CommunityHub = ({ player, onCommunityInteraction }) => {
     });
     setRelationships(initialRelationships);
   };
+  
   const generateEvents = () => {
     const events = [
       {
@@ -2473,6 +2559,11 @@ const CommunityHub = ({ player, onCommunityInteraction }) => {
     ];
     setCurrentEvents(events);
   };
+  
+  useEffect(() => {
+    loadCommunityData();
+    generateEvents();
+  }, [loadCommunityData, generateEvents]);
   const handleEventParticipation = (eventId) => {
     const event = currentEvents.find((e) => e.id === eventId);
     if (!event) return;

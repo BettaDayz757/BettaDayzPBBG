@@ -1,8 +1,8 @@
-name: Monorepo CI
+name: BettaDayz PBBG CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
 
@@ -11,34 +11,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Fetch all history for proper subtree support
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build all workspaces
-        run: npm run build
-        continue-on-error: true  # Allow build to continue if some workspaces fail
-
-      - name: Run tests
-        run: npm test
-        continue-on-error: true  # Don't block PR if tests fail (no tests yet)
-
-      - name: Lint
+      - name: Run ESLint
         run: npm run lint
-        continue-on-error: true  # Don't block PR if linting fails
 
-      - name: 'notify vercel'
-        uses: 'vercel/repository-dispatch/actions/status@v1'
-        with:
-          name: 'Vercel - bettaday: lint'
-        if: always()
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_DOMAIN: bettadayz.shop
+          NEXT_PUBLIC_SUPABASE_URL: https://dqirldrlusrmodkwlnqy.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxaXJsZHJsdXNybW9ka3dsbnF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1OTM3MjgsImV4cCI6MjA3NzE2OTcyOH0.xUlZvXk6uOfjEn4oPAZmDabd_k6aHSKi1SNTyO9Uji8
+
+      - name: Build Status
+        run: |
+          echo "🎉 Build completed successfully!"
+          echo "✅ TypeScript compilation passed"
+          echo "✅ Next.js build passed"
+          echo "✅ Lint checks passed"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

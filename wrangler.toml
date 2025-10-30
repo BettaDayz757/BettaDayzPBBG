@@ -1,4 +1,5 @@
 name = "bettadayz-pbbg"
+account_id = "9b9fcaead55610e5dd235878e702ee69"
 main = "cloudflare-worker.js"
 compatibility_date = "2024-10-30"
 
