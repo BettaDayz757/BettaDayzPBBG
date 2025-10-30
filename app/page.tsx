@@ -6,9 +6,9 @@ export default function Home() {
   const [currentDomain, setCurrentDomain] = useState('bettadayz.shop');
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setCurrentDomain(window.location.hostname);
-    }
+    const domain = typeof window !== 'undefined' ? window.location.hostname : 'bettadayz.shop';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setCurrentDomain(domain);
   }, []);
 
   return (

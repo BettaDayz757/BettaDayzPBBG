@@ -1,4 +1,4 @@
-import { locations } from './game-constants';
+// Norfolk events and activities
 
 export const NorfolkEvents = {
   COMMUNITY: [
@@ -216,7 +216,7 @@ export const NEIGHBORHOODS = {
   }
 };
 
-export const generateEvent = (playerLevel, location) => {
+export const generateEvent = (playerLevel) => {
   const availableEvents = [...NorfolkEvents.COMMUNITY, ...NorfolkEvents.BUSINESS]
     .filter(event => event.requirements.level <= playerLevel);
   
