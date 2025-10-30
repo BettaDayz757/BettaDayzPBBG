@@ -1,22 +1,7 @@
 {
   "version": 2,
   "name": "bettadayz-pbbg",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
+  "framework": "nextjs",
   "env": {
     "NODE_VERSION": "18",
     "NPM_VERSION": "9",
