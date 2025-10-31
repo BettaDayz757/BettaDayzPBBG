@@ -4,18 +4,28 @@
 export async function onRequest(context) {
   const { request, next } = context;
   const url = new URL(request.url);
-  const hostname = url.hostname;
+  const hostname = url.hostname.toLowerCase();
 
-  // Define allowed domains
-  const allowedDomains = ['bettadayz.shop', 'bettadayz.store', 'www.bettadayz.shop', 'www.bettadayz.store'];
-  
-  // Security: Block requests from unauthorized domains
-  if (!allowedDomains.includes(hostname)) {
+  // Define allowed production domains
+  const allowedDomains = new Set([
+    'bettadayz.shop',
+    'bettadayz.store',
+    'www.bettadayz.shop',
+    'www.bettadayz.store',
+  ]);
+
+  // Allow Cloudflare Pages preview/alias domains and local development
+  const isPagesDev = hostname.endsWith('.pages.dev');
+  const isLocal = hostname === 'localhost' || hostname.endsWith('.localhost');
+
+  // Security: Block requests only if not from our production domains, pages.dev previews, or local
+  const isAllowed = allowedDomains.has(hostname) || isPagesDev || isLocal;
+  if (!isAllowed) {
     return new Response('Forbidden', { status: 403 });
   }
 
   // Redirect www to non-www (optional - customize based on preference)
-  if (hostname.startsWith('www.')) {
+  if (!isPagesDev && hostname.startsWith('www.')) {
     const nonWwwDomain = hostname.slice(4);
     const newUrl = url.toString().replace(hostname, nonWwwDomain);
     return Response.redirect(newUrl, 301);

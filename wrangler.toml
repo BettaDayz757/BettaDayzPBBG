@@ -2,6 +2,10 @@ name = "bettadayz-pbbg"
 main = "cloudflare-worker.js"
 compatibility_date = "2023-12-01"
 
+# Cloudflare Pages configuration for Next.js
+# Static build output directory
+pages_build_output_dir = "out"
+
 [vars]
 SERVER_IP = "194.195.84.72"
 SHOP_PORT = "3000"

@@ -12,6 +12,14 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Ignore generated/bundled files:
+    "_*.js",
+    "*.cjs",
+    "**/node_modules/**",
+    "**/.git/**",
+    "**/dist/**",
+    "**/*.bundle.js",
+    "**/*.min.js",
   ]),
 ]);
 

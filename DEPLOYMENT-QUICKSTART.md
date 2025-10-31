@@ -1,23 +1,24 @@
 # Quick Start: Deploying to bettadayz.shop
 
+## DNSSEC: bettadayz.shop
+
+To enable DNSSEC you will need to add the following DS record at your registrar for bettadayz.shop. Most registrars ask for only a subset of these fields.
+
+
+Notes:
+
+
 This guide provides quick instructions for deploying your BettaDayz PBBG application to your domain **bettadayz.shop** using Hostinger.
 
 ## Overview
 
 Your repository is now configured to work with the domain **bettadayz.shop**. The following files have been updated:
-- `CNAME` - Points to bettadayz.shop
-- `.env.production` - Production environment variables
-- `vercel.json` - Domain configuration
-- `wrangler.toml` - Cloudflare Workers configuration
 
 ## Deployment Options
 
 ### Option 1: Hostinger VPS (Recommended)
 
 **Requirements:**
-- Hostinger VPS or Business hosting plan
-- Node.js 18+ support
-- SSH access
 
 **Quick Steps:**
 1. SSH into your Hostinger VPS
@@ -34,8 +35,6 @@ Your repository is now configured to work with the domain **bettadayz.shop**. Th
 ### Option 2: Cloudflare Pages (Alternative)
 
 **Requirements:**
-- Free Cloudflare account
-- Domain managed in Cloudflare
 
 **Quick Steps:**
 1. Log into Cloudflare Dashboard
@@ -134,15 +133,6 @@ PORT=3000
 
 After deployment, verify:
 
-- [ ] Site loads at https://bettadayz.shop
-- [ ] HTTPS is working (padlock icon in browser)
-- [ ] www.bettadayz.shop redirects properly
-- [ ] All pages and routes work correctly
-- [ ] Game functionality works as expected
-- [ ] API endpoints are accessible
-- [ ] Database connections work (if applicable)
-- [ ] No console errors in browser
-- [ ] Mobile responsiveness works
 
 ## Monitoring
 
@@ -187,33 +177,23 @@ Set up GitHub Actions for automatic deployment (see full guide).
 ## Troubleshooting
 
 ### Site Not Loading
-- Check DNS propagation: https://dnschecker.org
-- Verify Nginx is running: `systemctl status nginx`
-- Check application logs: `pm2 logs bettadayz`
 
 ### 502 Bad Gateway
-- Check if app is running: `pm2 status`
-- Verify port 3000 is listening: `netstat -tulpn | grep 3000`
-- Restart application: `pm2 restart bettadayz`
 
 ### SSL Certificate Issues
-- Check certificate: `certbot certificates`
-- Renew if needed: `certbot renew`
-- Verify Nginx config: `nginx -t`
+
+### 403 Forbidden on Cloudflare Pages
+
+If using Cloudflare Pages and you see 403 errors, ensure the Pages middleware allows the Pages alias and preview domains.
+
+
+Then redeploy the Pages project and re-test the alias and custom domains.
 
 ## Support
 
-- **Hostinger Support**: 24/7 live chat in hPanel
-- **Documentation**: [HOSTINGER-DEPLOYMENT-GUIDE.md](./HOSTINGER-DEPLOYMENT-GUIDE.md)
-- **GitHub Issues**: https://github.com/BettaDayz757/BettaDayzPBBG/issues
 
 ## Additional Resources
 
-- [Hostinger VPS Tutorial](https://www.hostinger.com/tutorials/vps)
-- [Remix Deployment Docs](https://remix.run/docs/en/main/guides/deployment)
-- [PM2 Documentation](https://pm2.keymetrics.io/docs)
-- [Nginx Documentation](https://nginx.org/en/docs)
-- [Certbot (Let's Encrypt)](https://certbot.eff.org)
 
 ## Need Help?
 
@@ -222,7 +202,6 @@ If you're new to server management or need assistance:
 2. Consider using Cloudflare Pages (simpler, no server management)
 3. Check the detailed deployment guides in this repository
 
----
 
 **Happy Deploying! 🚀**
 

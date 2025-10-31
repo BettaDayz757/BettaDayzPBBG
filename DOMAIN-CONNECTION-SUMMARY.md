@@ -1,5 +1,22 @@
 # Domain Connection Summary: bettadayz.shop via Hostinger
 
+## DNSSEC: bettadayz.shop
+
+To enable DNSSEC you will need to add the following DS record at your registrar for bettadayz.shop. Most registrars ask for only a subset of these fields.
+
+- DS Record: bettadayz.shop. 3600 IN DS 2371 13 2 195306F5DBE79C69C5DAD1D6F6E28394C584E03FEB0ADE7AE52EBD452D653F77
+- Digest: 195306F5DBE79C69C5DAD1D6F6E28394C584E03FEB0ADE7AE52EBD452D653F77
+- Digest Type: 2 (SHA256)
+- Algorithm: 13
+- Public Key: mdsswUyr3DPW132mOi8V9xESWE8jTo0dxCjjnopKl+GqJxpVXckHAeF+KkxLbxILfDLUT0rAK9iUzy1L53eKGQ==
+- Key Tag: 2371
+- Flags: 257 (KSK)
+
+Notes:
+
+- Turn on DNSSEC in the Cloudflare zone for bettadayz.shop, then add the DS at the registrar. Propagation can take up to 24 hours.
+- Repeat for bettadayz.store when its DS values are available from Cloudflare.
+
 ## ✅ What Was Completed
 
 This document summarizes all changes made to connect your repository to the domain **bettadayz.shop** for deployment via Hostinger.
@@ -147,7 +164,8 @@ PORT=3000
 ```
 
 ### DNS Records Needed (Hostinger)
-```
+
+```text
 Type: A
 Name: @
 Value: [Your VPS IP Address]
@@ -160,6 +178,7 @@ TTL: 14400
 ```
 
 ### Server Requirements
+
 - **OS**: Ubuntu/Debian (recommended)
 - **Node.js**: 18.x or 20.x
 - **Memory**: Minimum 1GB RAM
@@ -172,8 +191,8 @@ TTL: 14400
 
 After deployment, verify these items:
 
-- [ ] Site loads at https://bettadayz.shop
-- [ ] Site loads at https://www.bettadayz.shop (should redirect to non-www)
+- [ ] Site loads at [bettadayz.shop](https://bettadayz.shop)
+- [ ] Site loads at [www.bettadayz.shop](https://www.bettadayz.shop) (should redirect to non-www)
 - [ ] HTTP redirects to HTTPS
 - [ ] SSL certificate is valid (green padlock in browser)
 - [ ] All pages and routes work correctly
@@ -234,6 +253,7 @@ All deployment documentation is now available in the repository:
 ## 🛠️ Troubleshooting Quick Reference
 
 ### DNS Not Resolving
+
 ```bash
 # Check DNS propagation
 dig bettadayz.shop +short
@@ -244,6 +264,7 @@ dig bettadayz.shop +short
 ```
 
 ### Application Not Starting
+
 ```bash
 # Check PM2 status
 pm2 status
@@ -256,6 +277,7 @@ pm2 restart bettadayz
 ```
 
 ### Nginx Issues
+
 ```bash
 # Test configuration
 nginx -t
@@ -268,6 +290,7 @@ tail -f /var/log/nginx/error.log
 ```
 
 ### SSL Certificate Issues
+
 ```bash
 # Check certificate status
 certbot certificates
@@ -282,21 +305,23 @@ certbot renew --dry-run
 ## 📞 Support Resources
 
 - **Hostinger Support**: Available 24/7 via live chat in hPanel
-- **Hostinger Knowledge Base**: https://support.hostinger.com
-- **Repository Issues**: https://github.com/BettaDayz757/BettaDayzPBBG/issues
-- **Remix Documentation**: https://remix.run/docs
-- **PM2 Documentation**: https://pm2.keymetrics.io/docs
-- **Nginx Documentation**: https://nginx.org/en/docs
-- **Certbot**: https://certbot.eff.org
+- **Hostinger Knowledge Base**: [support.hostinger.com](https://support.hostinger.com)
+- **Repository Issues**: [GitHub Issues](https://github.com/BettaDayz757/BettaDayzPBBG/issues)
+- **Remix Documentation**: [remix.run/docs](https://remix.run/docs)
+- **PM2 Documentation**: [pm2.keymetrics.io/docs](https://pm2.keymetrics.io/docs)
+- **Nginx Documentation**: [nginx.org/en/docs](https://nginx.org/en/docs)
+- **Certbot**: [certbot.eff.org](https://certbot.eff.org)
 
 ## ✨ What's Different from Before?
 
-### Before (bettadayz.store):
+### Before (bettadayz.store)
+
 - Domain was configured as bettadayz.store
 - Limited deployment documentation
 - No Hostinger-specific guides
 
-### After (bettadayz.shop):
+### After (bettadayz.shop)
+
 - ✅ All references updated to bettadayz.shop
 - ✅ Comprehensive Hostinger deployment guide (12,000+ chars)
 - ✅ Quick start guide for easy reference
@@ -305,7 +330,7 @@ certbot renew --dry-run
 - ✅ Updated source code metadata
 - ✅ Ready for immediate deployment
 
-## 🎉 You're Ready to Deploy!
+## 🎉 You're Ready to Deploy
 
 Everything is now configured and ready for deployment to **bettadayz.shop** via Hostinger. Follow the guides in this repository to get your game live!
 
