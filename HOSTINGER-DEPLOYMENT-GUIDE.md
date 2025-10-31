@@ -1,16 +1,10 @@
 # Hostinger Deployment Guide for bettadayz.shop
 
-This guide will walk you through deploying your BettaDayz PBBG application to Hostinger and connecting it to your domain **bettadayz.shop**.
+## DNSSEC: bettadayz.shop
+
+To enable DNSSEC you will need to add the following DS record at your registrar for bettadayz.shop. Most registrars ask for only a subset of these fields.
 
 ## Prerequisites
-
-- Hostinger account with VPS or Business hosting plan (required for Node.js applications)
-- Domain **bettadayz.shop** registered and managed in Hostinger
-- SSH access to your Hostinger server
-- Node.js 18+ support on your hosting plan
-- Git installed on the server
-
-## Overview
 
 This application is built with Remix (React framework) and requires a Node.js environment to run. Hostinger supports Node.js applications through their VPS or Business hosting plans.
 
@@ -19,10 +13,6 @@ This application is built with Remix (React framework) and requires a Node.js en
 ### Step 1: Build the Application Locally
 
 ```bash
-# Clone the repository (if not already done)
-git clone https://github.com/BettaDayz757/BettaDayzPBBG.git
-cd BettaDayzPBBG
-
 # Install dependencies
 npm install
 
@@ -295,7 +285,10 @@ npm run build
 
 # Restart the application
 pm2 restart bettadayz
+```
 
+
+```bash
 # Check status
 pm2 status
 pm2 logs bettadayz --lines 50
@@ -388,9 +381,6 @@ jobs:
 ```
 
 Add these secrets in GitHub repository settings:
-- `HOSTINGER_HOST`: Your server IP
-- `HOSTINGER_USERNAME`: SSH username (usually `root`)
-- `HOSTINGER_SSH_KEY`: Your SSH private key
 
 ## Part 9: Monitoring and Maintenance
 
@@ -494,10 +484,6 @@ dpkg-reconfigure -plow unattended-upgrades
 
 ### 4. Environment Variables Security
 
-- Never commit `.env` files to Git
-- Use strong, random secrets
-- Rotate credentials regularly
-- Use environment-specific variables
 
 ## Troubleshooting
 
@@ -511,10 +497,6 @@ pm2 logs bettadayz --err
 netstat -tulpn | grep 3000
 
 # Restart application
-pm2 restart bettadayz
-```
-
-### DNS Not Resolving
 
 ```bash
 # Check DNS records
@@ -561,10 +543,9 @@ netstat -tulpn | grep 3000
 ## Alternative: Using Hostinger's Website Builder (Not Recommended for Node.js)
 
 Note: Hostinger's basic shared hosting plans don't support Node.js applications. You need:
-- **VPS Hosting**: Full control, requires server management
-- **Business/Premium Hosting**: May support Node.js (check with Hostinger)
 
 If you don't have VPS access, consider:
+
 1. Upgrading to Hostinger VPS
 2. Using Cloudflare Pages (free, supports Remix)
 3. Using Vercel (free tier available)
@@ -572,15 +553,10 @@ If you don't have VPS access, consider:
 
 ## Support and Resources
 
-- **Hostinger Support**: Available 24/7 via live chat
-- **Hostinger Knowledge Base**: https://support.hostinger.com
-- **Remix Documentation**: https://remix.run/docs
-- **PM2 Documentation**: https://pm2.keymetrics.io/docs
-- **Nginx Documentation**: https://nginx.org/en/docs
 
 ## Next Steps After Deployment
 
-1. ✅ Verify site is accessible at https://bettadayz.shop
+1. ✅ Verify site is accessible at [bettadayz.shop](https://bettadayz.shop)
 2. ✅ Test all features and functionality
 3. ✅ Set up monitoring (PM2 Plus, Sentry, etc.)
 4. ✅ Configure backups (database, files)
@@ -593,6 +569,6 @@ If you don't have VPS access, consider:
 
 ## Congratulations! 🎉
 
-Your BettaDayz PBBG application should now be live at **https://bettadayz.shop**!
+Your BettaDayz PBBG application should now be live at [bettadayz.shop](https://bettadayz.shop)!
 
 If you encounter any issues, check the troubleshooting section or contact Hostinger support.

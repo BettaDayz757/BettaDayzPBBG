@@ -1,19 +1,85 @@
 # BettaDayz PBBG - Norfolk Business Empire
 
+## DNSSEC: bettadayz.shop
+
+To enable DNSSEC you will need to add the following DS record at your registrar for bettadayz.shop. Most registrars ask for only a subset of these fields.
+
+- DS Record: bettadayz.shop. 3600 IN DS 2371 13 2 195306F5DBE79C69C5DAD1D6F6E28394C584E03FEB0ADE7AE52EBD452D653F77
+- Digest: 195306F5DBE79C69C5DAD1D6F6E28394C584E03FEB0ADE7AE52EBD452D653F77
+- Digest Type: 2 (SHA256)
+- Algorithm: 13
+- Public Key: mdsswUyr3DPW132mOi8V9xESWE8jTo0dxCjjnopKl+GqJxpVXckHAeF+KkxLbxILfDLUT0rAK9iUzy1L53eKGQ==
+- Key Tag: 2371
+- Flags: 257 (KSK)
+
+Notes:
+
+- Also toggle DNSSEC to On in the Cloudflare zone for bettadayz.shop, then add the DS at the registrar. Propagation can take up to 24 hours.
+- Repeat analogous steps for bettadayz.store when its DS values are available from Cloudflare.
+
+## Troubleshooting: 403 Forbidden on Cloudflare Pages
+
+If you see “Failed to load resource: the server responded with a status of 403 (Forbidden)”, the server denied access to an existing resource. Common causes include strict host allowlists, missing index files, or WAF rules.
+
+For this project specifically, ensure the Cloudflare Pages middleware allows the Pages alias and preview domains:
+
+- File: `functions/_middleware.js`
+- Allow hostnames ending with `.pages.dev` and `localhost` in addition to production domains. We’ve updated this already to fix deploy previews and the main alias.
+
+General checks:
+
+- Verify the URL and that an `index.html` exists for static directories.
+- Check server/app logs and any WAF settings.
+- Confirm client auth headers/cookies are present for protected routes.
+
+## About BettaDayz PBBG
+
 A Next.js-based Persistent Browser-Based Game (PBBG) celebrating African American and minority culture in Norfolk, VA. Build your business empire, create your legacy, and experience life simulation inspired by IMVU, BitLife, and Torn.com.
 
-**Live Sites:** 
+**Live Sites:**
+
 - [https://bettadayz.shop](https://bettadayz.shop)
 - [https://bettadayz.store](https://bettadayz.store)
 
-## 🎮 Game Features
+## � Canva Integration
+
+**NEW**: Connect your Canva account to edit and publish designs directly to your domains!
+
+**Quick Start:**
+
+1. Set up Canva credentials in `.env.local`
+2. Run migration: `npx supabase db push`
+3. Create `canva-assets` storage bucket
+4. Connect Canva in dashboard
+5. Publish designs to bettadayz.shop and/or bettadayz.store
+
+**Workflow**: Canva Editor → Local Dashboard → Supabase Storage → Domain Publishing
+
+**Documentation:**
+
+- 📘 [Complete Integration Guide](./CANVA-INTEGRATION-GUIDE.md)
+- 🚀 [Quick Start Guide](./CANVA-QUICK-START.md)
+- 📊 [Implementation Summary](./CANVA-IMPLEMENTATION-SUMMARY.md)
+
+**Features:**
+
+- ✅ OAuth 2.0 authentication
+- ✅ Browse and manage Canva designs
+- ✅ Export in multiple formats (PNG, JPG, PDF, SVG)
+- ✅ Publish to one or both domains
+- ✅ Version control and audit trail
+- ✅ Automatic CDN deployment
+
+## �🎮 Game Features
 
 ### Inspired By
+
 - **IMVU**: Social networking, character customization, virtual spaces
 - **BitLife**: Life simulation, aging system, major life decisions
 - **Torn.com**: Competitive gameplay, territory control, crew/gang system
 
 ### Core Gameplay
+
 - 🏢 **Build Business Empire** in authentic Norfolk, VA locations
 - 🎓 **HBCU Integration** with Norfolk State, Hampton, Virginia State
 - ✊🏾 **Cultural Heritage** celebrating African American excellence
@@ -48,12 +114,12 @@ A Next.js-based Persistent Browser-Based Game (PBBG) celebrating African America
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### Prerequisites (Dev)
 
 - Node.js 20.x or higher
 - npm 10.x or higher
 
-### Local Development
+### Local Development (Detailed)
 
 1. Clone the repository:
 
@@ -164,6 +230,7 @@ The deployment workflow runs on pushes to the `main` branch:
 ## 🌐 Dual Domain Deployment
 
 This game supports two domains:
+
 - **bettadayz.shop** - Primary domain
 - **bettadayz.store** - Secondary domain
 
@@ -200,9 +267,3 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

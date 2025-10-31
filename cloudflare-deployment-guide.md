@@ -1,5 +1,22 @@
 # Cloudflare Pages Deployment Guide for BettaDayz.shop
 
+## DNSSEC: bettadayz.shop
+
+To enable DNSSEC you will need to add the following DS record at your registrar for bettadayz.shop. Most registrars ask for only a subset of these fields.
+
+- DS Record: bettadayz.shop. 3600 IN DS 2371 13 2 195306F5DBE79C69C5DAD1D6F6E28394C584E03FEB0ADE7AE52EBD452D653F77
+- Digest: 195306F5DBE79C69C5DAD1D6F6E28394C584E03FEB0ADE7AE52EBD452D653F77
+- Digest Type: 2 (SHA256)
+- Algorithm: 13
+- Public Key: mdsswUyr3DPW132mOi8V9xESWE8jTo0dxCjjnopKl+GqJxpVXckHAeF+KkxLbxILfDLUT0rAK9iUzy1L53eKGQ==
+- Key Tag: 2371
+- Flags: 257 (KSK)
+
+Notes:
+
+- Turn on DNSSEC in the Cloudflare zone for bettadayz.shop, then add the DS at the registrar. Propagation can take up to 24 hours.
+- Repeat for bettadayz.store when its DS values are available from Cloudflare.
+
 ## Prerequisites
 - Cloudflare account
 - Domain `bettadayz.shop` added to Cloudflare
@@ -101,6 +118,21 @@ SESSION_SECRET=your_session_secret_here
    - Test the game functionality
 
 ## Troubleshooting
+
+### 403 Forbidden on Cloudflare Pages
+
+If you see “Failed to load resource: the server responded with a status of 403 (Forbidden)”, the server denied access to an existing resource.
+
+For this project specifically, ensure the Cloudflare Pages middleware allows the Pages alias and preview domains.
+
+- File: `functions/_middleware.js`
+- Allow hostnames ending with `.pages.dev` and `localhost` in addition to production domains.
+
+General checks:
+
+- Verify an `index.html` exists in the requested directory (for static exports).
+- Review Pages function logs and any WAF/Firewall rules.
+- Confirm client auth headers/cookies where required.
 
 ### Common Issues
 
