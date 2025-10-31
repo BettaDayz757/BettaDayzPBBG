@@ -35,6 +35,9 @@ functions/build/
 .wrangler
 _worker.bundle
 
+# VPS deployment configuration (contains secrets)
+vps-config.sh
+
 Modelfile
 modelfiles
 
@@ -51,4 +54,11 @@ docs/instructions/Roadmap.md
 !DUAL-DOMAIN-*.md
 !SUPABASE-*.md
 !README.md
+!DEPLOYMENT-README.md
+!VPS-DEPLOYMENT.md
+!DEPLOYMENT-QUICKSTART.md
+!HOSTINGER-DEPLOYMENT-GUIDE.md
+!COMPLETE-DEPLOYMENT-GUIDE.md
+!cloudflare-deployment-guide.md
+!QUICK-DEPLOY.md
 .qodo
