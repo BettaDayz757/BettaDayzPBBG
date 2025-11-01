@@ -4,7 +4,28 @@ This directory contains helper utilities and client configurations for interacti
 
 ## Files
 
-### `client.ts`
+### Import Convenience Files
+
+#### `client-exports.ts` ✅ CLIENT-SAFE
+Exports only client-safe Supabase utilities. Use this in browser/React component code.
+
+```typescript
+import { supabase, gameOperations } from '@/lib/supabase/client-exports';
+```
+
+#### `server-exports.ts` ⚠️ SERVER-ONLY
+Exports server-side utilities with elevated privileges. Only use in API routes, Server Components, and Server Actions.
+
+```typescript
+import { supabaseAdmin } from '@/lib/supabase/server-exports';
+```
+
+#### `index.ts`
+Main export file with all utilities. Includes security warnings in comments.
+
+### Core Implementation Files
+
+#### `client.ts`
 Enhanced Supabase client with helper functions for common operations.
 
 #### Features:
@@ -74,6 +95,15 @@ Simple Supabase client for basic usage:
 ```typescript
 import { supabase } from '@/lib/supabaseClient';
 ```
+
+### `examples.ts`
+Comprehensive example code demonstrating:
+- Client-side operations (player management, quests, inventory)
+- Server-side admin operations
+- Real-time subscriptions
+- Authentication flows (sign up, sign in, sign out)
+
+This file serves as a reference for implementing common patterns.
 
 ## Environment Variables
 

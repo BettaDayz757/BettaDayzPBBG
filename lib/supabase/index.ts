@@ -3,9 +3,15 @@
  * 
  * This file provides convenient exports for all Supabase-related
  * functionality in the BettaDayz PBBG application.
+ * 
+ * ⚠️ SECURITY WARNING:
+ * - Use 'supabase' for CLIENT-SIDE operations (browser, React components)
+ * - Use 'supabaseAdmin' ONLY in SERVER-SIDE code (API routes, Server Components)
+ * - Never use supabaseAdmin in client-side code as it bypasses Row Level Security (RLS)
+ * - JWT_SECRET is intentionally not exported here - import directly from '../supabase' in server code only
  */
 
-// Re-export everything from client.ts for convenience
+// CLIENT-SIDE EXPORTS - Safe for browser use
 export {
   supabase,
   createClient,
@@ -13,12 +19,11 @@ export {
   supabaseHelper
 } from './client';
 
-// Also export from parent supabase.ts for backwards compatibility
-// Note: JWT_SECRET is intentionally not exported here for security reasons
-// Access it directly from '../supabase' in server-side code only
+// SERVER-SIDE EXPORTS - Use only in API routes and Server Components
+// ⚠️ WARNING: supabaseAdmin bypasses RLS and should NEVER be used in client code
 export {
   supabase as supabaseClient,
-  supabaseAdmin,
+  supabaseAdmin,  // ⚠️ SERVER-SIDE ONLY
   gameOperations,
   type Player,
   type GameSession,
