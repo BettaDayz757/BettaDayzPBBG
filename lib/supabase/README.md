@@ -94,6 +94,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 2. **Use service role key only on server** - The service role key bypasses Row Level Security (RLS) and should never be exposed to the client
 3. **Use anon key for client-side operations** - This key works with RLS policies
 4. **Keep environment files out of git** - `.env.local` and `.env.production` should be in `.gitignore`
+5. **JWT_SECRET is server-only** - The JWT_SECRET exported from `supabase.ts` should only be used in server-side code (API routes, server components). It is intentionally NOT re-exported from `index.ts` to prevent accidental client-side exposure
 
 ## Database Schema
 

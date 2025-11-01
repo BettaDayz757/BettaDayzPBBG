@@ -14,6 +14,8 @@ export {
 } from './client';
 
 // Also export from parent supabase.ts for backwards compatibility
+// Note: JWT_SECRET is intentionally not exported here for security reasons
+// Access it directly from '../supabase' in server-side code only
 export {
   supabase as supabaseClient,
   supabaseAdmin,
@@ -21,8 +23,7 @@ export {
   type Player,
   type GameSession,
   type PlayerInventory,
-  type GameActivity,
-  JWT_SECRET
+  type GameActivity
 } from '../supabase';
 
 /**
