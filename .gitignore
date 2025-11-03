@@ -52,3 +52,19 @@ docs/instructions/Roadmap.md
 !SUPABASE-*.md
 !README.md
 .qodo
+
+# Design assets and large binaries - ignore large design files
+# Keep small icon SVGs but block large design files
+*Crime*.svg
+*Canva*.zip
+*3D*.svg
+files*.zip
+
+# Deployment archives (should be built fresh, not committed)
+*-deployment*.tar.gz
+*-dual-deployment*.tar.gz
+*-jwt-deployment*.tar.gz
+
+# Database tools (should not be committed)
+phpMyAdmin*/
+*phpMyAdmin*.zip
