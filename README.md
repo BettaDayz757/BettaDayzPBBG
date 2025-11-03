@@ -30,3 +30,16 @@ MVP features confirmed:
 
 Security & Compliance notes:
 - Crypto and virtual currency can trigger legal requirements (KYC/AML/money transmitter). I will not enable cashouts until we confirm compliance plan.
+
+## TinaCMS / Editing
+
+This project includes TinaCMS scaffolding to enable live editing of content directly in the browser.
+
+### Quick Setup:
+1. Install TinaCMS packages: `npm install --save tinacms @tinacms/react @tinacms/cli`
+2. Copy `.env.example` to `.env.local` and fill in your TinaCloud credentials
+3. Run the init CLI: `npx @tinacms/cli@latest init`
+4. Connect your TinaCloud dashboard to this GitHub repository
+
+### Documentation:
+For detailed setup instructions including Hostinger deployment, Cloudflare configuration, and dual-domain strategy, see [docs/tina-setup.md](docs/tina-setup.md).
