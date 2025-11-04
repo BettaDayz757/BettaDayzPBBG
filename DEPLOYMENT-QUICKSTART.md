@@ -5,6 +5,7 @@ This guide provides quick instructions for deploying your BettaDayz PBBG applica
 ## Overview
 
 Your repository is now configured to work with the domain **bettadayz.shop**. The following files have been updated:
+
 - `CNAME` - Points to bettadayz.shop
 - `.env.production` - Production environment variables
 - `vercel.json` - Domain configuration
@@ -15,11 +16,13 @@ Your repository is now configured to work with the domain **bettadayz.shop**. Th
 ### Option 1: Hostinger VPS (Recommended)
 
 **Requirements:**
+
 - Hostinger VPS or Business hosting plan
 - Node.js 18+ support
 - SSH access
 
 **Quick Steps:**
+
 1. SSH into your Hostinger VPS
 2. Clone this repository: `git clone https://github.com/BettaDayz757/BettaDayzPBBG.git`
 3. Install dependencies: `npm install`
@@ -34,10 +37,12 @@ Your repository is now configured to work with the domain **bettadayz.shop**. Th
 ### Option 2: Cloudflare Pages (Alternative)
 
 **Requirements:**
+
 - Free Cloudflare account
 - Domain managed in Cloudflare
 
 **Quick Steps:**
+
 1. Log into Cloudflare Dashboard
 2. Go to Pages → Create a project
 3. Connect your GitHub repository
@@ -81,7 +86,7 @@ Or use online tool: https://dnschecker.org
 
 ## SSL Certificate
 
-### For Hostinger VPS:
+### For Hostinger VPS
 
 ```bash
 # Install Certbot
@@ -91,7 +96,8 @@ apt install -y certbot python3-certbot-nginx
 certbot --nginx -d bettadayz.shop -d www.bettadayz.shop
 ```
 
-### For Cloudflare:
+### For Cloudflare
+
 SSL is automatically handled by Cloudflare.
 
 ## Build and Test Locally
@@ -146,7 +152,7 @@ After deployment, verify:
 
 ## Monitoring
 
-### For Hostinger VPS:
+### For Hostinger VPS
 
 ```bash
 # Check application status
@@ -161,7 +167,7 @@ pm2 monit
 
 ## Updating Your Application
 
-### Manual Updates (Hostinger VPS):
+### Manual Updates (Hostinger VPS)
 
 ```bash
 # SSH into server
@@ -181,22 +187,26 @@ npm run build
 pm2 restart bettadayz
 ```
 
-### Automatic Updates:
+### Automatic Updates
+
 Set up GitHub Actions for automatic deployment (see full guide).
 
 ## Troubleshooting
 
 ### Site Not Loading
+
 - Check DNS propagation: https://dnschecker.org
 - Verify Nginx is running: `systemctl status nginx`
 - Check application logs: `pm2 logs bettadayz`
 
 ### 502 Bad Gateway
+
 - Check if app is running: `pm2 status`
 - Verify port 3000 is listening: `netstat -tulpn | grep 3000`
 - Restart application: `pm2 restart bettadayz`
 
 ### SSL Certificate Issues
+
 - Check certificate: `certbot certificates`
 - Renew if needed: `certbot renew`
 - Verify Nginx config: `nginx -t`
@@ -218,6 +228,7 @@ Set up GitHub Actions for automatic deployment (see full guide).
 ## Need Help?
 
 If you're new to server management or need assistance:
+
 1. Contact Hostinger support (they can help with VPS setup)
 2. Consider using Cloudflare Pages (simpler, no server management)
 3. Check the detailed deployment guides in this repository

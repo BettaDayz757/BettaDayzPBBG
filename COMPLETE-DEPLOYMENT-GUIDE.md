@@ -1,9 +1,11 @@
 # 🚀 BettaDayz PBBG Complete Deployment Guide
 
 ## 🎯 Overview
+
 Complete production deployment of BettaDayz PBBG with Cloudflare Workers domain routing and Supabase database integration.
 
 ## 🔐 Credentials & Configuration
+
 - **Cloudflare Token**: `after9b9fcaead55610e5dd235878e702ee69`
 - **JWT Secret**: `9=N6H//qQ]?g+BDV`
 - **Server**: `194.195.84.72:65002`
@@ -12,6 +14,7 @@ Complete production deployment of BettaDayz PBBG with Cloudflare Workers domain 
 - **Supabase Project ID**: `btcfpizydmcdjhltwbil`
 
 ## ✅ Current Status (All Complete!)
+
 - ✅ **Server Applications**: Running on ports 3000 (shop) and 3001 (store)
 - ✅ **Supabase URL**: Configured at https://btcfpizydmcdjhltwbil.supabase.co
 - ✅ **Supabase Integration**: Code deployed with authentication hooks
@@ -27,6 +30,7 @@ Complete production deployment of BettaDayz PBBG with Cloudflare Workers domain 
 ### Step 1: Deploy Cloudflare Worker
 
 **Option A: Dashboard Deployment (Recommended)**
+
 1. Go to [https://dash.cloudflare.com](https://dash.cloudflare.com)
 2. Navigate to **Workers & Pages**
 3. Click **Create** → **Worker**
@@ -35,6 +39,7 @@ Complete production deployment of BettaDayz PBBG with Cloudflare Workers domain 
 6. Click **Save and Deploy**
 
 **Environment Variables to Set:**
+
 ```
 SERVER_IP = 194.195.84.72
 SHOP_PORT = 3000
@@ -45,6 +50,7 @@ NODE_ENV = production
 ```
 
 ### Step 2: Configure Custom Domains
+
 1. In Worker settings, go to **Triggers**
 2. Add **Custom Domains**:
    - `bettadayz.shop`
@@ -53,6 +59,7 @@ NODE_ENV = production
    - `www.bettadayz.store`
 
 ### Step 3: Create Supabase Database
+
 1. Go to [https://supabase.com/dashboard/project/btcfpizydmcdjhltwbil](https://supabase.com/dashboard/project/btcfpizydmcdjhltwbil)
 2. Navigate to **SQL Editor**
 3. Copy and run: `deploy-to-supabase.sql` (created automatically)
@@ -61,6 +68,7 @@ NODE_ENV = production
 **Note**: Your Supabase project is already created at: `https://btcfpizydmcdjhltwbil.supabase.co`
 
 ### Step 4: Get Supabase API Keys
+
 1. In your Supabase project settings
 2. Go to **API** section
 3. Copy your **anon/public key** and **service_role key**
@@ -71,11 +79,13 @@ NODE_ENV = production
 ## 🎮 Test URLs
 
 **Current (Direct Server Access):**
+
 - Shop: `http://194.195.84.72:3000`
-- Store: `http://194.195.84.72:3001` 
+- Store: `http://194.195.84.72:3001`
 - Game: `http://194.195.84.72:3000/game`
 
 **After Worker Deployment:**
+
 - Shop: `https://bettadayz.shop`
 - Store: `https://bettadayz.store`
 - Game: `https://bettadayz.shop/game`
@@ -96,18 +106,21 @@ deployment-package/
 ## 🔧 Advanced Configuration
 
 ### Worker Features
+
 - **Domain Routing**: Automatically routes shop/store domains to correct ports
 - **CORS Headers**: Enables cross-origin requests
 - **Error Handling**: Comprehensive error responses
 - **JWT Integration**: Validates authentication across requests
 
 ### Database Features
+
 - **Complete PBBG Schema**: Players, inventory, quests, guilds, marketplace
 - **Game Mechanics**: Experience, energy, level-up functions
 - **Real-time Features**: Activity tracking, session management
 - **Security**: Row-Level Security (RLS) policies enabled
 
 ### Server Integration
+
 - **JWT Authentication**: `9=N6H//qQ]?g+BDV` configured
 - **Environment Variables**: Production settings applied
 - **Application Status**: Both apps running and responding HTTP 200

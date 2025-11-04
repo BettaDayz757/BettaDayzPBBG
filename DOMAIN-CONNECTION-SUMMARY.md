@@ -76,7 +76,7 @@ This document summarizes all changes made to connect your repository to the doma
 
 ## 🚀 Next Steps for Deployment
 
-### For Hostinger VPS Deployment:
+### For Hostinger VPS Deployment
 
 1. **Access Your Hostinger VPS**
    - Log into Hostinger hPanel
@@ -116,7 +116,7 @@ This document summarizes all changes made to connect your repository to the doma
    - Test all functionality
    - Check SSL certificate (green padlock)
 
-### For Cloudflare Pages Deployment (Alternative):
+### For Cloudflare Pages Deployment (Alternative)
 
 1. **Log into Cloudflare**
    - Go to Pages section
@@ -134,12 +134,14 @@ This document summarizes all changes made to connect your repository to the doma
 ## 📋 Configuration Summary
 
 ### Domain Information
+
 - **Primary Domain**: bettadayz.shop
 - **WWW Subdomain**: www.bettadayz.shop (redirects to primary)
 - **Protocol**: HTTPS (forced redirect from HTTP)
 - **Previous Domain**: bettadayz.store (all references updated)
 
 ### Environment Variables Required
+
 ```env
 NODE_ENV=production
 SITE_URL=https://bettadayz.shop
@@ -147,6 +149,7 @@ PORT=3000
 ```
 
 ### DNS Records Needed (Hostinger)
+
 ```
 Type: A
 Name: @
@@ -160,6 +163,7 @@ TTL: 14400
 ```
 
 ### Server Requirements
+
 - **OS**: Ubuntu/Debian (recommended)
 - **Node.js**: 18.x or 20.x
 - **Memory**: Minimum 1GB RAM
@@ -234,6 +238,7 @@ All deployment documentation is now available in the repository:
 ## 🛠️ Troubleshooting Quick Reference
 
 ### DNS Not Resolving
+
 ```bash
 # Check DNS propagation
 dig bettadayz.shop +short
@@ -244,6 +249,7 @@ dig bettadayz.shop +short
 ```
 
 ### Application Not Starting
+
 ```bash
 # Check PM2 status
 pm2 status
@@ -256,6 +262,7 @@ pm2 restart bettadayz
 ```
 
 ### Nginx Issues
+
 ```bash
 # Test configuration
 nginx -t
@@ -268,6 +275,7 @@ tail -f /var/log/nginx/error.log
 ```
 
 ### SSL Certificate Issues
+
 ```bash
 # Check certificate status
 certbot certificates
@@ -291,12 +299,14 @@ certbot renew --dry-run
 
 ## ✨ What's Different from Before?
 
-### Before (bettadayz.store):
+### Before (bettadayz.store)
+
 - Domain was configured as bettadayz.store
 - Limited deployment documentation
 - No Hostinger-specific guides
 
-### After (bettadayz.shop):
+### After (bettadayz.shop)
+
 - ✅ All references updated to bettadayz.shop
 - ✅ Comprehensive Hostinger deployment guide (12,000+ chars)
 - ✅ Quick start guide for easy reference
@@ -305,7 +315,7 @@ certbot renew --dry-run
 - ✅ Updated source code metadata
 - ✅ Ready for immediate deployment
 
-## 🎉 You're Ready to Deploy!
+## 🎉 You're Ready to Deploy
 
 Everything is now configured and ready for deployment to **bettadayz.shop** via Hostinger. Follow the guides in this repository to get your game live!
 

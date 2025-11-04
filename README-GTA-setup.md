@@ -4,6 +4,7 @@ Getting started with the 3D demo (vehicle driving & character customization)
 This repository has small demo components to help you prototype a GTA-like world in the browser using WebGL and physics.
 
 Files added:
+
 - `app/components/VehicleSimulation.jsx` — A minimal physics-enabled chassis demo (keyboard W/A/S/D). Replace with a glTF car model and expand physics using `@react-three/cannon`'s raycast vehicle helpers.
 - `app/components/CharacterCustomization3D.jsx` — A demo showing how to load a glTF character and swap clothing materials/colors.
 

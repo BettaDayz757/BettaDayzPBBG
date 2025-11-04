@@ -1,0 +1,253 @@
+# .htaccess for BettaDayz PBBG on XAMPP Apache
+# Place this file in the htdocs directory if using static builds
+
+# ============================================================================
+# Enable Rewrite Engine
+# ============================================================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # ============================================================================
+    # WWW to Non-WWW Redirect
+    # ============================================================================
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+    # ============================================================================
+    # Force HTTPS (uncomment for SSL)
+    # ============================================================================
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # ============================================================================
+    # Single Page Application Routing
+    # ============================================================================
+    # Don't rewrite files or directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Don't rewrite API routes
+    RewriteCond %{REQUEST_URI} !^/api/
+    
+    # Rewrite everything else to index.html
+    RewriteRule ^ index.html [L]
+</IfModule>
+
+# ============================================================================
+# Security Headers
+# ============================================================================
+<IfModule mod_headers.c>
+    # Prevent clickjacking
+    Header always set X-Frame-Options "DENY"
+    
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Enable XSS protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "origin-when-cross-origin"
+    
+    # CORS for dual domain support
+    Header always set Access-Control-Allow-Origin "http://bettadayz.shop, http://bettadayz.store"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+    Header always set Access-Control-Allow-Credentials "true"
+    
+    # Remove server signature
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# ============================================================================
+# MIME Types
+# ============================================================================
+<IfModule mod_mime.c>
+    # JavaScript
+    AddType application/javascript js mjs
+    AddType application/json json map
+    
+    # Images
+    AddType image/webp webp
+    AddType image/svg+xml svg svgz
+    
+    # Fonts
+    AddType font/woff woff
+    AddType font/woff2 woff2
+    AddType application/font-woff woff
+    AddType application/font-woff2 woff2
+    AddType application/vnd.ms-fontobject eot
+    AddType font/ttf ttf
+    AddType font/otf otf
+    
+    # Other
+    AddType text/css css
+    AddType text/html html htm
+</IfModule>
+
+# ============================================================================
+# Compression
+# ============================================================================
+<IfModule mod_deflate.c>
+    # Compress HTML, CSS, JavaScript, Text, XML and fonts
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+    AddOutputFilterByType DEFLATE application/x-font
+    AddOutputFilterByType DEFLATE application/x-font-opentype
+    AddOutputFilterByType DEFLATE application/x-font-otf
+    AddOutputFilterByType DEFLATE application/x-font-truetype
+    AddOutputFilterByType DEFLATE application/x-font-ttf
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE font/opentype
+    AddOutputFilterByType DEFLATE font/otf
+    AddOutputFilterByType DEFLATE font/ttf
+    AddOutputFilterByType DEFLATE font/woff
+    AddOutputFilterByType DEFLATE font/woff2
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE image/x-icon
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+    
+    # Remove browser bugs (only needed for really old browsers)
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    Header append Vary User-Agent
+</IfModule>
+
+# ============================================================================
+# Browser Caching
+# ============================================================================
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Default expiration: 1 week
+    ExpiresDefault "access plus 1 week"
+    
+    # HTML (no caching for SPA)
+    ExpiresByType text/html "access plus 0 seconds"
+    
+    # CSS and JavaScript: 1 year
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType application/x-javascript "access plus 1 year"
+    
+    # Images: 1 year
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # Fonts: 1 year
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    
+    # JSON: no cache
+    ExpiresByType application/json "access plus 0 seconds"
+</IfModule>
+
+# ============================================================================
+# Cache Control Headers
+# ============================================================================
+<IfModule mod_headers.c>
+    # HTML: no cache
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires 0
+    </FilesMatch>
+    
+    # CSS and JavaScript: cache for 1 year
+    <FilesMatch "\.(css|js|mjs)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    # Images: cache for 1 year
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    # Fonts: cache for 1 year
+    <FilesMatch "\.(ttf|otf|woff|woff2|eot)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+# ============================================================================
+# File Access Protection
+# ============================================================================
+# Deny access to hidden files and directories
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Deny access to sensitive files
+<FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$">
+    Require all denied
+</FilesMatch>
+
+# Protect .env files
+<FilesMatch "\.env">
+    Require all denied
+</FilesMatch>
+
+# Protect package files
+<FilesMatch "(package\.json|package-lock\.json|composer\.json|composer\.lock)$">
+    Require all denied
+</FilesMatch>
+
+# ============================================================================
+# Directory Index
+# ============================================================================
+DirectoryIndex index.html index.php
+
+# ============================================================================
+# Error Pages (optional)
+# ============================================================================
+# ErrorDocument 404 /404.html
+# ErrorDocument 403 /403.html
+# ErrorDocument 500 /500.html
+
+# ============================================================================
+# Disable Directory Browsing
+# ============================================================================
+Options -Indexes
+
+# ============================================================================
+# PHP Configuration (if using PHP)
+# ============================================================================
+<IfModule mod_php.c>
+    # Disable PHP in upload directories
+    php_flag engine off
+</IfModule>
+
+# ============================================================================
+# Additional Security
+# ============================================================================
+# Prevent access to version control directories
+<IfModule mod_rewrite.c>
+    RewriteRule "(^|/)\.git" - [F,L]
+    RewriteRule "(^|/)\.svn" - [F,L]
+</IfModule>
+
+# ============================================================================
+# Notes
+# ============================================================================
+# This .htaccess file is optimized for Next.js static exports on Apache
+# For Node.js proxy setup, use the virtual hosts configuration instead
+# Make sure AllowOverride is set to All in Apache configuration

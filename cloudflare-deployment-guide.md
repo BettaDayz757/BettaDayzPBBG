@@ -1,6 +1,7 @@
 # Cloudflare Pages Deployment Guide for BettaDayz.shop
 
 ## Prerequisites
+
 - Cloudflare account
 - Domain `bettadayz.shop` added to Cloudflare
 - GitHub repository with your code
@@ -27,12 +28,14 @@
 In the Cloudflare Pages dashboard, go to your project settings and add these environment variables:
 
 ### Required Variables
+
 ```
 NODE_ENV=production
 SITE_URL=https://bettadayz.shop
 ```
 
 ### Optional Variables (add as needed)
+
 ```
 DATABASE_URL=your_database_url_here
 STRIPE_PUBLIC_KEY=your_stripe_public_key
@@ -135,6 +138,7 @@ SESSION_SECRET=your_session_secret_here
 ## Support
 
 If you encounter issues:
+
 1. Check Cloudflare Pages documentation
 2. Review build logs in the dashboard
 3. Test locally with `npm run build && npm run preview`
@@ -143,6 +147,7 @@ If you encounter issues:
 ## Next Steps
 
 After successful deployment:
+
 1. Set up monitoring and analytics
 2. Configure additional security rules
 3. Set up automated backups

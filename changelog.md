@@ -25,7 +25,6 @@
 * lock files ([#1681](https://github.com/stackblitz-labs/bolt.diy/pull/1681)) by @Stijnus
 * github fix and ui improvements ([#1685](https://github.com/stackblitz-labs/bolt.diy/pull/1685)) by @Stijnus
 
-
 ### 🐛 Bug Fixes
 
 * handle empty content correctly in FilesStore saveFile() ([#1381](https://github.com/stackblitz-labs/bolt.diy/pull/1381)) by @bizrockman
@@ -50,17 +49,14 @@
 * icon classes to existing icons #release:major (e9df523) by @xKevIsDev
 * revert back to previous commit (553fa5d) by @xKevIsDev
 
-
 ### 📚 Documentation
 
 * docs README.md changes (Webcontainer liicensing for commercial, other small things) (88901f3) by @leex279
-
 
 ### ♻️ Code Refactoring
 
 * remove success toast and prioritize public domain URL ([#1613](https://github.com/stackblitz-labs/bolt.diy/pull/1613)) by @xKevIsDev
 * optimize error handling and npm install performance ([#1688](https://github.com/stackblitz-labs/bolt.diy/pull/1688)) by @xKevIsDev
-
 
 ### ⚙️ CI
 
@@ -71,7 +67,6 @@
 * add Electron build process to release workflow (73442dd) by @xKevIsDev
 * reorder steps and add env vars for Electron build #release:major (a76013f) by @xKevIsDev
 
-
 ### 🔍 Other Changes
 
 * Delete wrangler.toml (60b6f47) by @leex279
@@ -80,7 +75,6 @@
 * Merge branch 'docker-fix' (5528306) by @thecodacus
 * fix icon classes for consistency and clarity #release:major" (4354ad4) by @xKevIsDev
 * fix icon classes for consistency and clarity #release:major" (5630be7) by @xKevIsDev
-
 
 ## ✨ First-time Contributors
 

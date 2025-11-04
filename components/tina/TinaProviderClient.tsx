@@ -10,7 +10,6 @@ export default function TinaProviderClient({ children }: { children: React.React
   const cms = React.useMemo(() => {
     return new TinaCMS({
       enabled: true,
-      toolbar: true,
     })
   }, [])
 

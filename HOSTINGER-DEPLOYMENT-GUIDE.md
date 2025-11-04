@@ -388,6 +388,7 @@ jobs:
 ```
 
 Add these secrets in GitHub repository settings:
+
 - `HOSTINGER_HOST`: Your server IP
 - `HOSTINGER_USERNAME`: SSH username (usually `root`)
 - `HOSTINGER_SSH_KEY`: Your SSH private key
@@ -561,10 +562,12 @@ netstat -tulpn | grep 3000
 ## Alternative: Using Hostinger's Website Builder (Not Recommended for Node.js)
 
 Note: Hostinger's basic shared hosting plans don't support Node.js applications. You need:
+
 - **VPS Hosting**: Full control, requires server management
 - **Business/Premium Hosting**: May support Node.js (check with Hostinger)
 
 If you don't have VPS access, consider:
+
 1. Upgrading to Hostinger VPS
 2. Using Cloudflare Pages (free, supports Remix)
 3. Using Vercel (free tier available)

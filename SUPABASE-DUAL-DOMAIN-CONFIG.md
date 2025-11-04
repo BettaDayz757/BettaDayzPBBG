@@ -5,13 +5,16 @@ This guide explains how to configure your Supabase project to support both `bett
 ## 1. Authentication Settings
 
 ### Site URL Configuration
+
 In your Supabase Dashboard:
 
 1. Go to **Authentication** → **Settings** → **Site URL**
 2. Set the main Site URL to: `https://bettadayz.shop`
 
 ### Additional Redirect URLs
+
 In the **Additional redirect URLs** section, add:
+
 ```
 https://bettadayz.store
 https://bettadayz.store/auth/callback
@@ -23,7 +26,9 @@ https://bettadayz.shop/**
 ## 2. CORS Configuration
 
 ### Allowed Origins
+
 In **Authentication** → **Settings** → **CORS Origins**, add:
+
 ```
 https://bettadayz.shop
 https://bettadayz.store
@@ -32,6 +37,7 @@ https://bettadayz.store
 ## 3. Database Configuration
 
 ### Environment Variables Table
+
 Create a table to store domain-specific configurations:
 
 ```sql
@@ -99,6 +105,7 @@ CREATE POLICY "Allow reading environment configs" ON environment_configs
 ## 4. Functions for Domain Management
 
 ### Get Domain Configuration Function
+
 ```sql
 CREATE OR REPLACE FUNCTION get_domain_config(domain_name TEXT)
 RETURNS JSONB AS $$
@@ -132,6 +139,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 ```
 
 ### User Activity Tracking with Domain
+
 ```sql
 -- Add domain column to user activity logs if it doesn't exist
 ALTER TABLE user_activity_logs 
@@ -155,6 +163,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 ## 5. API Configuration
 
 ### Edge Functions for Domain Handling
+
 If using Supabase Edge Functions, ensure they handle both domains:
 
 ```typescript
@@ -217,6 +226,7 @@ serve(async (req) => {
 ## 6. Client-Side Configuration
 
 ### Supabase Client Setup
+
 In your Next.js app, ensure the client is configured for both domains:
 
 ```typescript
@@ -270,6 +280,7 @@ export function getDomainConfig() {
 ## 7. Testing Checklist
 
 ### Authentication Testing
+
 - [ ] Login works on both domains
 - [ ] Logout works on both domains
 - [ ] Session persistence across domains
@@ -277,12 +288,14 @@ export function getDomainConfig() {
 - [ ] Social auth (if enabled) works on both domains
 
 ### Database Testing
+
 - [ ] User data is accessible from both domains
 - [ ] Cross-domain data integrity maintained
 - [ ] RLS policies work correctly
 - [ ] Domain-specific configurations load properly
 
 ### API Testing
+
 - [ ] API calls work from both domains
 - [ ] CORS headers allow both domains
 - [ ] Edge functions (if any) handle both domains
@@ -291,6 +304,7 @@ export function getDomainConfig() {
 ## 8. Monitoring and Analytics
 
 ### Database Queries for Monitoring
+
 ```sql
 -- Monitor user activity by domain
 SELECT 

@@ -30,6 +30,7 @@ For the best experience with bolt.diy, we recommend using the following models:
 - **Batch simple instructions**:  
  Combine simple tasks into a single prompt to save time and reduce API credit consumption. For example:  
  _"Change the color scheme, add mobile responsiveness, and restart the dev server."_
+
 </details>
 
 <details>
